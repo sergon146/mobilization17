@@ -303,6 +303,10 @@ public class DbBackend implements DbContract {
     }
 
     public void saveTranslate(Translate translate) {
+        if (isTranslateContains(translate)) {
+            return;
+        }
+        
         db = dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {
@@ -321,6 +325,22 @@ public class DbBackend implements DbContract {
         } finally {
             db.endTransaction();
         }
+    }
+
+    public boolean isTranslateContains(Translate translate) {
+        db = dbHelper.getReadableDatabase();
+
+        String table = TABLE_TRANSLATE;
+        String[] columns = new String[]{ID};
+        String where = TranslateTbl.COLUMN_SOURCE_TEXT + " = ? AND " +
+                TranslateTbl.COLUMN_SOURCE_LANG + " = ? AND " +
+                TranslateTbl.COLUMN_TARGET_LANG + " = ?";
+        String[] whereArgs = new String[]{translate.getSourceText(),
+                String.valueOf(getLangId(translate.getSourceLangCode())),
+                String.valueOf(getLangId(translate.getTargetLangCode()))};
+        Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
+
+        return cursor.moveToFirst();
     }
 
     public List<Translate> getHistory() {

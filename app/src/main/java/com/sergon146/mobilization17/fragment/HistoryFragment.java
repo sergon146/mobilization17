@@ -9,13 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sergon146.mobilization17.R;
 import com.sergon146.mobilization17.adapter.HistoryAdapter;
 import com.sergon146.mobilization17.db.DbBackend;
-import com.sergon146.mobilization17.listner.RecyclerItemClickListener;
 import com.sergon146.mobilization17.pojo.Translate;
 import com.sergon146.mobilization17.util.Const;
 
@@ -46,12 +44,6 @@ public class HistoryFragment extends Fragment {
 
         HistoryAdapter adapter = new HistoryAdapter(translateList);
         recyclerView.setAdapter(adapter);
-        recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getContext(), (view, position) -> {
-                    LinearLayout layout = (LinearLayout) view;
-                    TextView sourceText = (TextView) layout.findViewById(R.id.source_text);
-                    Toast.makeText(getContext(), sourceText.getText().toString(),Toast.LENGTH_SHORT).show();
-                }));
         return historyLayout;
     }
 
