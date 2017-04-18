@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Mobilization`17</string>
+    <string name="source">Source</string>
+    <string name="swap">Swap language</string>
+    <string name="target">Target</string>
+    <string name="source_title">Source language</string>
+    <string name="target_title">Target language</string>
+    <string name="offline_message">You are offline. Please Retry later</string>
+    <string name="textHint">Type text for translate</string>
+    <string name="error">Error! Please try againe</string>
+    <string name="recognition">Voice recognition \n  Talking…</string>
+
+    <string name="title_activity_splash">SplashActivity</string>
+
+    <string name="translate">Translate</string>
+    <string name="history">History</string>
+    <string name="favourites">Favourites</string>
+
+
+    <string name="history_search">Search in history</string>
+    <string name="favourite_search">Search in favourites</string>
+
+
+</resources>
