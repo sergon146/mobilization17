@@ -6,7 +6,7 @@ import com.sergon146.mobilization17.activity.SplashActivity;
 import com.sergon146.mobilization17.model.Impl.TranslateModelImpl;
 import com.sergon146.mobilization17.model.TranslateModel;
 import com.sergon146.mobilization17.pojo.Language;
-import com.sergon146.mobilization17.presenter.UtilPresenter;
+import com.sergon146.mobilization17.presenter.SplashActivityPresenter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,12 +18,12 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class UtilPresenterImpl implements UtilPresenter {
+public class SplashActivityPresenterImpl implements SplashActivityPresenter {
     private TranslateModel translateModel;
     private ArrayList<Language> languages;
     private SplashActivity activity;
 
-    public UtilPresenterImpl(SplashActivity activity) {
+    public SplashActivityPresenterImpl(SplashActivity activity) {
         this.activity = activity;
         translateModel = new TranslateModelImpl();
         languages = new ArrayList<>();

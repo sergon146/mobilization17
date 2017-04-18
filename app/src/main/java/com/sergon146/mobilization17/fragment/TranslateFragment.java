@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.sergon146.mobilization17.R;
 import com.sergon146.mobilization17.activity.ChooseLanguageActivity;
 import com.sergon146.mobilization17.presenter.TranslateFragmentPresenter;
-import com.sergon146.mobilization17.presenter.impl.TranslateFragmentFragmentPresenterImpl;
+import com.sergon146.mobilization17.presenter.impl.TranslateFragmentPresenterImpl;
 import com.sergon146.mobilization17.util.Const;
 
 import java.util.Locale;
@@ -48,14 +48,20 @@ public class TranslateFragment extends Fragment implements TextToSpeech.OnInitLi
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         translateLayout = (LinearLayout) inflater.inflate(R.layout.fragment_translate, container, false);
 
-        hideButtons();
-
-        presenter = new TranslateFragmentFragmentPresenterImpl(this);
-        tts = new TextToSpeech(getContext(), this);
+        presenter = new TranslateFragmentPresenterImpl(this);
 
         sourceEditText = (EditText) translateLayout.findViewById(R.id.source_edit_text);
         sourceEditText.addTextChangedListener(presenter.getSourceTextWatcher());
         targetTranslate = (TextView) translateLayout.findViewById(R.id.target_translate);
+
+        if (sourceEditText.getText().toString().isEmpty()) {
+            hideButtons();
+        } else {
+            showButtons();
+        }
+
+        tts = new TextToSpeech(getContext(), this);
+
 
         updateSourceBar(presenter.getSourceName());
         updateTargetBar(presenter.getTargetName());

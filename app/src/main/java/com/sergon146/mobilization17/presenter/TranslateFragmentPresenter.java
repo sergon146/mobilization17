@@ -6,9 +6,9 @@ import android.text.TextWatcher;
 public interface TranslateFragmentPresenter {
     void doTranslate(String text);
 
-    void setTranslateSentence(String text);
+    void setTargetText(String text);
 
-    void setTranslateWord();
+    void setTargetMean();
 
     void onActivityResult(int requestCode, int resultCode, Intent data);
 

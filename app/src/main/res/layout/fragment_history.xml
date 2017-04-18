@@ -58,7 +58,7 @@
             android:id="@+id/line"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/grayIconBg" />
+            android:background="@color/grayBackground" />
 
         <ScrollView
             android:layout_width="match_parent"

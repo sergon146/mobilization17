@@ -7,8 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.sergon146.mobilization17.R;
 import com.sergon146.mobilization17.db.DbBackend;
 import com.sergon146.mobilization17.pojo.Language;
-import com.sergon146.mobilization17.presenter.impl.UtilPresenterImpl;
-import com.sergon146.mobilization17.presenter.UtilPresenter;
+import com.sergon146.mobilization17.presenter.impl.SplashActivityPresenterImpl;
+import com.sergon146.mobilization17.presenter.SplashActivityPresenter;
 
 import java.util.List;
 import java.util.Locale;
@@ -26,7 +26,7 @@ public class SplashActivity extends AppCompatActivity {
     private void loadLanguagesIfNecessary() {
         DbBackend backend = new DbBackend(getApplicationContext());
         if (backend.isEmptyLocaleLanguageList(Locale.getDefault().getLanguage())) {
-            UtilPresenter presenter = new UtilPresenterImpl(this);
+            SplashActivityPresenter presenter = new SplashActivityPresenterImpl(this);
             presenter.loadLanguages(Locale.getDefault().getLanguage());
         } else {
             goToTranslateActivity();

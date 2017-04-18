@@ -1,6 +1,6 @@
 package com.sergon146.mobilization17.presenter;
 
-public interface UtilPresenter {
+public interface SplashActivityPresenter {
 
     void loadLanguages(String localeCode);
 

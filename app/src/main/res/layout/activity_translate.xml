@@ -10,11 +10,13 @@
     tools:context="com.sergon146.mobilization17.activity.TranslateActivity">
 
 
-    <com.sergon146.mobilization17.view.CustomViewPager
-        android:id="@+id/viewpager"
+    <FrameLayout
+        android:id="@+id/frame_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_weight="1">
+
+    </FrameLayout>
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
@@ -22,7 +24,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="?android:attr/windowBackground"
-        android:foregroundGravity="center"
         app:menu="@menu/navigation" />
 
 </LinearLayout>

@@ -45,11 +45,6 @@ public class HistoryFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         return historyLayout;
     }
-
-    public void updateData(){
-        recyclerView.removeAllViews();
-        recyclerView.setAdapter(new HistoryAdapter(backend.getHistory()));
-    }
 }
 
 

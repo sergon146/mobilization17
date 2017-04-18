@@ -4,4 +4,6 @@ import android.view.MenuItem;
 
 public interface TranslateActivityPresenter {
     void setCurrentFragmentByItem(MenuItem item);
+
+    int getCurrentItem();
 }

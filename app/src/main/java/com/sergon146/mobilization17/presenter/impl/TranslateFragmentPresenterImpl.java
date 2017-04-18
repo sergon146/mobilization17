@@ -31,7 +31,7 @@ import rx.subscriptions.Subscriptions;
 
 import static android.app.Activity.RESULT_OK;
 
-public class TranslateFragmentFragmentPresenterImpl implements TranslateFragmentPresenter {
+public class TranslateFragmentPresenterImpl implements TranslateFragmentPresenter {
     private TranslateFragment fragment;
     private Subscription subscription = Subscriptions.empty();
     private TranslateModel translateModel;
@@ -39,7 +39,7 @@ public class TranslateFragmentFragmentPresenterImpl implements TranslateFragment
     private DbBackend backend;
     private Translate translate;
 
-    public TranslateFragmentFragmentPresenterImpl(TranslateFragment fragment) {
+    public TranslateFragmentPresenterImpl(TranslateFragment fragment) {
         this.fragment = fragment;
         translateModel = new TranslateModelImpl();
         backend = new DbBackend(fragment.getContext());
@@ -61,8 +61,6 @@ public class TranslateFragmentFragmentPresenterImpl implements TranslateFragment
         translate.setSourceText(text);
         translate.setSourceLangCode(sourceCode);
         translate.setTargetLangCode(targetCode);
-
-
         translateModel.loadTranslateSentence(text, sourceCode, targetCode)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -73,7 +71,7 @@ public class TranslateFragmentFragmentPresenterImpl implements TranslateFragment
                     public void onNext(String s) {
                         if (!fragment.getSourceText().isEmpty()) {
                             translate.setTargetText(s);
-                            setTranslateSentence(s);
+                            setTargetText(s);
 
                             if (Util.isWord(text) && !translate.getTargetText().isEmpty()) {
                                 loadWord(translate);
@@ -88,7 +86,7 @@ public class TranslateFragmentFragmentPresenterImpl implements TranslateFragment
 
                     @Override
                     public void onCompleted() {
-                        Log.i("Translate", "Translate sentence: " + text + " completed");
+                        fragment.hideTranslateProgress();
                     }
 
                     @Override
@@ -97,9 +95,6 @@ public class TranslateFragmentFragmentPresenterImpl implements TranslateFragment
                         Log.w("Translate", "Error while translated sentence: " + text);
                     }
                 });
-
-
-        fragment.hideTranslateProgress();
     }
 
     private void loadWord(Translate translate) {
@@ -132,12 +127,12 @@ public class TranslateFragmentFragmentPresenterImpl implements TranslateFragment
 
 
     @Override
-    public void setTranslateSentence(String text) {
+    public void setTargetText(String text) {
         fragment.setTargetText(text);
     }
 
     @Override
-    public void setTranslateWord() {
+    public void setTargetMean() {
         // TODO: 18.04.2017 in mean layout
     }
 
@@ -215,7 +210,6 @@ public class TranslateFragmentFragmentPresenterImpl implements TranslateFragment
             @Override
             public void afterTextChanged(Editable s) {
 
-                fragment.showTranslateProgress();
 
                 ImageView sourceSpeech =
                         (ImageView) fragment.getTranslateLayout().findViewById(R.id.source_speech_view);
@@ -233,6 +227,7 @@ public class TranslateFragmentFragmentPresenterImpl implements TranslateFragment
                         }
 
                         public void onFinish() {
+                            fragment.showTranslateProgress();
                             doTranslate(s.toString());
                         }
                     }.start();
