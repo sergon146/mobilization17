@@ -13,7 +13,7 @@ import com.sergon146.mobilization17.presenter.UtilPresenter;
 import java.util.List;
 import java.util.Locale;
 
-public class SplashActivity extends AppCompatActivity implements UtilActivity {
+public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,6 @@ public class SplashActivity extends AppCompatActivity implements UtilActivity {
         }
     }
 
-    @Override
     public void setLanguage(List<Language> languages) {
         if (languages != null) {
             DbBackend backend = new DbBackend(getApplicationContext());

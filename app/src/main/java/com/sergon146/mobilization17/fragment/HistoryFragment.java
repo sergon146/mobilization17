@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.sergon146.mobilization17.R;
 import com.sergon146.mobilization17.adapter.HistoryAdapter;
@@ -50,13 +49,6 @@ public class HistoryFragment extends Fragment {
     public void updateData(){
         recyclerView.removeAllViews();
         recyclerView.setAdapter(new HistoryAdapter(backend.getHistory()));
-    }
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-
-        Toast.makeText(getContext(), "HISTORY!", Toast.LENGTH_SHORT).show();
     }
 }
 

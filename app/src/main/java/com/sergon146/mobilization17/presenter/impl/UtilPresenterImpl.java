@@ -2,7 +2,7 @@ package com.sergon146.mobilization17.presenter.impl;
 
 import android.util.Log;
 
-import com.sergon146.mobilization17.activity.UtilActivity;
+import com.sergon146.mobilization17.activity.SplashActivity;
 import com.sergon146.mobilization17.model.Impl.TranslateModelImpl;
 import com.sergon146.mobilization17.model.TranslateModel;
 import com.sergon146.mobilization17.pojo.Language;
@@ -21,9 +21,9 @@ import rx.schedulers.Schedulers;
 public class UtilPresenterImpl implements UtilPresenter {
     private TranslateModel translateModel;
     private ArrayList<Language> languages;
-    private UtilActivity activity;
+    private SplashActivity activity;
 
-    public UtilPresenterImpl(UtilActivity activity) {
+    public UtilPresenterImpl(SplashActivity activity) {
         this.activity = activity;
         translateModel = new TranslateModelImpl();
         languages = new ArrayList<>();

@@ -7,7 +7,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sergon146.mobilization17.R;
@@ -62,7 +61,6 @@ public class TranslateFragmentFragmentPresenterImpl implements TranslateFragment
         translate.setSourceText(text);
         translate.setSourceLangCode(sourceCode);
         translate.setTargetLangCode(targetCode);
-        fragment.showTranslateProgress();
 
 
         translateModel.loadTranslateSentence(text, sourceCode, targetCode)
@@ -117,7 +115,6 @@ public class TranslateFragmentFragmentPresenterImpl implements TranslateFragment
                         writeWordJson(word);
 
                         backend.saveTranslate(translate);
-                        Toast.makeText(fragment.getContext(), word.getDef().get(0).getText(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -217,6 +214,9 @@ public class TranslateFragmentFragmentPresenterImpl implements TranslateFragment
 
             @Override
             public void afterTextChanged(Editable s) {
+
+                fragment.showTranslateProgress();
+
                 ImageView sourceSpeech =
                         (ImageView) fragment.getTranslateLayout().findViewById(R.id.source_speech_view);
 

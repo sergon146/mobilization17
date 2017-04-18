@@ -78,13 +78,13 @@ public class TranslateFragment extends Fragment implements TextToSpeech.OnInitLi
 
         ImageView sourceSpeech = (ImageView) translateLayout.findViewById(R.id.source_speech_view);
         sourceSpeech.setOnClickListener(view -> {
-            animateClick(view);
+            animateScale(view);
             speakSourceOut();
         });
 
         ImageView targetSpeech = (ImageView) translateLayout.findViewById(R.id.target_speech_view);
         targetSpeech.setOnClickListener(view -> {
-            animateClick(view);
+            animateScale(view);
             speakTargetOut();
         });
 
@@ -209,6 +209,11 @@ public class TranslateFragment extends Fragment implements TextToSpeech.OnInitLi
     public void onPause() {
         super.onPause();
         hideTranslateProgress();
+
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
     }
 
     @Override
@@ -227,7 +232,7 @@ public class TranslateFragment extends Fragment implements TextToSpeech.OnInitLi
         }
     }
 
-    public void animateClick(View view) {
+    public void animateScale(View view) {
         Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.click_scale);
         view.startAnimation(animation);
     }

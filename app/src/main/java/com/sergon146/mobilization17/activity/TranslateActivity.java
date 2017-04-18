@@ -50,7 +50,6 @@ public class TranslateActivity extends AppCompatActivity {
                     if (position == 1) {
                         ((HistoryFragment) fragments.get(1)).updateData();
                     }
-
                 }
 
                 @Override
