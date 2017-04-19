@@ -14,6 +14,7 @@ import com.sergon146.mobilization17.db.DbBackend;
 import com.sergon146.mobilization17.fragment.TranslateFragment;
 import com.sergon146.mobilization17.model.Impl.TranslateModelImpl;
 import com.sergon146.mobilization17.model.TranslateModel;
+import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.pojo.Translate;
 import com.sergon146.mobilization17.pojo.translate.mapper.WordMapper;
 import com.sergon146.mobilization17.presenter.TranslateFragmentPresenter;
@@ -21,7 +22,11 @@ import com.sergon146.mobilization17.util.Const;
 import com.sergon146.mobilization17.util.Util;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -45,6 +50,10 @@ public class TranslateFragmentPresenterImpl implements TranslateFragmentPresente
         backend = new DbBackend(fragment.getContext());
         sourceCode = backend.getSourceCode();
         targetCode = backend.getTargetCode();
+        backend = new DbBackend(fragment.getContext());
+        if (backend.isEmptyLocaleLanguageList(Locale.getDefault().getLanguage())) {
+            loadLanguages(Locale.getDefault().getLanguage());
+        }
     }
 
     public void setSourceLang(String source) {
@@ -238,9 +247,12 @@ public class TranslateFragmentPresenterImpl implements TranslateFragmentPresente
     }
 
     @Override
-    public void updateTranslateFavourite() {
+    public int getImageAndUpdateFavourite() {
         translate.setFavourite(!translate.isFavourite());
         backend.updateTranslateFavourite(translate);
+        return translate.isFavourite() ?
+                R.drawable.ic_active_favourite :
+                R.drawable.ic_inactive_favourite;
     }
 
     private void writeWordJson(WordMapper word) {
@@ -254,5 +266,58 @@ public class TranslateFragmentPresenterImpl implements TranslateFragmentPresente
         } catch (IOException e) {
             return "";
         }
+    }
+
+
+    private void loadLanguages(String localeCode) {
+        TranslateModel translateModel = new TranslateModelImpl();
+        translateModel.loadLanguages(localeCode)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .cache()
+                .map(this::getLangsListFromMap)
+                .subscribe(new Subscriber<List<Language>>() {
+                    @Override
+                    public void onNext(List<Language> langs) {
+                        if (langs != null) {
+                            backend.insertLanguages(Locale.getDefault().getLanguage(), langs);
+                        }
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        Log.i("Mobilization", "Completed!");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i("Mobilization", "Error!");
+                    }
+                });
+    }
+
+    private List<Language> getLangsListFromMap(Map<String, Object> map) {
+        Map<String, String> langs = new HashMap<>();
+        try {
+            langs.putAll((Map<String, String>) map.get("langs"));
+        } catch (Exception e) {
+            Log.w("ERROR", e);
+        }
+
+        int id = 0;
+        List<Language> languages = new ArrayList<>();
+        for (Map.Entry<String, String> entry : langs.entrySet()) {
+            Language language = new Language();
+            language.setId(id++);
+            language.setCode(entry.getKey());
+            if (language.getCode().equals(Locale.getDefault().getLanguage())) {
+                language.setSource(true);
+                language.setTarget(true);
+            }
+            language.setName(entry.getValue());
+            languages.add(language);
+        }
+
+        return languages;
     }
 }
