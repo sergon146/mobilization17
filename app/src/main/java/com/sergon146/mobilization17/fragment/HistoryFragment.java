@@ -34,8 +34,6 @@ public class HistoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         LinearLayout historyLayout = (LinearLayout) inflater.inflate(R.layout.fragment_history, container, false);
-
-        backend = new DbBackend(getContext());
         List<Translate> translateList = backend.getHistory();
 
         recyclerView = (RecyclerView) historyLayout.findViewById(R.id.history_rv);

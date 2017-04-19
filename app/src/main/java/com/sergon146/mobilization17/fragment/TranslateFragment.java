@@ -47,7 +47,6 @@ public class TranslateFragment extends Fragment implements TextToSpeech.OnInitLi
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         translateLayout = (LinearLayout) inflater.inflate(R.layout.fragment_translate, container, false);
-
         presenter = new TranslateFragmentPresenterImpl(this);
 
         sourceEditText = (EditText) translateLayout.findViewById(R.id.source_edit_text);
@@ -75,7 +74,7 @@ public class TranslateFragment extends Fragment implements TextToSpeech.OnInitLi
 
     private void initButtons() {
         ImageView clear = (ImageView) translateLayout.findViewById(R.id.clear_text_view);
-        clear.setOnClickListener(v -> {
+        clear.setOnClickListener(view -> {
             setSourceText("");
             setTargetText("");
             hideButtons();
@@ -95,8 +94,8 @@ public class TranslateFragment extends Fragment implements TextToSpeech.OnInitLi
         });
 
         ImageView favourite = (ImageView) translateLayout.findViewById(R.id.favourite_view);
-        favourite.setOnClickListener(v -> {
-            presenter.updateTranslateFavourite();
+        favourite.setOnClickListener(view -> {
+            favourite.setImageResource(presenter.getImageAndUpdateFavourite());
         });
     }
 
@@ -246,4 +245,7 @@ public class TranslateFragment extends Fragment implements TextToSpeech.OnInitLi
     public LinearLayout getTranslateLayout() {
         return translateLayout;
     }
+
+    //// TODO: 19.04.2017 broadcast, repo, subscr, db backend, gen means, data changed, revert api query
+    // memory leaks
 }

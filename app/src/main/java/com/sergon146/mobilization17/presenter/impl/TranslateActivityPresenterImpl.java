@@ -16,7 +16,7 @@ import java.util.List;
 public class TranslateActivityPresenterImpl implements TranslateActivityPresenter {
     private final TranslateActivity activity;
     private final List<Fragment> fragmentList;
-    private int currentItem;
+    private int currentItem = 0;
 
     public TranslateActivityPresenterImpl(TranslateActivity activity) {
         this.activity = activity;

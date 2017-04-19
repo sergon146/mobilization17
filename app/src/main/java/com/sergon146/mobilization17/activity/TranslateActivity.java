@@ -10,33 +10,31 @@ import com.sergon146.mobilization17.R;
 import com.sergon146.mobilization17.presenter.TranslateActivityPresenter;
 import com.sergon146.mobilization17.presenter.impl.TranslateActivityPresenterImpl;
 
-import java.util.List;
-
 public class TranslateActivity extends AppCompatActivity {
     private TranslateActivityPresenter presenter;
     private BottomNavigationView navigation;
     // TODO: 13.04.2017 Broadcast
 
-    private List<Fragment> fragments;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_translate);
-        presenter = new TranslateActivityPresenterImpl(this);
+        if (presenter == null) {
+            presenter = new TranslateActivityPresenterImpl(this);
+        }
 
-        initStartFragment();
 
         initNavBar();
-//        initPager();
+        initStartFragment();
     }
 
     private void initStartFragment() {
-
+        navigation.setSelectedItemId(presenter.getCurrentItem());
     }
 
     private void initNavBar() {
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setSelectedItemId(presenter.getCurrentItem());
         navigation.setOnNavigationItemSelectedListener(item -> {
             presenter.setCurrentFragmentByItem(item);
             item.setChecked(true);

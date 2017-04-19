@@ -24,5 +24,5 @@ public interface TranslateFragmentPresenter {
 
     TextWatcher getSourceTextWatcher();
 
-    void updateTranslateFavourite();
+    int getImageAndUpdateFavourite();
 }
