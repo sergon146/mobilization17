@@ -39,7 +39,7 @@ public class TranslateLocalDataSource implements TranslationDataSource {
 
     @Override
     public Observable<Translate> loadFavourites() {
-        return Observable.from(backend.getHistory());
+        return Observable.from(backend.getFavourites());
     }
 
     @Override
@@ -54,11 +54,16 @@ public class TranslateLocalDataSource implements TranslationDataSource {
 
     @Override
     public void clearFavourites() {
-
+        backend.clearFavourites();
     }
 
     @Override
     public void setFavourites(Translate translate) {
+        backend.updateTranslateFavourite(translate);
+    }
 
+    @Override
+    public Observable<Translate> searchInHistory(String searchText) {
+        return Observable.from(backend.searchInFavourite(searchText));
     }
 }

@@ -214,9 +214,13 @@ public class TranslateFragment extends Fragment implements TextToSpeech.OnInitLi
     public void onPause() {
         super.onPause();
         hideTranslateProgress();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 
         if (tts != null) {
-            tts.stop();
             tts.shutdown();
         }
     }

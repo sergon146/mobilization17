@@ -1,4 +1,6 @@
-package com.sergon146.mobilization17.favourite;
+package com.sergon146.mobilization17.history;
+
+import android.content.Context;
 
 import com.sergon146.mobilization17.BasePresenter;
 import com.sergon146.mobilization17.BaseView;
@@ -6,7 +8,7 @@ import com.sergon146.mobilization17.pojo.Translate;
 
 import java.util.List;
 
-public interface FavouriteContract {
+public interface HistoryContract {
     interface View extends BaseView<Presenter> {
         void showSearchView();
 
@@ -19,15 +21,23 @@ public interface FavouriteContract {
         void showEmpty();
 
         void hideEmpty();
+
+        void clearSearch();
+
+        void hideTrash();
+
+        void showTrash();
     }
 
     interface Presenter extends BasePresenter {
         void loadData();
 
-        void cleanFavourite();
+        void clearFavourite();
 
         void setFavourite(Translate translate);
 
         void searchInFavourite(String searchText);
+
+        void showDialog(Context context, android.view.View v);
     }
 }

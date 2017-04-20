@@ -19,4 +19,6 @@ public interface TranslationDataSource {
     void clearFavourites();
 
     void setFavourites(Translate translate);
+
+    Observable<Translate> searchInHistory(String searchText);
 }

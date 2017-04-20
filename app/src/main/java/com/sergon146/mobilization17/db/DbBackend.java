@@ -343,36 +343,6 @@ public class DbBackend implements DbContract {
         return cursor.moveToFirst();
     }
 
-    public List<Translate> getHistory() {
-        List<Translate> translateList = new ArrayList<>();
-
-        db = dbHelper.getReadableDatabase();
-
-        String table = TABLE_TRANSLATE;
-        String[] columns = new String[]{
-                TranslateTbl.COLUMN_SOURCE_TEXT,
-                TranslateTbl.COLUMN_TARGET_TEXT,
-                TranslateTbl.COLUMN_SOURCE_LANG,
-                TranslateTbl.COLUMN_TARGET_LANG,
-                TranslateTbl.COLUMN_IS_FAVOURITE,
-                TranslateTbl.COLUMN_WORD_JSON};
-
-        Cursor cursor = db.query(table, columns, null, null, null, null, null);
-
-        while (cursor.moveToNext()) {
-            Translate translate = new Translate();
-            translate.setSourceText(cursor.getString(0));
-            translate.setTargetText(cursor.getString(1));
-            translate.setSourceLangCode(getLangCodeById(cursor.getInt(2)));
-            translate.setTargetLangCode(getLangCodeById(cursor.getInt(3)));
-            translate.setFavourite(cursor.getInt(4) == 1);
-            translate.setWordJson(cursor.getString(5));
-            translateList.add(translate);
-        }
-
-        return translateList;
-    }
-
     public void updateTranslateFavourite(Translate translate) {
         db = dbHelper.getWritableDatabase();
 
@@ -400,5 +370,104 @@ public class DbBackend implements DbContract {
         } finally {
             db.endTransaction();
         }
+    }
+
+
+    public List<Translate> getHistory() {
+        return searchInHistory("");
+    }
+
+    public List<Translate> searchInHistory(String searchText) {
+        searchText = "%" + searchText + "%";
+        List<Translate> translateList = new ArrayList<>();
+
+        db = dbHelper.getReadableDatabase();
+
+        String table = TABLE_TRANSLATE;
+        String[] columns = new String[]{
+                TranslateTbl.COLUMN_SOURCE_TEXT,
+                TranslateTbl.COLUMN_TARGET_TEXT,
+                TranslateTbl.COLUMN_SOURCE_LANG,
+                TranslateTbl.COLUMN_TARGET_LANG,
+                TranslateTbl.COLUMN_IS_FAVOURITE,
+                TranslateTbl.COLUMN_WORD_JSON};
+
+        String where = TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? OR " +
+                        TranslateTbl.COLUMN_TARGET_TEXT + " LIKE ?)";
+
+        String[] whereArgs = new String[]{ searchText, searchText};
+
+        Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
+
+        while (cursor.moveToNext()) {
+            Translate translate = new Translate();
+            translate.setSourceText(cursor.getString(0));
+            translate.setTargetText(cursor.getString(1));
+            translate.setSourceLangCode(getLangCodeById(cursor.getInt(2)));
+            translate.setTargetLangCode(getLangCodeById(cursor.getInt(3)));
+            translate.setFavourite(cursor.getInt(4) == 1);
+            translate.setWordJson(cursor.getString(5));
+            translateList.add(translate);
+        }
+
+        return translateList;
+    }
+
+
+    public List<Translate> getFavourites() {
+        return searchInFavourite("");
+    }
+
+
+
+    public List<Translate> searchInFavourite(String searchText) {
+        searchText = "%" + searchText + "%";
+        List<Translate> translateList = new ArrayList<>();
+
+        db = dbHelper.getReadableDatabase();
+
+        String table = TABLE_TRANSLATE;
+        String[] columns = new String[]{
+                TranslateTbl.COLUMN_SOURCE_TEXT,
+                TranslateTbl.COLUMN_TARGET_TEXT,
+                TranslateTbl.COLUMN_SOURCE_LANG,
+                TranslateTbl.COLUMN_TARGET_LANG,
+                TranslateTbl.COLUMN_IS_FAVOURITE,
+                TranslateTbl.COLUMN_WORD_JSON};
+
+        String where =
+                TranslateTbl.COLUMN_IS_FAVOURITE + " = ? AND (" +
+                TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? OR " +
+                TranslateTbl.COLUMN_TARGET_TEXT + " LIKE ?)";
+
+        String[] whereArgs = new String[]{String.valueOf(1), searchText, searchText};
+
+        Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
+
+        while (cursor.moveToNext()) {
+            Translate translate = new Translate();
+            translate.setSourceText(cursor.getString(0));
+            translate.setTargetText(cursor.getString(1));
+            translate.setSourceLangCode(getLangCodeById(cursor.getInt(2)));
+            translate.setTargetLangCode(getLangCodeById(cursor.getInt(3)));
+            translate.setFavourite(cursor.getInt(4) == 1);
+            translate.setWordJson(cursor.getString(5));
+            translateList.add(translate);
+        }
+
+        return translateList;
+    }
+
+    public void clearFavourites() {
+        db = dbHelper.getWritableDatabase();
+
+        String table = TABLE_TRANSLATE;
+
+        ContentValues values = new ContentValues();
+        values.put(TranslateTbl.COLUMN_IS_FAVOURITE, 0);
+
+        String where = TranslateTbl.COLUMN_IS_FAVOURITE + " = ? ";
+        String[] whereArgs = new String[]{String.valueOf(1)};
+        db.update(table, values, where, whereArgs);
     }
 }

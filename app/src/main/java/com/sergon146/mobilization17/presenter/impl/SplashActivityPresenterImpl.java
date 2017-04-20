@@ -34,7 +34,6 @@ public class SplashActivityPresenterImpl implements SplashActivityPresenter {
         translateModel.loadLanguages(localeCode)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .cache()
                 .map(this::getLangsListFromMap)
                 .subscribe(new Subscriber<List<Language>>() {
                     @Override

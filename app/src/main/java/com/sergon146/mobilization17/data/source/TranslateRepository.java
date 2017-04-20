@@ -8,10 +8,10 @@ import java.util.List;
 import rx.Observable;
 
 public class TranslateRepository implements TranslationDataSource {
-    private static TranslateRepository instance;
-    private TranslationDataSource localSource, remoteSource;
+    private static TranslateRepository instance = null;
+    private final TranslationDataSource localSource, remoteSource;
 
-    public TranslateRepository(TranslationDataSource localSource, TranslationDataSource remoteSource) {
+    private TranslateRepository(TranslationDataSource localSource, TranslationDataSource remoteSource) {
         this.localSource = localSource;
         this.remoteSource = remoteSource;
     }
@@ -50,11 +50,16 @@ public class TranslateRepository implements TranslationDataSource {
 
     @Override
     public void clearFavourites() {
-
+        localSource.clearFavourites();
     }
 
     @Override
     public void setFavourites(Translate translate) {
+        localSource.setFavourites(translate);
+    }
 
+    @Override
+    public Observable<Translate> searchInHistory(String searchText) {
+        return localSource.searchInHistory(searchText);
     }
 }

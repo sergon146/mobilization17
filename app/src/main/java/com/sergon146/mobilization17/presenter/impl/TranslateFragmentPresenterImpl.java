@@ -194,6 +194,9 @@ public class TranslateFragmentPresenterImpl implements TranslateFragmentPresente
         temp = sourceCode;
         sourceCode = targetCode;
         targetCode = temp;
+
+        setSourceLang(sourceCode);
+        setTargetLang(targetCode);
     }
 
     @Override

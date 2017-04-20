@@ -68,6 +68,11 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
 
     }
 
+    @Override
+    public Observable<Translate> searchInHistory(String searchText) {
+        return null;
+    }
+
     private List<Language> getLangsListFromMap(Map<String, Object> map) {
         Map<String, String> langs = new HashMap<>();
         try {

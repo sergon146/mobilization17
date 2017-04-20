@@ -37,7 +37,7 @@ public class HistoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         layout = (LinearLayout) inflater.inflate(R.layout.fragment_history, container, false);
         presenter.initRecycler(layout);
-        ImageView trash = (ImageView) layout.findViewById(R.id.history_trash);
+        ImageView trash = (ImageView) layout.findViewById(R.id.trash);
         trash.setOnClickListener(v -> presenter.showDialog(v));
         return layout;
     }
@@ -49,7 +49,7 @@ public class HistoryFragment extends Fragment {
     }
 
     public ImageView getTrash() {
-        return (ImageView) layout.findViewById(R.id.history_trash);
+        return (ImageView) layout.findViewById(R.id.trash);
     }
 }
 

@@ -8,8 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.sergon146.mobilization17.R;
-import com.sergon146.mobilization17.favourite.FavFragment;
-import com.sergon146.mobilization17.favourite.FavPresenter;
+import com.sergon146.mobilization17.history.favourite.FavFragment;
+import com.sergon146.mobilization17.history.favourite.FavPresenter;
 import com.sergon146.mobilization17.presenter.TranslateActivityPresenter;
 import com.sergon146.mobilization17.presenter.impl.TranslateActivityPresenterImpl;
 import com.sergon146.mobilization17.util.Util;

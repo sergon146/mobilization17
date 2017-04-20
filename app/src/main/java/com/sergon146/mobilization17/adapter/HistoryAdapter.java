@@ -8,15 +8,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sergon146.mobilization17.R;
+import com.sergon146.mobilization17.history.favourite.FavFragment;
 import com.sergon146.mobilization17.pojo.Translate;
 
 import java.util.List;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.TranslateViewHolder> {
     private List<Translate> translates;
+    private FavFragment.TranslateItemListener itemListener;
 
-    public HistoryAdapter(List<Translate> translates) {
+    public HistoryAdapter(List<Translate> translates, FavFragment.TranslateItemListener itemListener) {
         this.translates = translates;
+        this.itemListener = itemListener;
     }
 
     @Override
@@ -48,6 +51,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Translat
         setTranslates(translateList);
     }
 
+    private void setTranslates(List<Translate> translates) {
+        this.translates = translates;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void onBindViewHolder(TranslateViewHolder holder, int position, List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+    }
+
     class TranslateViewHolder extends RecyclerView.ViewHolder {
         TextView source, target, langs;
         ImageView favourite;
@@ -66,15 +79,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Translat
                 } else {
                     favourite.setImageResource(R.drawable.ic_active_favourite);
                 }
-
                 translate.setFavourite(!translate.isFavourite());
+                itemListener.onFavouriteClick(translate);
 
             });
         }
-    }
-
-    private void setTranslates(List<Translate> translates) {
-        this.translates = translates;
-        this.notifyDataSetChanged();
     }
 }
