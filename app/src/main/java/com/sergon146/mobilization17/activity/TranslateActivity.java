@@ -5,10 +5,14 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.sergon146.mobilization17.R;
+import com.sergon146.mobilization17.favourite.FavFragment;
+import com.sergon146.mobilization17.favourite.FavPresenter;
 import com.sergon146.mobilization17.presenter.TranslateActivityPresenter;
 import com.sergon146.mobilization17.presenter.impl.TranslateActivityPresenterImpl;
+import com.sergon146.mobilization17.util.Util;
 
 public class TranslateActivity extends AppCompatActivity {
     private TranslateActivityPresenter presenter;
@@ -36,7 +40,7 @@ public class TranslateActivity extends AppCompatActivity {
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setSelectedItemId(presenter.getCurrentItem());
         navigation.setOnNavigationItemSelectedListener(item -> {
-            presenter.setCurrentFragmentByItem(item);
+            setCurrentFragmentByItem(item);
             item.setChecked(true);
             return false;
         });
@@ -46,6 +50,21 @@ public class TranslateActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_container, fragment);
         transaction.commit();
+    }
+
+
+    public void setCurrentFragmentByItem(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.navigation_favourite:
+                FavFragment favFragment = (FavFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.fragment);
+                if (favFragment == null) {
+                    favFragment = FavFragment.newInstance();
+                }
+                new FavPresenter(Util.provideTasksRepository(getApplicationContext()), favFragment);
+                setCurrentFragment(favFragment);
+                break;
+        }
     }
 
     @Override

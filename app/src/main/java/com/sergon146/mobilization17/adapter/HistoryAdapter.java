@@ -9,17 +9,14 @@ import android.widget.TextView;
 
 import com.sergon146.mobilization17.R;
 import com.sergon146.mobilization17.pojo.Translate;
-import com.sergon146.mobilization17.presenter.HistoryFragmentPresenter;
 
 import java.util.List;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.TranslateViewHolder> {
     private List<Translate> translates;
-    private HistoryFragmentPresenter presenter;
 
-    public HistoryAdapter(List<Translate> translates, HistoryFragmentPresenter presenter) {
+    public HistoryAdapter(List<Translate> translates) {
         this.translates = translates;
-        this.presenter = presenter;
     }
 
     @Override
@@ -37,12 +34,18 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Translat
         holder.langs.setText(translate.getSourceLangCode() + " - " + translate.getTargetLangCode());
         if (translate.isFavourite()) {
             holder.favourite.setImageResource(R.drawable.ic_active_favourite);
+        } else {
+            holder.favourite.setImageResource(R.drawable.ic_inactive_favourite);
         }
     }
 
     @Override
     public int getItemCount() {
         return translates.size();
+    }
+
+    public void updateData(List<Translate> translateList) {
+        setTranslates(translateList);
     }
 
     class TranslateViewHolder extends RecyclerView.ViewHolder {
@@ -65,13 +68,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Translat
                 }
 
                 translate.setFavourite(!translate.isFavourite());
-                presenter.updateTranslate(translate);
 
             });
         }
     }
 
-    public void setTranslates(List<Translate> translates) {
+    private void setTranslates(List<Translate> translates) {
         this.translates = translates;
+        this.notifyDataSetChanged();
     }
 }

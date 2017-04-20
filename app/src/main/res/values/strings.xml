@@ -21,9 +21,11 @@
     <string name="favourite_search">Search in favourites</string>
 
 
-
     <string name="history_dialog_title">Are you sure you want to clear your history?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="del_history">History cleared</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

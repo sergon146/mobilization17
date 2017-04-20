@@ -28,14 +28,12 @@ public class HistoryFragmentPresenterImpl implements HistoryFragmentPresenter {
     public void initRecycler(View layout) {
         recyclerView = (RecyclerView) layout.findViewById(R.id.history_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(fragment.getContext()));
-        adapter = new HistoryAdapter(backend.getHistory(), this);
         recyclerView.setAdapter(adapter);
     }
 
     @Override
     public void getNewData() {
-        adapter.setTranslates(backend.getHistory());
-        adapter.notifyDataSetChanged();
+
     }
 
     @Override
