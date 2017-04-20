@@ -306,7 +306,7 @@ public class DbBackend implements DbContract {
         if (isTranslateContains(translate)) {
             return;
         }
-        
+
         db = dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {
@@ -389,5 +389,16 @@ public class DbBackend implements DbContract {
                 String.valueOf(getLangId(translate.getTargetLangCode())),
                 translate.getSourceText()};
         db.update(table, values, where, whereArgs);
+    }
+
+    public void deleteHistory() {
+        db = dbHelper.getReadableDatabase();
+        db.beginTransaction();
+        try {
+            db.delete(TABLE_TRANSLATE, null, null);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 }

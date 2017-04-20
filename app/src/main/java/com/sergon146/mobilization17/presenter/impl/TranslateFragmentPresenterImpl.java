@@ -73,7 +73,9 @@ public class TranslateFragmentPresenterImpl implements TranslateFragmentPresente
         translateModel.loadTranslateSentence(text, sourceCode, targetCode)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
                 .cache()
+                .onErrorReturn(null)
                 .map(st -> st.getText().get(0))
                 .subscribe(new Subscriber<String>() {
                     @Override
@@ -111,6 +113,7 @@ public class TranslateFragmentPresenterImpl implements TranslateFragmentPresente
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .cache()
+                .onErrorReturn(null)
                 .subscribe(new Subscriber<WordMapper>() {
                     @Override
                     public void onNext(WordMapper word) {

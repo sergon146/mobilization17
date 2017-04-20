@@ -6,18 +6,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sergon146.mobilization17.R;
 import com.sergon146.mobilization17.pojo.Translate;
+import com.sergon146.mobilization17.presenter.HistoryFragmentPresenter;
 
 import java.util.List;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.TranslateViewHolder> {
     private List<Translate> translates;
+    private HistoryFragmentPresenter presenter;
 
-    public HistoryAdapter(List<Translate> translates) {
+    public HistoryAdapter(List<Translate> translates, HistoryFragmentPresenter presenter) {
         this.translates = translates;
+        this.presenter = presenter;
     }
 
     @Override
@@ -53,9 +55,23 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Translat
             target = (TextView) itemView.findViewById(R.id.target_text);
             langs = (TextView) itemView.findViewById(R.id.langs);
             favourite = (ImageView) itemView.findViewById(R.id.favourite);
-            favourite.setOnClickListener(v -> Toast.makeText(v.getContext(), "FAV", Toast.LENGTH_SHORT).show());
+            favourite.setOnClickListener(v -> {
+                Translate translate = translates.get(itemView.getId());
+
+                if (translate.isFavourite()) {
+                    favourite.setImageResource(R.drawable.ic_inactive_favourite);
+                } else {
+                    favourite.setImageResource(R.drawable.ic_active_favourite);
+                }
+
+                translate.setFavourite(!translate.isFavourite());
+                presenter.updateTranslate(translate);
+
+            });
         }
     }
 
-
+    public void setTranslates(List<Translate> translates) {
+        this.translates = translates;
+    }
 }

@@ -27,4 +27,8 @@ public class Const {
     public static final int RECOGNITION_REQUEST_CODE = 7890;
 
     public static final String ARGUMENT_PAGE_NUMBER = "arg_page_number";
+
+
+    public static final int HISTORY_DIALOG_ID = 0;
+    public static final int FAVOURITE_DIALOG_ID = 1;
 }
