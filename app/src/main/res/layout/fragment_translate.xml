@@ -184,13 +184,18 @@
                 android:id="@+id/target_translate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/base_8dp"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:visibility="visible" />
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:fadingEdge="none"
+                android:requiresFadingEdge="none"
+                android:scrollIndicators="none"
+                android:scrollbars="none">
 
                 <LinearLayout
                     android:id="@+id/mean_inner_container"

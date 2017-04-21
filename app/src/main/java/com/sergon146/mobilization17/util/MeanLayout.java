@@ -16,7 +16,6 @@ import com.sergon146.mobilization17.pojo.translate.mapper.Mean;
 import com.sergon146.mobilization17.pojo.translate.mapper.Syn;
 import com.sergon146.mobilization17.pojo.translate.mapper.Tr;
 import com.sergon146.mobilization17.pojo.translate.mapper.WordMapper;
-import com.sergon146.mobilization17.translate.TrPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +23,9 @@ import java.util.List;
 public class MeanLayout {
     private Context context;
     private LayoutInflater li;
-    private TrPresenter.FlowItemListener flowListener;
+    private View.OnClickListener flowListener;
 
-    public MeanLayout(Context context,  TrPresenter.FlowItemListener flowListener) {
+    public MeanLayout(Context context, View.OnClickListener flowListener) {
         this.context = context;
         this.flowListener = flowListener;
         li = LayoutInflater.from(context);
@@ -95,7 +94,7 @@ public class MeanLayout {
             }
             TextView itemName = (TextView) itemLayout.findViewById(R.id.flow_item_name);
             itemName.setText(tr.getText());
-            itemName.setOnClickListener(getFlowItemNameClickListener());
+            itemName.setOnClickListener(flowListener);
 
             TextView itemGen = (TextView) itemLayout.findViewById(R.id.flow_item_gen);
             if (tr.getGen() != null) {
@@ -118,7 +117,7 @@ public class MeanLayout {
 
                     TextView itemName = (TextView) itemLayout.findViewById(R.id.flow_item_name);
                     itemName.setText(syn.getText());
-                    itemName.setOnClickListener(getFlowItemNameClickListener());
+                    itemName.setOnClickListener(flowListener);
 
                     if (syn.getGen() != null) {
                         TextView itemGen = (TextView) itemLayout.findViewById(R.id.flow_item_gen);
@@ -138,16 +137,7 @@ public class MeanLayout {
         }
     }
 
-    private View.OnClickListener getFlowItemNameClickListener() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                TextView view = (TextView) v;
-//                sourceEditText.setText(view.getText());
-//                swapLanguage();
-            }
-        };
-    }
+
 
     private void setMeans(Tr tr, LinearLayout layout) {
         List<Mean> meanList = tr.getMean();

@@ -90,9 +90,7 @@ public class TrFragment extends Fragment implements TranslateContract.View, Text
         mPresenter.setSourceLang();
 
         ivSwap = (ImageView) rootView.findViewById(R.id.swap);
-        ivSwap.setOnClickListener(v -> {
-            swapLanguage();
-        });
+        ivSwap.setOnClickListener(v -> swapLanguage());
 
         tvTargetLang = (TextView) rootView.findViewById(R.id.targetLangView);
         tvTargetLang.setOnClickListener(getLangClickListener(Const.TARGET));
@@ -207,6 +205,16 @@ public class TrFragment extends Fragment implements TranslateContract.View, Text
     }
 
     @Override
+    public void hideTargetText() {
+        tvTarget.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void showTargetText() {
+        tvTarget.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public void hideSourceSpeechOut() {
         ivSourceSpeechOut.setVisibility(View.INVISIBLE);
     }
@@ -304,7 +312,7 @@ public class TrFragment extends Fragment implements TranslateContract.View, Text
     private void clearAll() {
         setSourceText("");
         hideMean();
-        setTargetText("");
+        hideTargetText();
         hideButtons();
         hideProgress();
         hideSourceSpeechOut();

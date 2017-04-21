@@ -1,7 +1,7 @@
 package com.sergon146.mobilization17.util;
 
 public class Const {
-    public static final String LOG_TAG = "MOBILIZATION";
+    public static final String LOG_TAG = "MBLZN";
 
     public static final String TRANSLATE_API_KEY =
             "trnsl.1.1.20170323T070601Z.2b227dada2fe3a16.27fa9bd73033217af3ba93f347932bc682177b19";

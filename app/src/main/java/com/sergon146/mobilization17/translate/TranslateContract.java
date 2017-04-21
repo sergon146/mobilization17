@@ -20,6 +20,10 @@ public interface TranslateContract {
 
         void setSourceText(String sourceText);
 
+        void hideTargetText();
+
+        void showTargetText();
+
         void hideSourceSpeechOut();
 
         void speakSourceOut();

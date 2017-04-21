@@ -7,6 +7,7 @@ import com.sergon146.mobilization17.model.Impl.TranslateModelImpl;
 import com.sergon146.mobilization17.model.TranslateModel;
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.presenter.SplashActivityPresenter;
+import com.sergon146.mobilization17.util.Const;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +44,7 @@ public class SplashActivityPresenterImpl implements SplashActivityPresenter {
 
                     @Override
                     public void onCompleted() {
-                        Log.i("Mobilization", "Completed!");
+                        Log.i(Const.LOG_TAG, "Completed!");
                     }
 
                     @Override
@@ -58,7 +59,7 @@ public class SplashActivityPresenterImpl implements SplashActivityPresenter {
         try {
             langs.putAll((Map<String, String>) map.get("langs"));
         } catch (Exception e) {
-            Log.w("ERROR", e);
+            Log.w(Const.LOG_TAG, "Langs from map error: " + e);
         }
 
         int id = 0;
