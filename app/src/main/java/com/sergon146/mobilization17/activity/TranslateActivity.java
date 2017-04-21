@@ -25,6 +25,7 @@ public class TranslateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_translate);
 
+        setCurrentFragmentByItemId(currentItem);
         initNavBar();
     }
 
@@ -46,16 +47,35 @@ public class TranslateActivity extends AppCompatActivity {
     }
 
     public void setCurrentFragmentByItemId(int itemId) {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_container);
         switch (itemId) {
             case R.id.navigation_translate:
-                TrFragment trFragment = TrFragment.newInstance();
+                TrFragment trFragment;
+                if (fragment == null || !(fragment instanceof TrFragment)) {
+                    trFragment = TrFragment.newInstance();
+                } else {
+                    trFragment = (TrFragment) fragment;
+                }
                 presenter = new TrPresenter(Util.provideTasksRepository(getApplicationContext()), trFragment);
                 setCurrentFragment(trFragment);
                 break;
             case R.id.navigation_history:
+//                FavFragment favFragment;
+//                if (fragment == null || !(fragment instanceof FavFragment)) {
+//                    favFragment = FavFragment.newInstance();
+//                } else {
+//                    favFragment = (FavFragment) fragment;
+//                }
+//                presenter = new FavPresenter(Util.provideTasksRepository(getApplicationContext()), favFragment);
+//                setCurrentFragment(favFragment);
                 break;
             case R.id.navigation_favourite:
-                FavFragment favFragment = FavFragment.newInstance();
+                FavFragment favFragment;
+                if (fragment == null || !(fragment instanceof FavFragment)) {
+                    favFragment = FavFragment.newInstance();
+                } else {
+                    favFragment = (FavFragment) fragment;
+                }
                 presenter = new FavPresenter(Util.provideTasksRepository(getApplicationContext()), favFragment);
                 setCurrentFragment(favFragment);
                 break;

@@ -20,10 +20,10 @@ public class TrPresenter implements TranslateContract.Presenter {
     private Translate translate;
 
     public TrPresenter(TranslateRepository repository, TranslateContract.View view) {
-        translate = new Translate();
-        mRepository = repository;
         mView = view;
         mView.setPresenter(this);
+        mRepository = repository;
+        translate = new Translate();
         mSubscription = new CompositeSubscription();
     }
 
