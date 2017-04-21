@@ -26,5 +26,6 @@
     <string name="del_history">History cleared</string>
 
     <string name="nothing_show">Nothing to show</string>
+    <string name="translate_error">An error occurred while translating</string>
 
 </resources>

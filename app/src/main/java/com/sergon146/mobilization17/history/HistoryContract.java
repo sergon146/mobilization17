@@ -10,8 +10,6 @@ import java.util.List;
 
 public interface HistoryContract {
     interface View extends BaseView<Presenter> {
-        void showSearchView();
-
         void hideSearchView();
 
         void showData(List<Translate> translateList);

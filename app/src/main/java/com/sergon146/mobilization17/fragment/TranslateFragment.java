@@ -93,7 +93,7 @@ public class TranslateFragment extends Fragment implements TextToSpeech.OnInitLi
             speakTargetOut();
         });
 
-        ImageView favourite = (ImageView) translateLayout.findViewById(R.id.favourite_view);
+        ImageView favourite = (ImageView) translateLayout.findViewById(R.id.favourite);
         favourite.setOnClickListener(view -> {
             favourite.setImageResource(presenter.getImageAndUpdateFavourite());
         });

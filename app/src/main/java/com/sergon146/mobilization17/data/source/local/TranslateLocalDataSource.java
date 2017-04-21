@@ -7,8 +7,11 @@ import com.sergon146.mobilization17.data.source.TranslationDataSource;
 import com.sergon146.mobilization17.db.DbBackend;
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.pojo.Translate;
+import com.sergon146.mobilization17.pojo.translate.mapper.SentenceMapper;
+import com.sergon146.mobilization17.pojo.translate.mapper.WordMapper;
 
 import java.util.List;
+import java.util.Locale;
 
 import rx.Observable;
 
@@ -43,12 +46,22 @@ public class TranslateLocalDataSource implements TranslationDataSource {
     }
 
     @Override
-    public Observable<List<Translate>> loadTranslateWord() {
+    public Observable<WordMapper> loadTranslateWord(Translate translate) {
         return null;
     }
 
     @Override
-    public Observable<List<Translate>> loadTranslateSentence() {
+    public boolean isContainTranslate(Translate translate) {
+        return backend.isTranslateContains(translate);
+    }
+
+    @Override
+    public void saveTranslate(Translate translate) {
+        backend.saveTranslate(translate);
+    }
+
+    @Override
+    public Observable<SentenceMapper> loadTranslateSentence(Translate translate) {
         return null;
     }
 
@@ -65,5 +78,25 @@ public class TranslateLocalDataSource implements TranslationDataSource {
     @Override
     public Observable<Translate> searchInHistory(String searchText) {
         return Observable.from(backend.searchInFavourite(searchText));
+    }
+
+    @Override
+    public String getSourceCode() {
+        return backend.getSourceCode();
+    }
+
+    @Override
+    public String getTargetCode() {
+        return backend.getTargetCode();
+    }
+
+    @Override
+    public String getSourceName() {
+        return backend.getSourceName(Locale.getDefault().getLanguage());
+    }
+
+    @Override
+    public String getTargetName() {
+        return backend.getTargetName(Locale.getDefault().getLanguage());
     }
 }

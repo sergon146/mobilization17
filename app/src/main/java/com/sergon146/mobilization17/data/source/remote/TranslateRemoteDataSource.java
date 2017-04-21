@@ -5,6 +5,8 @@ import android.util.Log;
 import com.sergon146.mobilization17.data.source.TranslationDataSource;
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.pojo.Translate;
+import com.sergon146.mobilization17.pojo.translate.mapper.SentenceMapper;
+import com.sergon146.mobilization17.pojo.translate.mapper.WordMapper;
 import com.sergon146.mobilization17.service.TranslateService;
 import com.sergon146.mobilization17.util.Const;
 
@@ -44,17 +46,42 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
     }
 
     @Override
+    public Observable<SentenceMapper> loadTranslateSentence(Translate translate) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Const.TRANSLATE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
+        return retrofit.create(TranslateService.class)
+                .loadTranslateSentences(Const.TRANSLATE_API_KEY, translate.getSourceText(),
+                        translate.getSourceLangCode() + "-" + translate.getTargetLangCode());
+    }
+
+    @Override
+    public Observable<WordMapper> loadTranslateWord(Translate translate) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Const.DICTIONARY_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
+
+        return retrofit.create(TranslateService.class)
+                .loadTranslateWord(Const.DICTIONARY_API_KEY, translate.getSourceText(),
+                        translate.getSourceLangCode() + "-" + translate.getTargetLangCode());
+    }
+
+    @Override
+    public boolean isContainTranslate(Translate translate) {
+        return false;
+    }
+
+    @Override
+    public void saveTranslate(Translate translate) {
+
+    }
+
+    @Override
     public Observable<Translate> loadFavourites() {
-        return null;
-    }
-
-    @Override
-    public Observable<List<Translate>> loadTranslateWord() {
-        return null;
-    }
-
-    @Override
-    public Observable<List<Translate>> loadTranslateSentence() {
         return null;
     }
 
@@ -70,6 +97,26 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
 
     @Override
     public Observable<Translate> searchInHistory(String searchText) {
+        return null;
+    }
+
+    @Override
+    public String getSourceCode() {
+        return null;
+    }
+
+    @Override
+    public String getTargetCode() {
+        return null;
+    }
+
+    @Override
+    public String getSourceName() {
+        return null;
+    }
+
+    @Override
+    public String getTargetName() {
         return null;
     }
 

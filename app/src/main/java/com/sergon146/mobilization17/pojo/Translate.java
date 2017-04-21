@@ -68,4 +68,22 @@ public class Translate implements Serializable {
     public void setTargetLangCode(String targetLangCode) {
         this.targetLangCode = targetLangCode;
     }
+
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) {
+//            return true;
+//        }
+//
+//        if (o == null || getClass() != o.getClass()) {
+//            return false;
+//        }
+//
+//        Translate translate = (Translate) o;
+//        return Objects.equals(sourceText, translate.sourceText) &&
+//                Objects.equals(targetText,  translate.targetText) &&
+//                Objects.equals(sourceLangCode, translate.sourceLangCode) &&
+//                Objects.equals(targetLangCode,  translate.targetLangCode);
+//
+//    }
 }

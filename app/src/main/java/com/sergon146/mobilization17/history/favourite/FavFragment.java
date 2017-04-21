@@ -97,11 +97,6 @@ public class FavFragment extends Fragment implements HistoryContract.View {
     }
 
     @Override
-    public void showSearchView() {
-        ((View) etSearch.getParent()).setVisibility(View.VISIBLE);
-    }
-
-    @Override
     public void hideSearchView() {
         ((View) etSearch.getParent()).setVisibility(View.GONE);
     }
