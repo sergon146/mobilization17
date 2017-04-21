@@ -6,10 +6,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.pojo.Translate;
+import com.sergon146.mobilization17.pojo.translate.mapper.WordMapper;
+import com.sergon146.mobilization17.util.Const;
 import com.sergon146.mobilization17.util.Util;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -192,7 +196,7 @@ public class DbBackend implements DbContract {
         return cursor.getString(0);
     }
 
-    public void updateSource(String sourceCode) {
+    public void setSourceLang(String sourceCode) {
         db = dbHelper.getWritableDatabase();
         unSourcesAll();
 
@@ -355,6 +359,7 @@ public class DbBackend implements DbContract {
                 String.valueOf(getLangId(translate.getTargetLangCode())),
                 translate.getSourceText()};
         db.update(table, values, where, whereArgs);
+        Log.i(Const.LOG_TAG, "Set as favourite " + translate.getSourceText());
     }
 
     public void deleteHistory() {
@@ -367,7 +372,6 @@ public class DbBackend implements DbContract {
             db.endTransaction();
         }
     }
-
 
     public List<Translate> getHistory() {
         return searchInHistory("");
@@ -409,11 +413,9 @@ public class DbBackend implements DbContract {
         return translateList;
     }
 
-
     public List<Translate> getFavourites() {
         return searchInFavourite("");
     }
-
 
     public List<Translate> searchInFavourite(String searchText) {
         searchText = "%" + searchText + "%";
@@ -489,6 +491,13 @@ public class DbBackend implements DbContract {
         translate.setTargetText(cursor.getString(0));
         translate.setFavourite(cursor.getInt(1) == 1);
         translate.setWordJson(cursor.getString(2));
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            translate.setWordMapper(mapper.readValue(translate.getWordJson(), WordMapper.class));
+        } catch (IOException e) {
+            Log.w(Const.LOG_TAG, "Error while mapper to Word.class");
+        }
 
         cursor.close();
         return translate;

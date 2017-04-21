@@ -82,6 +82,16 @@ public class TranslateRepository implements TranslationDataSource {
     }
 
     @Override
+    public void setSourceLang(String sourceCode) {
+        localSource.setSourceLang(sourceCode);
+    }
+
+    @Override
+    public void setTargetLang(String targetLang) {
+        localSource.setTargetLang(targetLang);
+    }
+
+    @Override
     public String getSourceCode() {
         return localSource.getSourceCode();
     }

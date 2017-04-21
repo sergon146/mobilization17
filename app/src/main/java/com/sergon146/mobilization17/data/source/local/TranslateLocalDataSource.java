@@ -78,6 +78,16 @@ public class TranslateLocalDataSource implements TranslationDataSource {
     }
 
     @Override
+    public void setSourceLang(String sourceCode) {
+        backend.setSourceLang(sourceCode);
+    }
+
+    @Override
+    public void setTargetLang(String targetLang) {
+        backend.setTargetLang(targetLang);
+    }
+
+    @Override
     public String getSourceCode() {
         return backend.getSourceCode();
     }

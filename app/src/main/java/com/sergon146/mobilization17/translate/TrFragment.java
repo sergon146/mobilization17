@@ -6,7 +6,6 @@ import android.os.CountDownTimer;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewGroupCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -26,6 +25,7 @@ import com.sergon146.mobilization17.R;
 import com.sergon146.mobilization17.activity.ChooseLanguageActivity;
 import com.sergon146.mobilization17.util.Const;
 
+import java.util.List;
 import java.util.Locale;
 
 public class TrFragment extends Fragment implements TranslateContract.View, TextToSpeech.OnInitListener {
@@ -92,8 +92,6 @@ public class TrFragment extends Fragment implements TranslateContract.View, Text
         ivSwap = (ImageView) rootView.findViewById(R.id.swap);
         ivSwap.setOnClickListener(v -> {
             swapLanguage();
-            setSourceText(tvTarget.getText().toString());
-            setTargetText("");
         });
 
         tvTargetLang = (TextView) rootView.findViewById(R.id.targetLangView);
@@ -197,6 +195,9 @@ public class TrFragment extends Fragment implements TranslateContract.View, Text
     public void swapLanguage() {
         Animation rotate = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate);
         ivSwap.startAnimation(rotate);
+        setSourceText(tvTarget.getText().toString());
+        setTargetText("");
+        hideMean();
         mPresenter.swapLanguage();
     }
 
@@ -208,11 +209,6 @@ public class TrFragment extends Fragment implements TranslateContract.View, Text
     @Override
     public void hideSourceSpeechOut() {
         ivSourceSpeechOut.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    public void speakSourceOut() {
-
     }
 
     @Override
@@ -236,18 +232,26 @@ public class TrFragment extends Fragment implements TranslateContract.View, Text
     }
 
     @Override
-    public void speakTargetOut() {
+    public void speakSourceOut() {
+        mPresenter.speakSourceOut(etSource.getText().toString(), tts);
+    }
 
+    @Override
+    public void speakTargetOut() {
+        mPresenter.speakTargetOut(tvTarget.getText().toString(), tts);
     }
 
     @Override
     public void hideMean() {
-
+        llMeanInner.removeAllViews();
     }
 
     @Override
-    public void setMean(ViewGroupCompat viewGroup) {
-
+    public void setMean(List<View> layoutList) {
+        llMeanInner.removeAllViews();
+        for (View vg : layoutList) {
+            llMeanInner.addView(vg);
+        }
     }
 
     @Override
@@ -299,10 +303,10 @@ public class TrFragment extends Fragment implements TranslateContract.View, Text
 
     private void clearAll() {
         setSourceText("");
+        hideMean();
         setTargetText("");
         hideButtons();
         hideProgress();
         hideSourceSpeechOut();
-        mPresenter.unsubscribe(); // FIXME: 21.04.2017  ya hz nado li eto? 3 p.m.
     }
 }

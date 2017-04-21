@@ -42,6 +42,7 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
         TranslateService translateService = retrofit.create(TranslateService.class);
 
         return translateService.loadLanguages(Const.TRANSLATE_API_KEY, localeCode)
+                .doOnError(th -> Log.e(Const.LOG_TAG, th.toString()))
                 .map(this::getLangsListFromMap);
     }
 
@@ -55,6 +56,7 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
         return retrofit.create(TranslateService.class)
                 .loadTranslateSentences(Const.TRANSLATE_API_KEY, translate.getSourceText(),
                         translate.getSourceLangCode() + "-" + translate.getTargetLangCode())
+                .doOnError(th -> Log.e(Const.LOG_TAG, th.toString()))
                 .map(st -> st.getText().get(0))
                 .map(s -> {
                     translate.setTargetText(s);
@@ -75,6 +77,7 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
                 .loadTranslateWord(Const.DICTIONARY_API_KEY,
                         translate.getSourceLangCode() + "-" + translate.getTargetLangCode(),
                         translate.getSourceText())
+                .doOnError(th -> Log.e(Const.LOG_TAG, th.toString()))
                 .map(wr -> {
                     translate.setWordMapper(wr);
                     return wr;
@@ -115,6 +118,16 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
     @Override
     public Observable<List<Translate>> searchInHistory(String searchText) {
         return null;
+    }
+
+    @Override
+    public void setSourceLang(String sourceCode) {
+
+    }
+
+    @Override
+    public void setTargetLang(String targetLang) {
+
     }
 
     @Override

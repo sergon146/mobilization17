@@ -1,12 +1,17 @@
 package com.sergon146.mobilization17.translate;
 
-import android.support.v4.view.ViewGroupCompat;
+import android.content.Context;
+import android.speech.tts.TextToSpeech;
 
 import com.sergon146.mobilization17.BasePresenter;
 import com.sergon146.mobilization17.BaseView;
 
+import java.util.List;
+
 public interface TranslateContract {
     interface View extends BaseView<Presenter> {
+        Context getContext();
+
         void setSourceLang(String sourceLang);
 
         void setTargetLang(String targetLang);
@@ -31,7 +36,7 @@ public interface TranslateContract {
 
         void hideMean();
 
-        void setMean(ViewGroupCompat viewGroup);
+        void setMean(List<android.view.View> layoutList);
 
         void hideConnectionError();
 
@@ -59,5 +64,8 @@ public interface TranslateContract {
 
         void setTargetLang();
 
+        void speakSourceOut(String s, TextToSpeech tts);
+
+        void speakTargetOut(String s, TextToSpeech tts);
     }
 }

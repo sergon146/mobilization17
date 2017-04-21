@@ -26,6 +26,10 @@ public interface TranslationDataSource {
 
     Observable<List<Translate>> searchInHistory(String searchText);
 
+    void setSourceLang(String sourceCode);
+
+    void setTargetLang(String targetLang);
+
     String getSourceCode();
 
     String getTargetCode();
