@@ -2,8 +2,6 @@ package com.sergon146.mobilization17.data.source;
 
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.pojo.Translate;
-import com.sergon146.mobilization17.pojo.translate.mapper.SentenceMapper;
-import com.sergon146.mobilization17.pojo.translate.mapper.WordMapper;
 
 import java.util.List;
 
@@ -12,9 +10,9 @@ import rx.Observable;
 public interface TranslationDataSource {
     Observable<List<Language>> loadLangs(String localeCode);
 
-    Observable<SentenceMapper> loadTranslateSentence(Translate translate);
+    Observable<Translate> loadTranslateSentence(Translate translate);
 
-    Observable<WordMapper> loadTranslateWord(Translate translate);
+    Observable<Translate> loadTranslateWord(Translate translate);
 
     boolean isContainTranslate(Translate translate);
 
@@ -26,7 +24,7 @@ public interface TranslationDataSource {
 
     void setFavourites(Translate translate);
 
-    Observable<Translate> searchInHistory(String searchText);
+    Observable<List<Translate>> searchInHistory(String searchText);
 
     String getSourceCode();
 

@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.db;
+package com.sergon146.mobilization17.data.source.local;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -19,10 +19,6 @@ public class DbBackend implements DbContract {
 
     public DbBackend(Context context) {
         dbHelper = new DbHelper(context);
-    }
-
-    DbBackend(DbHelper dbHelper) {
-        this.dbHelper = dbHelper;
     }
 
     public void insertLanguages(String localeCode, List<Language> languages) {
@@ -393,9 +389,9 @@ public class DbBackend implements DbContract {
                 TranslateTbl.COLUMN_WORD_JSON};
 
         String where = TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? OR " +
-                        TranslateTbl.COLUMN_TARGET_TEXT + " LIKE ?)";
+                TranslateTbl.COLUMN_TARGET_TEXT + " LIKE ?)";
 
-        String[] whereArgs = new String[]{ searchText, searchText};
+        String[] whereArgs = new String[]{searchText, searchText};
 
         Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
 
@@ -419,7 +415,6 @@ public class DbBackend implements DbContract {
     }
 
 
-
     public List<Translate> searchInFavourite(String searchText) {
         searchText = "%" + searchText + "%";
         List<Translate> translateList = new ArrayList<>();
@@ -437,8 +432,8 @@ public class DbBackend implements DbContract {
 
         String where =
                 TranslateTbl.COLUMN_IS_FAVOURITE + " = ? AND (" +
-                TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? OR " +
-                TranslateTbl.COLUMN_TARGET_TEXT + " LIKE ?)";
+                        TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? OR " +
+                        TranslateTbl.COLUMN_TARGET_TEXT + " LIKE ?)";
 
         String[] whereArgs = new String[]{String.valueOf(1), searchText, searchText};
 
@@ -469,5 +464,33 @@ public class DbBackend implements DbContract {
         String where = TranslateTbl.COLUMN_IS_FAVOURITE + " = ? ";
         String[] whereArgs = new String[]{String.valueOf(1)};
         db.update(table, values, where, whereArgs);
+    }
+
+    public Translate getTranslateSentence(Translate translate) {
+        db = dbHelper.getReadableDatabase();
+
+        String table = TABLE_TRANSLATE;
+        String[] columns = new String[]{
+                TranslateTbl.COLUMN_TARGET_TEXT,
+                TranslateTbl.COLUMN_IS_FAVOURITE,
+                TranslateTbl.COLUMN_WORD_JSON};
+
+        String where = TranslateTbl.COLUMN_SOURCE_TEXT + " = ? AND " +
+                TranslateTbl.COLUMN_SOURCE_LANG + " = ? AND " +
+                TranslateTbl.COLUMN_TARGET_LANG + " = ?";
+
+        String[] whereArgs = new String[]{translate.getSourceText(),
+                String.valueOf(getLangId(translate.getSourceLangCode())),
+                String.valueOf(getLangId(translate.getTargetLangCode()))};
+
+        Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
+        cursor.moveToNext();
+
+        translate.setTargetText(cursor.getString(0));
+        translate.setFavourite(cursor.getInt(1) == 1);
+        translate.setWordJson(cursor.getString(2));
+
+        cursor.close();
+        return translate;
     }
 }

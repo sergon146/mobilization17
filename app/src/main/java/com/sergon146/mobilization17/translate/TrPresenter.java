@@ -2,13 +2,9 @@ package com.sergon146.mobilization17.translate;
 
 import android.util.Log;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sergon146.mobilization17.data.source.TranslateRepository;
 import com.sergon146.mobilization17.pojo.Translate;
-import com.sergon146.mobilization17.pojo.translate.mapper.WordMapper;
 import com.sergon146.mobilization17.util.Util;
-
-import java.io.IOException;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -43,24 +39,26 @@ public class TrPresenter implements TranslateContract.Presenter {
     @Override
     public void loadTranslate(String text) {
         mView.showProgress();
-        translate.setSourceText(text);
+        translate.setSourceText(Util.trimAll(text));
+        translate.setTargetText("");
+        translate.setWordJson("");
+        translate.setFavourite(false);
+        translate.setWordMapper(null);
+
         Subscription subscription = mRepository.loadTranslateSentence(translate)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .cache()
-                .map(st -> {
-                    return st.getText().get(0);
-                })
-                .subscribe(new Subscriber<String>() {
+                .subscribe(new Subscriber<Translate>() {
                     @Override
-                    public void onNext(String s) {
-                        mView.setTargetText(s);
-                        if (Util.isWord(text) && !s.isEmpty()) {
-//                            loadWord(translate);
-                        } else {
-                            translate.setWordJson("");
-                            if (!s.isEmpty()) {
-                                mRepository.saveTranslate(translate);
+                    public void onNext(Translate tr) {
+                        mView.setTargetText(tr.getTargetText());
+                        if (!tr.getTargetText().isEmpty()) {
+                            if (Util.isWord(text) && tr.getWordJson().isEmpty()) {
+                                loadWord(tr);
+                            } else {
+                                translate.setWordJson("");
+                                mRepository.saveTranslate(tr);
                             }
                         }
                     }
@@ -89,15 +87,10 @@ public class TrPresenter implements TranslateContract.Presenter {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .cache()
-                .onErrorReturn(null)
-                .subscribe(new Subscriber<WordMapper>() {
+                .subscribe(new Subscriber<Translate>() {
                     @Override
-                    public void onNext(WordMapper word) {
-
-                        translate.setWordMapper(word);
-                        writeWordJson(word);
-
-                        mRepository.saveTranslate(translate);
+                    public void onNext(Translate tr) {
+                        mView.setTargetText(tr.getTargetText() + "" + tr.getWordJson());
                     }
 
                     @Override
@@ -105,6 +98,7 @@ public class TrPresenter implements TranslateContract.Presenter {
                         mView.hideProgress();
                         mView.showButtons();
                         mView.changeFavourite(translate.isFavourite());
+                        mRepository.saveTranslate(translate);
                     }
 
                     @Override
@@ -146,18 +140,4 @@ public class TrPresenter implements TranslateContract.Presenter {
         translate.setTargetLangCode(mRepository.getTargetCode());
         mView.setTargetLang(mRepository.getTargetName());
     }
-    private void writeWordJson(WordMapper word) {
-        translate.setWordJson(getWordJson(word));
-    }
-
-    private String getWordJson(WordMapper word) {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.writeValueAsString(word);
-        } catch (IOException e) {
-            return "";
-        }
-    }
-
-
 }

@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.sergon146.mobilization17.R;
-import com.sergon146.mobilization17.db.DbBackend;
+import com.sergon146.mobilization17.data.source.local.DbBackend;
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.presenter.impl.SplashActivityPresenterImpl;
 import com.sergon146.mobilization17.presenter.SplashActivityPresenter;

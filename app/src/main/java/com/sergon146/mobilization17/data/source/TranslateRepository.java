@@ -2,8 +2,6 @@ package com.sergon146.mobilization17.data.source;
 
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.pojo.Translate;
-import com.sergon146.mobilization17.pojo.translate.mapper.SentenceMapper;
-import com.sergon146.mobilization17.pojo.translate.mapper.WordMapper;
 
 import java.util.List;
 
@@ -41,11 +39,11 @@ public class TranslateRepository implements TranslationDataSource {
     }
 
     @Override
-    public Observable<WordMapper> loadTranslateWord(Translate translate) {
+    public Observable<Translate> loadTranslateWord(Translate translate) {
         if (localSource.isContainTranslate(translate)) {
             return localSource.loadTranslateWord(translate);
         } else {
-            return null;
+            return remoteSource.loadTranslateWord(translate);
         }
     }
 
@@ -55,7 +53,7 @@ public class TranslateRepository implements TranslationDataSource {
     }
 
     @Override
-    public Observable<SentenceMapper> loadTranslateSentence(Translate translate) {
+    public Observable<Translate> loadTranslateSentence(Translate translate) {
         if (localSource.isContainTranslate(translate)) {
             return localSource.loadTranslateSentence(translate);
         } else {
@@ -79,7 +77,7 @@ public class TranslateRepository implements TranslationDataSource {
     }
 
     @Override
-    public Observable<Translate> searchInHistory(String searchText) {
+    public Observable<List<Translate>> searchInHistory(String searchText) {
         return localSource.searchInHistory(searchText);
     }
 

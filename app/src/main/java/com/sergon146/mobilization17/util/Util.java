@@ -29,4 +29,8 @@ public class Util {
         return TranslateRepository.getInstance(TranslateLocalDataSource.getInstance(context),
                 TranslateRemoteDataSource.getInstance());
     }
+
+    public static String trimAll(String text) {
+        return text.replaceAll("[\\s]{2,}", " ").trim();
+    }
 }

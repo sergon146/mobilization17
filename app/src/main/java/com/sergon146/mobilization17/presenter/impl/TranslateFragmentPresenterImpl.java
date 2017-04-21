@@ -10,7 +10,7 @@ import android.widget.ImageView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sergon146.mobilization17.R;
-import com.sergon146.mobilization17.db.DbBackend;
+import com.sergon146.mobilization17.data.source.local.DbBackend;
 import com.sergon146.mobilization17.fragment.TranslateFragment;
 import com.sergon146.mobilization17.model.Impl.TranslateModelImpl;
 import com.sergon146.mobilization17.model.TranslateModel;

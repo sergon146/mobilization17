@@ -88,7 +88,6 @@ public class FavPresenter implements HistoryContract.Presenter {
         mRepository.searchInHistory(searchText)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .toList()
                 .subscribe(new Observer<List<Translate>>() {
                     @Override
                     public void onCompleted() {

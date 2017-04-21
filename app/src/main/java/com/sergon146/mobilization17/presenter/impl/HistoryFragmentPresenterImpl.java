@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.sergon146.mobilization17.R;
 import com.sergon146.mobilization17.adapter.HistoryAdapter;
-import com.sergon146.mobilization17.db.DbBackend;
+import com.sergon146.mobilization17.data.source.local.DbBackend;
 import com.sergon146.mobilization17.fragment.HistoryFragment;
 import com.sergon146.mobilization17.pojo.Translate;
 import com.sergon146.mobilization17.presenter.HistoryFragmentPresenter;

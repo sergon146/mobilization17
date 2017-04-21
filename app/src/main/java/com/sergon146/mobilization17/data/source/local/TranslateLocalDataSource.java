@@ -4,11 +4,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.sergon146.mobilization17.data.source.TranslationDataSource;
-import com.sergon146.mobilization17.db.DbBackend;
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.pojo.Translate;
-import com.sergon146.mobilization17.pojo.translate.mapper.SentenceMapper;
-import com.sergon146.mobilization17.pojo.translate.mapper.WordMapper;
 
 import java.util.List;
 import java.util.Locale;
@@ -46,7 +43,7 @@ public class TranslateLocalDataSource implements TranslationDataSource {
     }
 
     @Override
-    public Observable<WordMapper> loadTranslateWord(Translate translate) {
+    public Observable<Translate> loadTranslateWord(Translate translate) {
         return null;
     }
 
@@ -61,8 +58,8 @@ public class TranslateLocalDataSource implements TranslationDataSource {
     }
 
     @Override
-    public Observable<SentenceMapper> loadTranslateSentence(Translate translate) {
-        return null;
+    public Observable<Translate> loadTranslateSentence(Translate translate) {
+        return Observable.just(backend.getTranslateSentence(translate));
     }
 
     @Override
@@ -76,8 +73,8 @@ public class TranslateLocalDataSource implements TranslationDataSource {
     }
 
     @Override
-    public Observable<Translate> searchInHistory(String searchText) {
-        return Observable.from(backend.searchInFavourite(searchText));
+    public Observable<List<Translate>> searchInHistory(String searchText) {
+        return Observable.just(backend.searchInFavourite(searchText));
     }
 
     @Override

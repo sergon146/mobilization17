@@ -2,14 +2,14 @@ package com.sergon146.mobilization17.data.source.remote;
 
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sergon146.mobilization17.data.source.TranslationDataSource;
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.pojo.Translate;
-import com.sergon146.mobilization17.pojo.translate.mapper.SentenceMapper;
-import com.sergon146.mobilization17.pojo.translate.mapper.WordMapper;
 import com.sergon146.mobilization17.service.TranslateService;
 import com.sergon146.mobilization17.util.Const;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +46,7 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
     }
 
     @Override
-    public Observable<SentenceMapper> loadTranslateSentence(Translate translate) {
+    public Observable<Translate> loadTranslateSentence(Translate translate) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Const.TRANSLATE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -54,20 +54,40 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
                 .build();
         return retrofit.create(TranslateService.class)
                 .loadTranslateSentences(Const.TRANSLATE_API_KEY, translate.getSourceText(),
-                        translate.getSourceLangCode() + "-" + translate.getTargetLangCode());
+                        translate.getSourceLangCode() + "-" + translate.getTargetLangCode())
+                .map(st -> st.getText().get(0))
+                .map(s -> {
+                    translate.setTargetText(s);
+                    return translate;
+                });
     }
 
     @Override
-    public Observable<WordMapper> loadTranslateWord(Translate translate) {
+    public Observable<Translate> loadTranslateWord(Translate translate) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Const.DICTIONARY_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
 
+
         return retrofit.create(TranslateService.class)
-                .loadTranslateWord(Const.DICTIONARY_API_KEY, translate.getSourceText(),
-                        translate.getSourceLangCode() + "-" + translate.getTargetLangCode());
+                .loadTranslateWord(Const.DICTIONARY_API_KEY,
+                        translate.getSourceLangCode() + "-" + translate.getTargetLangCode(),
+                        translate.getSourceText())
+                .map(wr -> {
+                    translate.setWordMapper(wr);
+                    return wr;
+                })
+                .map(wr -> {
+                    ObjectMapper mapper = new ObjectMapper();
+                    try {
+                        translate.setWordJson(mapper.writeValueAsString(wr));
+                    } catch (IOException e) {
+                        translate.setWordJson("");
+                    }
+                    return translate;
+                });
     }
 
     @Override
@@ -96,7 +116,7 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
     }
 
     @Override
-    public Observable<Translate> searchInHistory(String searchText) {
+    public Observable<List<Translate>> searchInHistory(String searchText) {
         return null;
     }
 
