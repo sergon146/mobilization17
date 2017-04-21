@@ -73,7 +73,9 @@ public class TrFragment extends Fragment implements TranslateContract.View, Text
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.subscribe();
+        if (mPresenter != null) {
+            mPresenter.subscribe();
+        }
     }
 
     @Override

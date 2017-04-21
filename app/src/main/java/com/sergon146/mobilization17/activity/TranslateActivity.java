@@ -5,8 +5,8 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 
+import com.sergon146.mobilization17.BasePresenter;
 import com.sergon146.mobilization17.R;
 import com.sergon146.mobilization17.history.favourite.FavFragment;
 import com.sergon146.mobilization17.history.favourite.FavPresenter;
@@ -16,7 +16,8 @@ import com.sergon146.mobilization17.util.Util;
 
 public class TranslateActivity extends AppCompatActivity {
     private BottomNavigationView navigation;
-    private int currentItem = 0;
+    private BasePresenter presenter;
+    private int currentItem = R.id.navigation_translate;
     // TODO: 13.04.2017 Broadcast
 
     @Override
@@ -25,41 +26,41 @@ public class TranslateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_translate);
 
         initNavBar();
-        initStartFragment();
     }
 
-    private void initStartFragment() {
-        navigation.setSelectedItemId(currentItem);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        currentItem = navigation.getSelectedItemId();
+        setCurrentFragmentByItemId(currentItem);
     }
 
     private void initNavBar() {
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setSelectedItemId(currentItem);
         navigation.setOnNavigationItemSelectedListener(item -> {
-            setCurrentFragmentByItem(item);
+            setCurrentFragmentByItemId(item.getItemId());
             item.setChecked(true);
             return false;
         });
     }
 
-    public void setCurrentFragmentByItem(MenuItem item) {
-        switch (item.getItemId()) {
+    public void setCurrentFragmentByItemId(int itemId) {
+        switch (itemId) {
             case R.id.navigation_translate:
                 TrFragment trFragment = TrFragment.newInstance();
-                new TrPresenter(Util.provideTasksRepository(getApplicationContext()), trFragment);
+                presenter = new TrPresenter(Util.provideTasksRepository(getApplicationContext()), trFragment);
                 setCurrentFragment(trFragment);
-                currentItem = 0;
                 break;
             case R.id.navigation_history:
-                currentItem = 1;
                 break;
             case R.id.navigation_favourite:
                 FavFragment favFragment = FavFragment.newInstance();
-                new FavPresenter(Util.provideTasksRepository(getApplicationContext()), favFragment);
+                presenter = new FavPresenter(Util.provideTasksRepository(getApplicationContext()), favFragment);
                 setCurrentFragment(favFragment);
-                currentItem = 2;
                 break;
         }
+        currentItem = itemId;
     }
 
 

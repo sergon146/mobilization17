@@ -97,7 +97,6 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
 
     @Override
     public void saveTranslate(Translate translate) {
-
     }
 
     @Override
@@ -107,12 +106,10 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
 
     @Override
     public void clearFavourites() {
-
     }
 
     @Override
     public void setFavourites(Translate translate) {
-
     }
 
     @Override
