@@ -33,6 +33,9 @@ public class TrPresenter implements TranslateContract.Presenter {
         mRepository = repository;
         translate = new Translate();
         mSubscription = new CompositeSubscription();
+
+        translate.setSourceLangCode(mRepository.getSourceCode());
+        translate.setTargetLangCode(mRepository.getTargetCode());
     }
 
     @Override
@@ -46,16 +49,16 @@ public class TrPresenter implements TranslateContract.Presenter {
 
     @Override
     public void loadTranslate(String text) {
-        mView.showProgress();
+        mView.hideMean();
         mView.hideButtons();
+        mView.showProgress();
+        mView.hideTargetText();
 
         translate.setSourceText(Util.trimAll(text));
         translate.setTargetText("");
         translate.setWordJson("");
         translate.setFavourite(false);
         translate.setWordMapper(null);
-        translate.setSourceLangCode(mRepository.getSourceCode());
-        translate.setTargetLangCode(mRepository.getTargetCode());
 
         Subscription subscription = mRepository.loadTranslateSentence(translate)
                 .subscribeOn(Schedulers.io())
@@ -65,6 +68,7 @@ public class TrPresenter implements TranslateContract.Presenter {
                     @Override
                     public void onNext(Translate tr) {
                         mView.setTargetText(tr.getTargetText());
+                        mView.showTargetText();
                         mView.changeFavourite(tr.isFavourite());
                         if (!tr.getTargetText().isEmpty()) {
                             if (Util.isWord(text)) {
@@ -190,16 +194,15 @@ public class TrPresenter implements TranslateContract.Presenter {
     }
 
     private void setMeans(WordMapper word) {
-        FlowItemListener flowListener = v -> {
+        View.OnClickListener flowListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
             TextView view = (TextView) v;
             mView.setSourceText(view.getText().toString());
             swapLanguage();
-        };
+        }};
         MeanLayout layout = new MeanLayout(mView.getContext(), flowListener);
         mView.setMean(layout.getMeanViews(word));
     }
 
-    public interface FlowItemListener {
-        void onFlowClick(View v);
-    }
 }
