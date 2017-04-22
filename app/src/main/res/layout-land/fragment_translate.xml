@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:tag="@string/translate"
+    tools:context="com.sergon146.mobilization17.fragment.TranslateFragment">
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/source_lang_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignBottom="@+id/swap"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_toStartOf="@+id/swap"
+                android:ellipsize="end"
+                android:gravity="end|center_vertical"
+                android:lines="1"
+                android:paddingRight="15dp"
+                android:scrollHorizontally="true"
+                android:text="@string/source"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/swap"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:contentDescription="@string/swap"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_swap_lang" />
+
+            <TextView
+                android:id="@+id/target_lang_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignBottom="@+id/swap"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/swap"
+                android:ellipsize="end"
+                android:ems="10"
+                android:gravity="start|center_vertical"
+                android:lines="1"
+                android:paddingLeft="15dp"
+                android:scrollHorizontally="true"
+                android:text="@string/target"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:visibility="visible" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/writing_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/edit_text_bg"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/source_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@android:color/transparent"
+                    android:ems="10"
+                    android:gravity="top|left"
+                    android:hint="@string/textHint"
+                    android:inputType="textCapSentences|textAutoCorrect|textAutoComplete|textMultiLine|textImeMultiLine"
+                    android:lines="5"
+                    android:paddingStart="5dp"
+                    android:textColorHint="@color/grayBackground"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/source_buttons_ll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/clear_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/ic_close" />
+
+                <ImageView
+                    android:id="@+id/source_micro_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="10dp"
+                    android:onClick="onGetSourceSpeechClick"
+                    app:srcCompat="@drawable/ic_micro" />
+
+                <ViewSwitcher
+                    android:id="@+id/source_speech_switcher"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/source_speech_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="visible"
+                        app:srcCompat="@drawable/ic_sound" />
+
+                    <ProgressBar
+                        android:id="@+id/source_speech_bar"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleX="0.5"
+                        android:scaleY="0.5"
+                        android:visibility="visible" />
+
+                </ViewSwitcher>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:id="@+id/offline_message"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_offline" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:gravity="top|center_vertical|center_horizontal"
+                    android:text="@string/offline_message"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:visibility="visible" />
+
+                <Button
+                    android:id="@+id/retry_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/retry" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/mean_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/target_translate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/base_8dp"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:visibility="visible" />
+
+                <ProgressBar
+                    android:id="@+id/translate_progress_bar"
+                    style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:progressDrawable="@drawable/progress_bar"
+                    android:visibility="gone" />
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fadingEdge="none"
+                    android:requiresFadingEdge="none"
+                    android:scrollIndicators="none"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/mean_inner_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="8dp" />
+                </ScrollView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/button_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:orientation="vertical"
+                android:visibility="invisible">
+
+                <ViewSwitcher
+                    android:id="@+id/target_speech_switcher"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/target_speech_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="10dp"
+                        app:srcCompat="@drawable/ic_sound" />
+
+                    <ProgressBar
+                        android:id="@+id/target_speech_bar"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scaleX="0.5"
+                        android:scaleY="0.5"
+                        android:visibility="gone" />
+                </ViewSwitcher>
+
+                <ImageView
+                    android:id="@+id/favourite"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="10dp"
+                    app:srcCompat="@drawable/ic_inactive_favourite" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
