@@ -9,17 +9,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 
 import com.sergon146.mobilization17.R;
-import com.sergon146.mobilization17.data.source.local.DbBackend;
+import com.sergon146.mobilization17.data.source.TranslationDataSource;
 import com.sergon146.mobilization17.language.adapter.LanguageAdapter;
 import com.sergon146.mobilization17.language.adapter.RecyclerItemClickListener;
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.util.Const;
+import com.sergon146.mobilization17.util.Util;
 
 import java.util.List;
 import java.util.Locale;
 
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 public class ChooseLanguageActivity extends AppCompatActivity {
-    List<Language> languages;
+    private RecyclerView recyclerView;
+    private List<Language> languages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,19 +32,25 @@ public class ChooseLanguageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_choose_language);
         Intent intent = getIntent();
         initActionBar(intent);
+
+        recyclerView = (RecyclerView) findViewById(R.id.langs_recycler);
+
         initData();
     }
 
     private void initData() {
-        DbBackend backend = new DbBackend(this);
-        languages = backend.getCashedLangs(Locale.getDefault().getLanguage());
+        TranslationDataSource repository = Util.provideTasksRepository(getApplicationContext());
+        repository.loadLangs((Locale.getDefault().getLanguage()))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(l -> {
+                    languages = l;
+                    LanguageAdapter adapter = new LanguageAdapter(languages);
+                    recyclerView.setAdapter(adapter);
+                });
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.langs_recycler);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        LanguageAdapter adapter = new LanguageAdapter(languages);
-        recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getApplicationContext(), (view, position) -> {
                     Intent intent = new Intent();

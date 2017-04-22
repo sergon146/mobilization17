@@ -128,7 +128,7 @@ public class HistoryPresenter implements HistoryContract.Presenter {
     @Override
     public void showDialog(Context context, View v) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage(context.getString(R.string.favourite_dialog_title))
+        builder.setMessage(context.getString(R.string.history_dialog_title))
                 .setNegativeButton(context.getString(R.string.no),
                         (dialog, idV) -> dialog.cancel())
                 .setPositiveButton(context.getString(R.string.yes),
