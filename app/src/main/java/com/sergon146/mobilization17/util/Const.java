@@ -20,6 +20,7 @@ public class Const {
     public static final String TARGET = "TARGET";
     public static final String LANGS = "LANGS";
     public static final String LANGUAGE = "LANGUAGE";
+    public static final String CODE = "CODE";
     public static final String TRANSLATE = "TRANSLATE";
 
     public static final int REQUEST_CODE_SOURCE = 1;
@@ -30,7 +31,6 @@ public class Const {
 
     public static final String ARGUMENT_PAGE_NUMBER = "arg_page_number";
 
-
-    public static final int HISTORY_DIALOG_ID = 0;
-    public static final int FAVOURITE_DIALOG_ID = 1;
+    public static final String SOURCE_SPEECH = "SOURCE_SPEECH";
+    public static final String TARGET_SPEECH = "TARGET_SPEECH";
 }

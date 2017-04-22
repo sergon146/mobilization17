@@ -49,7 +49,7 @@ public class DbBackend implements DbContract {
         db = dbHelper.getReadableDatabase();
 
         String table = TABLE_LANGS_NAME;
-        String[] columns = new String[]{"COUNT(rowid)"};
+        String[] columns = new String[]{"COUNT(" + ID + ")"};
         Cursor cursor = db.query(table, columns, null, null, null, null, null);
         cursor.moveToFirst();
         return cursor.getInt(0);
@@ -66,7 +66,6 @@ public class DbBackend implements DbContract {
         String where = LangsNameTbl.COLUMN_LOCALE_CODE + " = ?";
         String[] whereArgs = new String[]{String.valueOf(getLocaleId(localeCode))};
 
-        //select lang_code, name from langs_name where locale_code = 'locale_code'
         Cursor cursor = db.query(
                 table,
                 columns,
@@ -101,7 +100,7 @@ public class DbBackend implements DbContract {
 
         String table = TABLE_LANGS;
         String[] columns = new String[]{ID};
-        String where = LangsTbl.COLUMN_CODE + " like ?";
+        String where = LangsTbl.COLUMN_CODE + " LIKE ?";
         String[] whereArgs = new String[]{langCode};
         Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
         if (cursor.moveToFirst()) {
@@ -332,7 +331,7 @@ public class DbBackend implements DbContract {
 
         String table = TABLE_TRANSLATE;
         String[] columns = new String[]{ID};
-        String where = TranslateTbl.COLUMN_SOURCE_TEXT + " = ? AND " +
+        String where = TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? AND " +
                 TranslateTbl.COLUMN_SOURCE_LANG + " = ? AND " +
                 TranslateTbl.COLUMN_TARGET_LANG + " = ?";
         String[] whereArgs = new String[]{translate.getSourceText(),
@@ -352,8 +351,8 @@ public class DbBackend implements DbContract {
         values.put(TranslateTbl.COLUMN_IS_FAVOURITE, translate.isFavourite() ? 1 : 0);
 
         String where = TranslateTbl.COLUMN_SOURCE_LANG + " = ? AND "
-                + TranslateTbl.COLUMN_TARGET_LANG + " = ? AND "
-                + TranslateTbl.COLUMN_SOURCE_TEXT + "= ?";
+                + TranslateTbl.COLUMN_TARGET_LANG + " LIKE ? AND "
+                + TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ?";
         String[] whereArgs = new String[]{
                 String.valueOf(getLangId(translate.getSourceLangCode())),
                 String.valueOf(getLangId(translate.getTargetLangCode())),
@@ -396,8 +395,9 @@ public class DbBackend implements DbContract {
                 TranslateTbl.COLUMN_TARGET_TEXT + " LIKE ?)";
 
         String[] whereArgs = new String[]{searchText, searchText};
+        String orderBy = ID + " DESC";
 
-        Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
+        Cursor cursor = db.query(table, columns, where, whereArgs, null, null, orderBy);
 
         while (cursor.moveToNext()) {
             Translate translate = new Translate();
@@ -438,8 +438,9 @@ public class DbBackend implements DbContract {
                         TranslateTbl.COLUMN_TARGET_TEXT + " LIKE ?)";
 
         String[] whereArgs = new String[]{String.valueOf(1), searchText, searchText};
+        String orderBy = ID + " DESC";
 
-        Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
+        Cursor cursor = db.query(table, columns, where, whereArgs, null, null, orderBy);
 
         while (cursor.moveToNext()) {
             Translate translate = new Translate();
@@ -477,7 +478,7 @@ public class DbBackend implements DbContract {
                 TranslateTbl.COLUMN_IS_FAVOURITE,
                 TranslateTbl.COLUMN_WORD_JSON};
 
-        String where = TranslateTbl.COLUMN_SOURCE_TEXT + " = ? AND " +
+        String where = TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? AND " +
                 TranslateTbl.COLUMN_SOURCE_LANG + " = ? AND " +
                 TranslateTbl.COLUMN_TARGET_LANG + " = ?";
 

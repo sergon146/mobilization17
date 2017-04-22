@@ -20,7 +20,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/sourceLangView"
+                android:id="@+id/source_lang_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignBottom="@+id/swap"
@@ -47,7 +47,7 @@
                 app:srcCompat="@drawable/ic_swap_lang" />
 
             <TextView
-                android:id="@+id/targetLangView"
+                android:id="@+id/target_lang_view"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignBottom="@+id/swap"
@@ -70,7 +70,7 @@
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout
-        android:id="@+id/writingLayout"
+        android:id="@+id/writing_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -110,7 +110,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/source_bouttons_cont"
+            android:id="@+id/source_buttons_ll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -126,22 +126,39 @@
                 android:onClick="onGetSourceSpeechClick"
                 app:srcCompat="@drawable/ic_micro" />
 
-            <ImageView
-                android:id="@+id/source_speech_view"
+            <ViewSwitcher
+                android:id="@+id/source_speech_switcher"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="10dp"
-                android:visibility="invisible"
-                app:srcCompat="@drawable/ic_sound" />
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/source_speech_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="10dp"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/ic_sound" />
+
+                <ProgressBar
+                    android:id="@+id/source_speech_bar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleX="0.5"
+                    android:scaleY="0.5"
+                    android:visibility="visible" />
+
+            </ViewSwitcher>
 
         </LinearLayout>
     </LinearLayout>
 
     <ProgressBar
-        android:id="@+id/translateProgressBar"
+        android:id="@+id/translate_progress_bar"
         style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -154,6 +171,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="start"
         android:layout_marginEnd="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
@@ -161,16 +179,37 @@
         android:orientation="horizontal"
         android:weightSum="1">
 
-        <TextView
+        <LinearLayout
             android:id="@+id/offline_message"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="8dp"
-            android:gravity="center_vertical|center_horizontal"
-            android:text="@string/offline_message"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:visibility="gone" />
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_offline" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:gravity="top|center_vertical|center_horizontal"
+                android:text="@string/offline_message"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/retry_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/retry" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/mean_layout"
@@ -208,21 +247,37 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/buttonLayout"
+            android:id="@+id/button_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="top"
             android:orientation="vertical"
             android:visibility="invisible">
 
-            <ImageView
-                android:id="@+id/target_speech_view"
+            <ViewSwitcher
+                android:id="@+id/target_speech_switcher"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="10dp"
-                app:srcCompat="@drawable/ic_sound" />
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/target_speech_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="10dp"
+                    app:srcCompat="@drawable/ic_sound" />
+
+                <ProgressBar
+                    android:id="@+id/target_speech_bar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleX="0.5"
+                    android:scaleY="0.5"
+                    android:visibility="gone" />
+            </ViewSwitcher>
 
             <ImageView
                 android:id="@+id/favourite"

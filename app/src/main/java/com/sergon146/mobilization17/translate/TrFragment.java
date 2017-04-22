@@ -3,7 +3,9 @@ package com.sergon146.mobilization17.translate;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -12,18 +14,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.sergon146.mobilization17.R;
 import com.sergon146.mobilization17.activity.ChooseLanguageActivity;
 import com.sergon146.mobilization17.util.Const;
+import com.sergon146.mobilization17.util.Util;
+import com.sergon146.mobilization17.util.ViewUtil;
 
 import java.util.List;
 import java.util.Locale;
@@ -40,9 +44,12 @@ public class TrFragment extends Fragment implements TranslateContract.View, Text
     private EditText etSource;
     private ImageView ivClear;
     private ImageView ivSourceSpeechOut;
+    private ViewSwitcher vsSource;
     private ImageView ivSourceSpeechIn;
 
-    private TextView tvConnectionError;
+    private LinearLayout llOfflineMessage;
+    private Button butRetry;
+
     private TextView tvTarget;
     private LinearLayout llMeanInner;
 
@@ -51,8 +58,9 @@ public class TrFragment extends Fragment implements TranslateContract.View, Text
     private ImageView ivTargetSpeechOut;
     private ImageView ivFavourite;
 
-    private ProgressBar progressBar;
+    private ProgressBar pbTranslate;
 
+    private ViewSwitcher vsTarget;
 
     public TrFragment() {
     }
@@ -66,6 +74,7 @@ public class TrFragment extends Fragment implements TranslateContract.View, Text
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_translate, container, false);
         tts = new TextToSpeech(getContext(), this);
+        tts.setOnUtteranceProgressListener(getUtteranceListener());
         initViews(rootView);
         return rootView;
     }
@@ -73,9 +82,7 @@ public class TrFragment extends Fragment implements TranslateContract.View, Text
     @Override
     public void onResume() {
         super.onResume();
-        if (mPresenter != null) {
-            mPresenter.subscribe();
-        }
+        mPresenter.subscribe();
     }
 
     @Override
@@ -85,52 +92,19 @@ public class TrFragment extends Fragment implements TranslateContract.View, Text
     }
 
     private void initViews(View rootView) {
-        tvSourceLang = (TextView) rootView.findViewById(R.id.sourceLangView);
+        tvSourceLang = (TextView) rootView.findViewById(R.id.source_lang_view);
         tvSourceLang.setOnClickListener(getLangClickListener(Const.SOURCE));
         mPresenter.setSourceLang();
 
         ivSwap = (ImageView) rootView.findViewById(R.id.swap);
         ivSwap.setOnClickListener(v -> swapLanguage());
 
-        tvTargetLang = (TextView) rootView.findViewById(R.id.targetLangView);
+        tvTargetLang = (TextView) rootView.findViewById(R.id.target_lang_view);
         tvTargetLang.setOnClickListener(getLangClickListener(Const.TARGET));
         mPresenter.setTargetLang();
 
         etSource = (EditText) rootView.findViewById(R.id.source_edit_text);
-        etSource.addTextChangedListener(new TextWatcher() {
-            CountDownTimer timer = null;
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                if (s.toString().equals("")) {
-                    hideSourceSpeechOut();
-                    setTargetText("");
-                } else {
-                    showSourceSpeechOut();
-                    if (timer != null) {
-                        timer.cancel();
-                    }
-                    timer = new CountDownTimer(600, 1) {
-                        public void onTick(long millisUntilFinished) {
-                        }
-
-                        public void onFinish() {
-                            mPresenter.loadTranslate(s.toString());
-                        }
-                    }.start();
-                }
-            }
-
-        });
+        etSource.addTextChangedListener(getSourceTextWatcher());
 
         ivClear = (ImageView) rootView.findViewById(R.id.clear_text_view);
         ivClear.setOnClickListener(v -> clearAll());
@@ -139,23 +113,30 @@ public class TrFragment extends Fragment implements TranslateContract.View, Text
         ivSourceSpeechOut.setOnClickListener(v -> speakSourceOut());
 
         ivSourceSpeechIn = (ImageView) rootView.findViewById(R.id.source_micro_view);
-        ivSourceSpeechIn.setOnClickListener(null); // TODO: 21.04.2017
+        ivSourceSpeechIn.setOnClickListener(v -> startVoiceRecognitionActivity());
 
-        tvConnectionError = (TextView) rootView.findViewById(R.id.offline_message);
+        llOfflineMessage = (LinearLayout) rootView.findViewById(R.id.offline_message);
+        butRetry = (Button) rootView.findViewById(R.id.retry_button);
+        butRetry.setOnClickListener(v -> mPresenter.loadTranslate(getSourceText()));
 
         tvTarget = (TextView) rootView.findViewById(R.id.target_translate);
 
         llMeanInner = (LinearLayout) rootView.findViewById(R.id.mean_inner_container);
-
-        llButtons = (LinearLayout) rootView.findViewById(R.id.buttonLayout);
+        llButtons = (LinearLayout) rootView.findViewById(R.id.button_layout);
 
         ivTargetSpeechOut = (ImageView) rootView.findViewById(R.id.target_speech_view);
         ivTargetSpeechOut.setOnClickListener(v -> speakTargetOut());
 
         ivFavourite = (ImageView) rootView.findViewById(R.id.favourite);
-        ivFavourite.setOnClickListener(v -> mPresenter.setFavourite());
+        ivFavourite.setOnClickListener(v -> {
+            ViewUtil.animateClick(getContext(), v, R.anim.click_scale);
+            mPresenter.setFavourite();
+        });
 
-        progressBar = (ProgressBar) rootView.findViewById(R.id.translateProgressBar);
+        pbTranslate = (ProgressBar) rootView.findViewById(R.id.translate_progress_bar);
+
+        vsSource = (ViewSwitcher) rootView.findViewById(R.id.source_speech_switcher);
+        vsTarget = (ViewSwitcher) rootView.findViewById(R.id.target_speech_switcher);
     }
 
     private View.OnClickListener getLangClickListener(final String langType) {
@@ -191,17 +172,21 @@ public class TrFragment extends Fragment implements TranslateContract.View, Text
 
     @Override
     public void swapLanguage() {
-        Animation rotate = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate);
-        ivSwap.startAnimation(rotate);
+        ViewUtil.animateClick(getContext(), ivSwap, R.anim.rotate);
         setSourceText(tvTarget.getText().toString());
-        setTargetText("");
-        hideMean();
+        hideTargetText();
+        clearMeanLayout();
         mPresenter.swapLanguage();
     }
 
     @Override
     public void setSourceText(String sourceText) {
         etSource.setText(sourceText);
+    }
+
+    @Override
+    public String getSourceText() {
+        return etSource.getText().toString();
     }
 
     @Override
@@ -215,13 +200,18 @@ public class TrFragment extends Fragment implements TranslateContract.View, Text
     }
 
     @Override
+    public String getTargetText() {
+        return tvTarget.getText().toString();
+    }
+
+    @Override
     public void hideSourceSpeechOut() {
-        ivSourceSpeechOut.setVisibility(View.INVISIBLE);
+        vsSource.setVisibility(View.GONE);
     }
 
     @Override
     public void showSourceSpeechOut() {
-        ivSourceSpeechOut.setVisibility(View.VISIBLE);
+        vsSource.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -241,16 +231,18 @@ public class TrFragment extends Fragment implements TranslateContract.View, Text
 
     @Override
     public void speakSourceOut() {
+        vsSource.showNext();
         mPresenter.speakSourceOut(etSource.getText().toString(), tts);
     }
 
     @Override
     public void speakTargetOut() {
+        vsTarget.showNext();
         mPresenter.speakTargetOut(tvTarget.getText().toString(), tts);
     }
 
     @Override
-    public void hideMean() {
+    public void clearMeanLayout() {
         llMeanInner.removeAllViews();
     }
 
@@ -263,28 +255,23 @@ public class TrFragment extends Fragment implements TranslateContract.View, Text
     }
 
     @Override
-    public void hideConnectionError() {
-
+    public void hideOfflineMessage() {
+        llOfflineMessage.setVisibility(View.GONE);
     }
 
     @Override
-    public void showConnectionError() {
-
+    public void showOfflineMessage() {
+        llOfflineMessage.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgress() {
-        progressBar.setVisibility(View.GONE);
+        pbTranslate.setVisibility(View.GONE);
     }
 
     @Override
     public void showProgress() {
-        progressBar.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void toastError() {
-        Toast.makeText(getContext(), getString(R.string.translate_error), Toast.LENGTH_SHORT).show();
+        pbTranslate.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -294,6 +281,11 @@ public class TrFragment extends Fragment implements TranslateContract.View, Text
         } else {
             ivFavourite.setImageResource(R.drawable.ic_inactive_favourite);
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mPresenter.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -309,9 +301,85 @@ public class TrFragment extends Fragment implements TranslateContract.View, Text
         }
     }
 
+    private void startVoiceRecognitionActivity() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, mPresenter.getSourceLangCode());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.recognition));
+        startActivityForResult(intent, Const.RECOGNITION_REQUEST_CODE);
+    }
+
+    private UtteranceProgressListener getUtteranceListener() {
+        return new UtteranceProgressListener() {
+            @Override
+            public void onStart(String utteranceId) {
+            }
+
+            @Override
+            public void onDone(String utteranceId) {
+                swapView(utteranceId);
+            }
+
+            @Override
+            public void onError(String utteranceId) {
+                swapView(utteranceId);
+            }
+
+            private void swapView(String utteranceId) {
+                getActivity().runOnUiThread(() -> {
+                    switch (utteranceId) {
+                        case Const.SOURCE_SPEECH:
+                            vsSource.showPrevious();
+                            break;
+                        case Const.TARGET_SPEECH:
+                            vsTarget.showPrevious();
+                            break;
+                    }
+                });
+            }
+        };
+    }
+
+    private TextWatcher getSourceTextWatcher() {
+        return new TextWatcher() {
+            CountDownTimer timer = null;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String text = Util.trimAll(s.toString());
+                if (text.isEmpty()) {
+                    hideSourceSpeechOut();
+                    hideTargetText();
+                } else {
+                    showSourceSpeechOut();
+                    if (timer != null) {
+                        timer.cancel();
+                    }
+                    timer = new CountDownTimer(600, 1) {
+                        public void onTick(long millisUntilFinished) {
+                        }
+
+                        public void onFinish() {
+                            mPresenter.loadTranslate(text);
+                        }
+                    }.start();
+                }
+            }
+        };
+    }
+
     private void clearAll() {
         setSourceText("");
-        hideMean();
+        clearMeanLayout();
         hideTargetText();
         hideButtons();
         hideProgress();

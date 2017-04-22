@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.util;
+package com.sergon146.mobilization17.view;
 
 import android.content.Context;
 import android.graphics.Typeface;

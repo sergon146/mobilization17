@@ -1,6 +1,7 @@
 package com.sergon146.mobilization17.translate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.speech.tts.TextToSpeech;
 
 import com.sergon146.mobilization17.BasePresenter;
@@ -20,9 +21,13 @@ public interface TranslateContract {
 
         void setSourceText(String sourceText);
 
+        String getSourceText();
+
         void hideTargetText();
 
         void showTargetText();
+
+        String getTargetText();
 
         void hideSourceSpeechOut();
 
@@ -38,19 +43,17 @@ public interface TranslateContract {
 
         void speakTargetOut();
 
-        void hideMean();
+        void clearMeanLayout();
 
         void setMean(List<android.view.View> layoutList);
 
-        void hideConnectionError();
+        void hideOfflineMessage();
 
-        void showConnectionError();
+        void showOfflineMessage();
 
         void hideProgress();
 
         void showProgress();
-
-        void toastError();
 
         void changeFavourite(boolean isFavourite);
     }
@@ -60,7 +63,7 @@ public interface TranslateContract {
 
         void setFavourite();
 
-        void onActivityResult();
+        void onActivityResult(int requestCode, int resultCode, Intent data);
 
         void swapLanguage();
 
@@ -71,5 +74,7 @@ public interface TranslateContract {
         void speakSourceOut(String s, TextToSpeech tts);
 
         void speakTargetOut(String s, TextToSpeech tts);
+
+        String getSourceLangCode();
     }
 }

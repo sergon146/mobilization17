@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
-import com.sergon146.mobilization17.BasePresenter;
 import com.sergon146.mobilization17.R;
 import com.sergon146.mobilization17.history.favourite.FavFragment;
 import com.sergon146.mobilization17.history.favourite.FavPresenter;
@@ -16,9 +15,9 @@ import com.sergon146.mobilization17.util.Util;
 
 public class TranslateActivity extends AppCompatActivity {
     private BottomNavigationView navigation;
-    private BasePresenter presenter;
     private int currentItem = R.id.navigation_translate;
-    // TODO: 13.04.2017 Broadcast
+
+    //коментарии в коде идут вразрез концепции чистого кода описанного Мартином :)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +55,7 @@ public class TranslateActivity extends AppCompatActivity {
                 } else {
                     trFragment = (TrFragment) fragment;
                 }
-                presenter = new TrPresenter(Util.provideTasksRepository(getApplicationContext()), trFragment);
+               new TrPresenter(Util.provideTasksRepository(getApplicationContext()), trFragment);
                 setCurrentFragment(trFragment);
                 break;
             case R.id.navigation_history:
@@ -66,7 +65,7 @@ public class TranslateActivity extends AppCompatActivity {
 //                } else {
 //                    favFragment = (FavFragment) fragment;
 //                }
-//                presenter = new FavPresenter(Util.provideTasksRepository(getApplicationContext()), favFragment);
+//                new FavPresenter(Util.provideTasksRepository(getApplicationContext()), favFragment);
 //                setCurrentFragment(favFragment);
                 break;
             case R.id.navigation_favourite:
@@ -76,7 +75,7 @@ public class TranslateActivity extends AppCompatActivity {
                 } else {
                     favFragment = (FavFragment) fragment;
                 }
-                presenter = new FavPresenter(Util.provideTasksRepository(getApplicationContext()), favFragment);
+                new FavPresenter(Util.provideTasksRepository(getApplicationContext()), favFragment);
                 setCurrentFragment(favFragment);
                 break;
         }

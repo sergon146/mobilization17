@@ -1,6 +1,8 @@
 package com.sergon146.mobilization17.translate;
 
+import android.content.Intent;
 import android.os.Build;
+import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
@@ -9,9 +11,12 @@ import android.widget.TextView;
 import com.sergon146.mobilization17.data.source.TranslateRepository;
 import com.sergon146.mobilization17.pojo.Translate;
 import com.sergon146.mobilization17.pojo.translate.mapper.WordMapper;
-import com.sergon146.mobilization17.util.MeanLayout;
+import com.sergon146.mobilization17.util.Const;
+import com.sergon146.mobilization17.util.NetworkUtil;
 import com.sergon146.mobilization17.util.Util;
+import com.sergon146.mobilization17.view.MeanLayout;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import rx.Subscriber;
@@ -19,6 +24,8 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+
+import static android.app.Activity.RESULT_OK;
 
 public class TrPresenter implements TranslateContract.Presenter {
     private TranslateRepository mRepository;
@@ -49,12 +56,25 @@ public class TrPresenter implements TranslateContract.Presenter {
 
     @Override
     public void loadTranslate(String text) {
-        mView.hideMean();
-        mView.hideButtons();
-        mView.showProgress();
-        mView.hideTargetText();
+        if (NetworkUtil.getConnectivityStatus(mView.getContext()) ==
+                NetworkUtil.TYPE_NOT_CONNECTED) {
+            mView.showOfflineMessage();
+            return;
+        }
 
         translate.setSourceText(Util.trimAll(text));
+
+        if (translate.getSourceText().isEmpty()) {
+            mView.hideSourceSpeechOut();
+            return;
+        }
+
+        mView.showProgress();
+        mView.hideTargetText();
+        mView.clearMeanLayout();
+        mView.hideButtons();
+        mView.hideOfflineMessage();
+
         translate.setTargetText("");
         translate.setWordJson("");
         translate.setFavourite(false);
@@ -71,7 +91,7 @@ public class TrPresenter implements TranslateContract.Presenter {
                         mView.showTargetText();
                         mView.changeFavourite(tr.isFavourite());
                         if (!tr.getTargetText().isEmpty()) {
-                            if (Util.isWord(text)) {
+                            if (Util.isWord(translate.getSourceText())) {
                                 if (tr.getWordJson().isEmpty()) {
                                     loadWord(tr);
                                 } else {
@@ -94,7 +114,6 @@ public class TrPresenter implements TranslateContract.Presenter {
                     public void onError(Throwable e) {
                         mView.hideProgress();
                         mView.showButtons();
-                        mView.toastError();
                         Log.w("Translate", "Error while translated sentence: " + text + " " + e.toString());
                     }
                 });
@@ -143,8 +162,36 @@ public class TrPresenter implements TranslateContract.Presenter {
     }
 
     @Override
-    public void onActivityResult() {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null) {
+            return;
+        }
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case Const.REQUEST_CODE_SOURCE:
+                    translate.setSourceLangCode((String) data.getExtras().get(Const.CODE));
+                    mRepository.setSourceLang(translate.getSourceLangCode());
+                    mView.setSourceLang((String) data.getExtras().get(Const.LANGUAGE));
 
+                    loadTranslate(mView.getSourceText());
+                    break;
+                case Const.REQUEST_CODE_TARGET:
+                    translate.setTargetLangCode((String) data.getExtras().get(Const.CODE));
+                    mRepository.setTargetLang(translate.getTargetLangCode());
+                    mView.setTargetLang((String) data.getExtras().get(Const.LANGUAGE));
+
+                    loadTranslate(mView.getSourceText());
+                    break;
+                case Const.RECOGNITION_REQUEST_CODE:
+                    ArrayList<String> matches = data.getStringArrayListExtra(
+                            RecognizerIntent.EXTRA_RESULTS);
+                    if (!matches.get(0).isEmpty()) {
+                        mView.setSourceText(matches.get(0));
+                        loadTranslate(mView.getSourceText());
+                    }
+                    break;
+            }
+        }
     }
 
     @Override
@@ -163,7 +210,6 @@ public class TrPresenter implements TranslateContract.Presenter {
     @Override
     public void setSourceLang() {
         mView.setSourceLang(mRepository.getSourceName());
-
     }
 
     @Override
@@ -176,7 +222,7 @@ public class TrPresenter implements TranslateContract.Presenter {
         tts.setLanguage(new Locale(translate.getSourceLangCode()));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            tts.speak(s, TextToSpeech.QUEUE_FLUSH, null, null);
+            tts.speak(s, TextToSpeech.QUEUE_FLUSH, null, Const.SOURCE_SPEECH);
         } else {
             tts.speak(s, TextToSpeech.QUEUE_FLUSH, null);
         }
@@ -187,22 +233,24 @@ public class TrPresenter implements TranslateContract.Presenter {
         tts.setLanguage(new Locale(translate.getTargetLangCode()));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            tts.speak(s, TextToSpeech.QUEUE_FLUSH, null, null);
+            tts.speak(s, TextToSpeech.QUEUE_FLUSH, null, Const.TARGET_SPEECH);
         } else {
             tts.speak(s, TextToSpeech.QUEUE_FLUSH, null);
         }
     }
 
+    @Override
+    public String getSourceLangCode() {
+        return translate.getSourceLangCode();
+    }
+
     private void setMeans(WordMapper word) {
-        View.OnClickListener flowListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        View.OnClickListener flowListener = v -> {
             TextView view = (TextView) v;
             mView.setSourceText(view.getText().toString());
             swapLanguage();
-        }};
+        };
         MeanLayout layout = new MeanLayout(mView.getContext(), flowListener);
         mView.setMean(layout.getMeanViews(word));
     }
-
 }

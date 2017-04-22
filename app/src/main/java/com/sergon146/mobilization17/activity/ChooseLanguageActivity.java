@@ -43,7 +43,8 @@ public class ChooseLanguageActivity extends AppCompatActivity {
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getApplicationContext(), (view, position) -> {
                     Intent intent = new Intent();
-                    intent.putExtra(Const.LANGUAGE, languages.get(position).getCode());
+                    intent.putExtra(Const.LANGUAGE, languages.get(position).getName());
+                    intent.putExtra(Const.CODE, languages.get(position).getCode());
                     setResult(RESULT_OK, intent);
                     finish();
                 })
