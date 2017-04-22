@@ -30,7 +30,7 @@ public interface HistoryContract {
     interface Presenter extends BasePresenter {
         void loadData();
 
-        void clearFavourite();
+        void clearFavourites();
 
         void setFavourite(Translate translate);
 

@@ -1,11 +1,18 @@
 package com.sergon146.mobilization17.data.source;
 
+import android.util.Log;
+
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.pojo.Translate;
+import com.sergon146.mobilization17.util.Const;
 
 import java.util.List;
+import java.util.Locale;
 
 import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class TranslateRepository implements TranslationDataSource {
     private static TranslateRepository instance = null;
@@ -31,7 +38,25 @@ public class TranslateRepository implements TranslationDataSource {
 
     @Override
     public Observable<List<Language>> loadLangs(String localeCode) {
-        return remoteSource.loadLangs(localeCode);
+        Observable<List<Language>> listObservable = remoteSource.loadLangs(localeCode);
+        listObservable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<Language>>() {
+                    @Override
+                    public void onNext(List<Language> languageList) {
+                        saveLanguages(Locale.getDefault().getLanguage(), languageList);
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.w(Const.LOG_TAG, "Error " + e);
+                    }
+                });
+        return listObservable;
     }
 
     @Override

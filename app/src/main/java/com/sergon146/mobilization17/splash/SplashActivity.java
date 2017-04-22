@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.sergon146.mobilization17.R;
 import com.sergon146.mobilization17.translate.TranslateActivity;
+import com.sergon146.mobilization17.util.NetworkUtil;
 import com.sergon146.mobilization17.util.Util;
 
 public class SplashActivity extends AppCompatActivity implements SplashContract.View {
@@ -17,7 +18,13 @@ public class SplashActivity extends AppCompatActivity implements SplashContract.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         getSupportActionBar().hide();
-        new SplashPresenter(this, Util.provideTasksRepository(getApplicationContext()));
+
+        if (NetworkUtil.getConnectivityStatus(getApplicationContext()) == NetworkUtil.TYPE_NOT_CONNECTED) {
+            showErrorLoadToast();
+            finishSplash();
+        } else {
+            new SplashPresenter(this, Util.provideTasksRepository(getApplicationContext()));
+        }
     }
 
     @Override

@@ -72,7 +72,9 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_translate, container, false);
+
         tts = new TextToSpeech(getContext(), this);
+
         tts.setOnUtteranceProgressListener(getUtteranceListener());
         initViews(rootView);
         return rootView;
@@ -88,19 +90,18 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     public void onPause() {
         super.onPause();
         mPresenter.unsubscribe();
+        tts.shutdown();
     }
 
     private void initViews(View rootView) {
         tvSourceLang = (TextView) rootView.findViewById(R.id.source_lang_view);
         tvSourceLang.setOnClickListener(getLangClickListener(Const.SOURCE));
-        mPresenter.setSourceLang();
 
         ivSwap = (ImageView) rootView.findViewById(R.id.swap);
         ivSwap.setOnClickListener(v -> swapLanguage());
 
         tvTargetLang = (TextView) rootView.findViewById(R.id.target_lang_view);
         tvTargetLang.setOnClickListener(getLangClickListener(Const.TARGET));
-        mPresenter.setTargetLang();
 
         etSource = (EditText) rootView.findViewById(R.id.source_edit_text);
         etSource.addTextChangedListener(getSourceTextWatcher());
@@ -306,7 +307,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, mPresenter.getSourceLangCode());
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.recognition));
-        startActivityForResult(intent, Const.RECOGNITION_REQUEST_CODE);
+        startActivityForResult(intent, Const.REQUEST_CODE_RECOGNITION);
     }
 
     private UtteranceProgressListener getUtteranceListener() {

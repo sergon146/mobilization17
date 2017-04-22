@@ -15,6 +15,7 @@ import com.sergon146.mobilization17.util.Util;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DbBackend implements DbContract {
@@ -177,8 +178,11 @@ public class DbBackend implements DbContract {
         Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
 
         cursor.moveToFirst();
-
-        return cursor.getString(0);
+        try {
+            return cursor.getString(0);
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     public String getTargetName(String localeCode) {
@@ -192,7 +196,11 @@ public class DbBackend implements DbContract {
 
         cursor.moveToFirst();
 
-        return cursor.getString(0);
+        try {
+            return cursor.getString(0);
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     public void setSourceLang(String sourceCode) {
@@ -258,7 +266,11 @@ public class DbBackend implements DbContract {
 
         cursor.moveToFirst();
 
-        return cursor.getInt(0);
+        try {
+            return cursor.getInt(0);
+        } catch (Exception e) {
+            return -1;
+        }
     }
 
     private int getTargetLangId() {
@@ -272,7 +284,11 @@ public class DbBackend implements DbContract {
 
         cursor.moveToFirst();
 
-        return cursor.getInt(0);
+        try {
+            return cursor.getInt(0);
+        } catch (Exception e) {
+            return -1;
+        }
     }
 
     public String getSourceCode() {
@@ -284,8 +300,12 @@ public class DbBackend implements DbContract {
         String[] whereArgs = new String[]{String.valueOf(1)};
         Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
         cursor.moveToFirst();
-
-        return cursor.getString(0);
+        
+        try {
+            return cursor.getString(0);
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     public String getTargetCode() {
@@ -298,7 +318,11 @@ public class DbBackend implements DbContract {
         Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
         cursor.moveToFirst();
 
-        return cursor.getString(0);
+        try {
+            return cursor.getString(0);
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     public void saveTranslate(Translate translate) {
@@ -427,8 +451,12 @@ public class DbBackend implements DbContract {
             translate.setWordJson(cursor.getString(5));
             translateList.add(translate);
         }
-
-        return translateList;
+        
+        try {
+            return translateList;
+        } catch (Exception e) {
+            return Collections.emptyList();
+        }
     }
 
     public void updateTranslateFavourite(Translate translate) {
@@ -490,7 +518,11 @@ public class DbBackend implements DbContract {
             translateList.add(translate);
         }
 
-        return translateList;
+        try {
+            return translateList;
+        } catch (Exception e) {
+            return Collections.emptyList();
+        }
     }
 
     public void clearFavourites() {

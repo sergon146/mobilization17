@@ -1,19 +1,34 @@
 package com.sergon146.mobilization17.translate;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.res.Configuration;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
+import com.sergon146.mobilization17.BasePresenter;
 import com.sergon146.mobilization17.R;
 import com.sergon146.mobilization17.history.favourite.FavouriteFragment;
 import com.sergon146.mobilization17.history.favourite.FavouritePresenter;
 import com.sergon146.mobilization17.util.Util;
 
 public class TranslateActivity extends AppCompatActivity {
+    private BasePresenter mPresenter;
     private BottomNavigationView navigation;
     private int currentItem = R.id.navigation_translate;
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            mPresenter.onReceive(context, intent);
+        }
+    };
 
     //коментарии в коде идут вразрез концепции чистого кода описанного Р. Мартином :)
 
@@ -21,16 +36,26 @@ public class TranslateActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_translate);
-
-        setCurrentFragmentByItemId(currentItem);
         initNavBar();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        registerReceiver();
         currentItem = navigation.getSelectedItemId();
         setCurrentFragmentByItemId(currentItem);
+    }
+
+    private void registerReceiver() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(receiver, filter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
     }
 
     private void initNavBar() {
@@ -53,7 +78,7 @@ public class TranslateActivity extends AppCompatActivity {
                 } else {
                     translateFragment = (TranslateFragment) fragment;
                 }
-               new TranslatePresenter(Util.provideTasksRepository(getApplicationContext()), translateFragment);
+                mPresenter = new TranslatePresenter(Util.provideTasksRepository(getApplicationContext()), translateFragment);
                 setCurrentFragment(translateFragment);
                 break;
             case R.id.navigation_history:
@@ -73,7 +98,7 @@ public class TranslateActivity extends AppCompatActivity {
                 } else {
                     favouriteFragment = (FavouriteFragment) fragment;
                 }
-                new FavouritePresenter(Util.provideTasksRepository(getApplicationContext()), favouriteFragment);
+                mPresenter = new FavouritePresenter(Util.provideTasksRepository(getApplicationContext()), favouriteFragment);
                 setCurrentFragment(favouriteFragment);
                 break;
         }
@@ -94,5 +119,11 @@ public class TranslateActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_container, fragment);
         transaction.commit();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mPresenter.loadLanguagesIfNecessary(newConfig.locale.getLanguage());
     }
 }

@@ -1,6 +1,7 @@
 package com.sergon146.mobilization17.history.favourite;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -42,6 +43,18 @@ public class FavouritePresenter implements HistoryContract.Presenter {
     }
 
     @Override
+    public void onReceive(Context context, Intent intent) {
+        //do nothing
+    }
+
+    @Override
+    public void loadLanguagesIfNecessary(String localeCode) {
+        if (mRepository.isEmptyLangList(localeCode)) {
+            mRepository.loadLangs(localeCode);
+        }
+    }
+
+    @Override
     public void loadData() {
         Subscription subscription = mRepository.loadFavourites()
                 .subscribeOn(Schedulers.io())
@@ -73,7 +86,7 @@ public class FavouritePresenter implements HistoryContract.Presenter {
     }
 
     @Override
-    public void clearFavourite() {
+    public void clearFavourites() {
         mRepository.clearFavourites();
     }
 
@@ -125,7 +138,7 @@ public class FavouritePresenter implements HistoryContract.Presenter {
                             mView.hideData();
                             mView.hideSearchView();
                             mView.showEmpty();
-                            mRepository.clearFavourites();
+                            clearFavourites();
                         })
                 .create()
                 .show();

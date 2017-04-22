@@ -1,5 +1,6 @@
 package com.sergon146.mobilization17.translate;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.speech.RecognizerIntent;
@@ -46,12 +47,52 @@ public class TranslatePresenter implements TranslateContract.Presenter {
 
     @Override
     public void subscribe() {
-        loadTranslate(mView.getSourceText());
+       initialProcess(mView.getContext());
     }
 
     @Override
     public void unsubscribe() {
         mSubscriptions.clear();
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        initialProcess(context);
+    }
+
+    private void initialProcess(Context context) {
+        if (NetworkUtil.getConnectivityStatus(context) ==
+                NetworkUtil.TYPE_NOT_CONNECTED) {
+            mView.showOfflineMessage();
+            mView.hideButtons();
+            mView.hideTargetText();
+        } else {
+            loadLanguagesIfNecessary(Locale.getDefault().getLanguage());
+            mView.hideOfflineMessage();
+            loadTranslate();
+        }
+    }
+
+    @Override
+    public void loadLanguagesIfNecessary(String localeCode) {
+        if (mRepository.isEmptyLangList(localeCode)) {
+            mView.showProgress();
+            mRepository.loadLangs(localeCode)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(t -> {
+                        setSourceLang();
+                        setTargetLang();
+                        mView.hideProgress();
+                    });
+        } else {
+            setSourceLang();
+            setTargetLang();
+        }
+    }
+
+    private void loadTranslate() {
+        loadTranslate(mView.getSourceText());
     }
 
     @Override
@@ -171,21 +212,21 @@ public class TranslatePresenter implements TranslateContract.Presenter {
                     mRepository.setSourceLang(translate.getSourceLangCode());
                     mView.setSourceLang((String) data.getExtras().get(Const.LANGUAGE));
 
-                    loadTranslate(mView.getSourceText());
+                    loadTranslate();
                     break;
                 case Const.REQUEST_CODE_TARGET:
                     translate.setTargetLangCode((String) data.getExtras().get(Const.CODE));
                     mRepository.setTargetLang(translate.getTargetLangCode());
                     mView.setTargetLang((String) data.getExtras().get(Const.LANGUAGE));
 
-                    loadTranslate(mView.getSourceText());
+                    loadTranslate();
                     break;
-                case Const.RECOGNITION_REQUEST_CODE:
+                case Const.REQUEST_CODE_RECOGNITION:
                     ArrayList<String> matches = data.getStringArrayListExtra(
                             RecognizerIntent.EXTRA_RESULTS);
                     if (!matches.get(0).isEmpty()) {
                         mView.setSourceText(matches.get(0));
-                        loadTranslate(mView.getSourceText());
+                        loadTranslate();
                     }
                     break;
             }
@@ -201,8 +242,8 @@ public class TranslatePresenter implements TranslateContract.Presenter {
         mRepository.setSourceLang(translate.getSourceLangCode());
         mRepository.setTargetLang(translate.getTargetLangCode());
 
-        mView.setSourceLang(mRepository.getSourceName());
-        mView.setTargetLang(mRepository.getTargetName());
+        setSourceLang();
+        setTargetLang();
     }
 
     @Override

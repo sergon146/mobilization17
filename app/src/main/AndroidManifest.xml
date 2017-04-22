@@ -27,8 +27,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ChooseLanguageActivity"
+        <activity
+            android:name=".activity.ChooseLanguageActivity"
             android:theme="@style/ChooseTheme" />
+
     </application>
 
 </manifest>

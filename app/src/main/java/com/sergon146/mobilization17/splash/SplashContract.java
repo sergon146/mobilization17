@@ -11,6 +11,5 @@ public interface SplashContract {
     }
 
     interface Presenter extends BasePresenter {
-        void loadLanguagesIfNecessary();
     }
 }

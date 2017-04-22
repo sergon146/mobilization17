@@ -1,9 +1,10 @@
 package com.sergon146.mobilization17.splash;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.sergon146.mobilization17.data.source.TranslateRepository;
-import com.sergon146.mobilization17.data.source.local.DbBackend;
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.util.Const;
 
@@ -30,7 +31,7 @@ public class SplashPresenter implements SplashContract.Presenter {
 
     @Override
     public void subscribe() {
-        loadLanguagesIfNecessary();
+        loadLanguagesIfNecessary(Locale.getDefault().getLanguage());
     }
 
     @Override
@@ -39,15 +40,18 @@ public class SplashPresenter implements SplashContract.Presenter {
     }
 
     @Override
-    public void loadLanguagesIfNecessary() {
-        if (mRepository.isEmptyLangList(Locale.getDefault().getLanguage())) {
-            Subscription subscription = mRepository.loadLangs(Locale.getDefault().getLanguage())
+    public void onReceive(Context context, Intent intent) {
+    }
+
+    @Override
+    public void loadLanguagesIfNecessary(String localeCode) {
+        if (mRepository.isEmptyLangList(localeCode)) {
+            Subscription subscription = mRepository.loadLangs(localeCode)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<List<Language>>() {
                         @Override
                         public void onNext(List<Language> languages) {
-                            mRepository.saveLanguages(Locale.getDefault().getLanguage(), languages);
                         }
 
                         @Override
@@ -66,13 +70,6 @@ public class SplashPresenter implements SplashContract.Presenter {
             mSubscriptions.add(subscription);
         } else {
             mView.finishSplash();
-        }
-    }
-
-    public void setLanguage(List<Language> languages) {
-        if (languages != null) {
-            DbBackend backend = new DbBackend(null);
-            backend.insertLanguages(Locale.getDefault().getLanguage(), languages);
         }
 
     }
