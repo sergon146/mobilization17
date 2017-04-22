@@ -47,7 +47,7 @@ public class TranslatePresenter implements TranslateContract.Presenter {
 
     @Override
     public void subscribe() {
-       initialProcess(mView.getContext());
+        initialProcess(mView.getContext());
     }
 
     @Override
@@ -66,6 +66,8 @@ public class TranslatePresenter implements TranslateContract.Presenter {
             mView.showOfflineMessage();
             mView.hideButtons();
             mView.hideTargetText();
+            setSourceLang();
+            setTargetLang();
         } else {
             loadLanguagesIfNecessary(Locale.getDefault().getLanguage());
             mView.hideOfflineMessage();
@@ -248,12 +250,18 @@ public class TranslatePresenter implements TranslateContract.Presenter {
 
     @Override
     public void setSourceLang() {
-        mView.setSourceLang(mRepository.getSourceName());
+        String sourceName = mRepository.getSourceName();
+        if (!sourceName.isEmpty()) {
+            mView.setSourceLang(mRepository.getSourceName());
+        }
     }
 
     @Override
     public void setTargetLang() {
-        mView.setTargetLang(mRepository.getTargetName());
+        String targetName = mRepository.getTargetName();
+        if (!targetName.isEmpty()) {
+            mView.setTargetLang(targetName);
+        }
     }
 
     @Override

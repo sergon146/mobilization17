@@ -98,8 +98,18 @@ public class TranslateRepository implements TranslationDataSource {
     }
 
     @Override
+    public Observable<List<Translate>> loadHistory() {
+        return localSource.loadHistory();
+    }
+
+    @Override
     public Observable<List<Translate>> searchInHistory(String searchText) {
         return localSource.searchInHistory(searchText);
+    }
+
+    @Override
+    public void clearHistory() {
+        localSource.clearHistory();
     }
 
     @Override

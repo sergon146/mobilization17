@@ -27,6 +27,7 @@
     <string name="no">No</string>
 
     <string name="history_dialog_title">Are you sure you want to clear your history?</string>
+    <string name="favourite_dialog_title">Are you sure you want to clear all favourites ?</string>
     <string name="del_history">History cleared</string>
 
     <string name="nothing_show">Nothing to show</string>

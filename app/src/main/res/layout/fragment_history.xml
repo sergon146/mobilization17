@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -29,6 +30,7 @@
                 android:id="@+id/trash"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="visible"
                 app:srcCompat="@drawable/ic_trash" />
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
@@ -42,10 +44,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="visible">
 
             <ImageView
-                android:id="@+id/imageView2"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 app:srcCompat="@drawable/ic_search" />
@@ -58,38 +60,69 @@
                 android:layout_margin="10dp"
                 android:layout_weight="2"
                 android:background="@color/transparent"
+                android:ems="10"
                 android:hint="@string/history_search"
                 android:inputType="text"
-                android:selectAllOnFocus="false"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:selectAllOnFocus="false" />
 
             <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/ivClearSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 app:srcCompat="@drawable/ic_close" />
 
         </LinearLayout>
 
-        <View
+        <TextView
             android:id="@+id/line"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/grayBackground" />
+            android:background="@color/colorPrimary" />
+
+        <LinearLayout
+            android:id="@+id/emptyData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:scaleX="2"
+                android:scaleY="1.8"
+                app:srcCompat="@drawable/ic_inactive_favourite" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="@string/nothing_show"
+                android:textAlignment="center"
+                android:textSize="20sp" />
+
+        </LinearLayout>
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/history_rv"
+                    android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="wrap_content"
+                    android:visibility="visible" />
+
             </LinearLayout>
         </ScrollView>
 

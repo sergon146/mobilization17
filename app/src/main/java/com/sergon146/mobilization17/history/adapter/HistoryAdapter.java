@@ -8,16 +8,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sergon146.mobilization17.R;
-import com.sergon146.mobilization17.history.favourite.FavouriteFragment;
+import com.sergon146.mobilization17.history.HistoryContract;
 import com.sergon146.mobilization17.pojo.Translate;
 
 import java.util.List;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.TranslateViewHolder> {
     private List<Translate> translates;
-    private FavouriteFragment.TranslateItemListener itemListener;
+    private HistoryContract.TranslateItemListener itemListener;
 
-    public HistoryAdapter(List<Translate> translates, FavouriteFragment.TranslateItemListener itemListener) {
+    public HistoryAdapter(List<Translate> translates, HistoryContract.TranslateItemListener itemListener) {
         this.translates = translates;
         this.itemListener = itemListener;
     }

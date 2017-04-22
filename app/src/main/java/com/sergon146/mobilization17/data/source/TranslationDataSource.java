@@ -22,13 +22,17 @@ public interface TranslationDataSource {
 
     void saveTranslate(Translate translate);
 
+    Observable<List<Translate>> loadHistory();
+
     Observable<List<Translate>> searchInHistory(String searchText);
+
+    void clearHistory();
+
+    void setFavourites(Translate translate);
 
     Observable<List<Translate>> loadFavourites();
 
     void clearFavourites();
-
-    void setFavourites(Translate translate);
 
     Observable<List<Translate>> searchInFavourite(String searchText);
 

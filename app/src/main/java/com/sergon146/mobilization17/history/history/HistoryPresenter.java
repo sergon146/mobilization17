@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.history.favourite;
+package com.sergon146.mobilization17.history.history;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,12 +21,12 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class FavouritePresenter implements HistoryContract.Presenter {
+public class HistoryPresenter implements HistoryContract.Presenter {
     private TranslateRepository mRepository;
     private HistoryContract.View mView;
     private CompositeSubscription mSubscription;
 
-    public FavouritePresenter(TranslateRepository repository, HistoryContract.View view) {
+    public HistoryPresenter(TranslateRepository repository, HistoryContract.View view) {
         mRepository = repository;
         mView = view;
         mView.setPresenter(this);
@@ -56,7 +56,7 @@ public class FavouritePresenter implements HistoryContract.Presenter {
 
     @Override
     public void loadData() {
-        Subscription subscription = mRepository.loadFavourites()
+        Subscription subscription = mRepository.loadHistory()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Translate>>() {
@@ -87,7 +87,7 @@ public class FavouritePresenter implements HistoryContract.Presenter {
 
     @Override
     public void clearData() {
-        mRepository.clearFavourites();
+        mRepository.clearHistory();
     }
 
     @Override
@@ -144,3 +144,4 @@ public class FavouritePresenter implements HistoryContract.Presenter {
                 .show();
     }
 }
+

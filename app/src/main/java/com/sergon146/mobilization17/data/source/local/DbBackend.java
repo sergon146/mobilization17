@@ -434,7 +434,7 @@ public class DbBackend implements DbContract {
                 TranslateTbl.COLUMN_WORD_JSON};
 
         String where = TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? OR " +
-                TranslateTbl.COLUMN_TARGET_TEXT + " LIKE ?)";
+                TranslateTbl.COLUMN_TARGET_TEXT + " LIKE ?";
 
         String[] whereArgs = new String[]{searchText, searchText};
         String orderBy = ID + " DESC";

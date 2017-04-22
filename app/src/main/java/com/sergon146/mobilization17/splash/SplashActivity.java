@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.sergon146.mobilization17.R;
-import com.sergon146.mobilization17.translate.TranslateActivity;
+import com.sergon146.mobilization17.activity.TranslateActivity;
 import com.sergon146.mobilization17.util.NetworkUtil;
 import com.sergon146.mobilization17.util.Util;
 

@@ -30,12 +30,19 @@ public interface HistoryContract {
     interface Presenter extends BasePresenter {
         void loadData();
 
-        void clearFavourites();
+        void clearData();
 
         void setFavourite(Translate translate);
 
-        void searchInFavourite(String searchText);
+        void search(String searchText);
 
         void showDialog(Context context, android.view.View v);
+    }
+
+
+    interface TranslateItemListener {
+        void onFavouriteClick(Translate translate);
+
+        void onTextClick(Translate translate);
     }
 }

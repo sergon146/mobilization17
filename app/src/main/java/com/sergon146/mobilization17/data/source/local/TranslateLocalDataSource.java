@@ -64,6 +64,11 @@ public class TranslateLocalDataSource implements TranslationDataSource {
     }
 
     @Override
+    public Observable<List<Translate>> loadHistory() {
+        return Observable.just(backend.getHistory());
+    }
+
+    @Override
     public Observable<Translate> loadTranslateSentence(Translate translate) {
         return Observable.just(backend.getTranslateSentence(translate));
     }
@@ -71,6 +76,11 @@ public class TranslateLocalDataSource implements TranslationDataSource {
     @Override
     public Observable<List<Translate>> searchInHistory(String searchText) {
         return Observable.just(backend.searchInHistory(searchText));
+    }
+
+    @Override
+    public void clearHistory() {
+        backend.clearHistory();
     }
 
     @Override

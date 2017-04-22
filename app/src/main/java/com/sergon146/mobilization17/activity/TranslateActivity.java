@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.translate;
+package com.sergon146.mobilization17.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,12 +16,17 @@ import com.sergon146.mobilization17.BasePresenter;
 import com.sergon146.mobilization17.R;
 import com.sergon146.mobilization17.history.favourite.FavouriteFragment;
 import com.sergon146.mobilization17.history.favourite.FavouritePresenter;
+import com.sergon146.mobilization17.history.history.HistoryFragment;
+import com.sergon146.mobilization17.history.history.HistoryPresenter;
+import com.sergon146.mobilization17.translate.TranslateFragment;
+import com.sergon146.mobilization17.translate.TranslatePresenter;
 import com.sergon146.mobilization17.util.Util;
 
 public class TranslateActivity extends AppCompatActivity {
     private BasePresenter mPresenter;
     private BottomNavigationView navigation;
-    private int currentItem = R.id.navigation_translate;
+    private int prevItem = 0;
+    private int currentItem = 0;
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -43,8 +48,7 @@ public class TranslateActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         registerReceiver();
-        currentItem = navigation.getSelectedItemId();
-        setCurrentFragmentByItemId(currentItem);
+        setCurrentFragmentByItemId(navigation.getSelectedItemId());
     }
 
     private void registerReceiver() {
@@ -79,17 +83,19 @@ public class TranslateActivity extends AppCompatActivity {
                     translateFragment = (TranslateFragment) fragment;
                 }
                 mPresenter = new TranslatePresenter(Util.provideTasksRepository(getApplicationContext()), translateFragment);
+                currentItem = 0;
                 setCurrentFragment(translateFragment);
                 break;
             case R.id.navigation_history:
-//                FavouriteFragment favouriteFragment;
-//                if (fragment == null || !(fragment instanceof FavouriteFragment)) {
-//                    favouriteFragment = FavouriteFragment.newInstance();
-//                } else {
-//                    favouriteFragment = (FavouriteFragment) fragment;
-//                }
-//                new FavouritePresenter(Util.provideTasksRepository(getApplicationContext()), favouriteFragment);
-//                setCurrentFragment(favouriteFragment);
+                HistoryFragment historyFragment;
+                if (fragment == null || !(fragment instanceof HistoryFragment)) {
+                    historyFragment = HistoryFragment.newInstance();
+                } else {
+                    historyFragment = (HistoryFragment) fragment;
+                }
+                mPresenter = new HistoryPresenter(Util.provideTasksRepository(getApplicationContext()), historyFragment);
+                currentItem = 1;
+                setCurrentFragment(historyFragment);
                 break;
             case R.id.navigation_favourite:
                 FavouriteFragment favouriteFragment;
@@ -99,10 +105,10 @@ public class TranslateActivity extends AppCompatActivity {
                     favouriteFragment = (FavouriteFragment) fragment;
                 }
                 mPresenter = new FavouritePresenter(Util.provideTasksRepository(getApplicationContext()), favouriteFragment);
+                currentItem = 2;
                 setCurrentFragment(favouriteFragment);
                 break;
         }
-        currentItem = itemId;
     }
 
 
@@ -117,6 +123,13 @@ public class TranslateActivity extends AppCompatActivity {
 
     public void setCurrentFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (currentItem > prevItem) {
+            transaction.setCustomAnimations(R.anim.enter_right, R.anim.exit_left);
+        } else {
+            transaction.setCustomAnimations(R.anim.enter_left, R.anim.exit_right);
+        }
+        prevItem = currentItem;
+
         transaction.replace(R.id.frame_container, fragment);
         transaction.commit();
     }

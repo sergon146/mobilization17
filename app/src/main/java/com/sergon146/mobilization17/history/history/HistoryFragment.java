@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.history.favourite;
+package com.sergon146.mobilization17.history.history;
 
 
 import android.os.Bundle;
@@ -23,7 +23,7 @@ import com.sergon146.mobilization17.pojo.Translate;
 import java.util.Collections;
 import java.util.List;
 
-public class FavouriteFragment extends Fragment implements HistoryContract.View {
+public class HistoryFragment extends Fragment implements HistoryContract.View {
     private HistoryContract.Presenter mPresenter;
     private EditText etSearch;
     private ImageView ivClearSearch;
@@ -32,11 +32,11 @@ public class FavouriteFragment extends Fragment implements HistoryContract.View 
     private RecyclerView mRecyclerView;
     private HistoryAdapter mAdapter;
 
-    public FavouriteFragment() {
+    public HistoryFragment() {
     }
 
-    public static FavouriteFragment newInstance() {
-        return new FavouriteFragment();
+    public static HistoryFragment newInstance() {
+        return new HistoryFragment();
     }
 
 
@@ -65,7 +65,7 @@ public class FavouriteFragment extends Fragment implements HistoryContract.View 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_favourite, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_history, container, false);
         etSearch = (EditText) rootView.findViewById(R.id.editText);
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
