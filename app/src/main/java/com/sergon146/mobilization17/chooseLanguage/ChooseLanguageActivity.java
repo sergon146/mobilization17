@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.language;
+package com.sergon146.mobilization17.chooseLanguage;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,8 +11,8 @@ import android.widget.Toast;
 
 import com.sergon146.mobilization17.R;
 import com.sergon146.mobilization17.data.source.TranslationDataSource;
-import com.sergon146.mobilization17.language.adapter.LanguageAdapter;
-import com.sergon146.mobilization17.language.adapter.RecyclerItemClickListener;
+import com.sergon146.mobilization17.chooseLanguage.adapter.LanguageAdapter;
+import com.sergon146.mobilization17.chooseLanguage.adapter.RecyclerItemClickListener;
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.util.Const;
 import com.sergon146.mobilization17.util.Util;

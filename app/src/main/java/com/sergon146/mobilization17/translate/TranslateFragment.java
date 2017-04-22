@@ -23,7 +23,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.sergon146.mobilization17.R;
-import com.sergon146.mobilization17.language.ChooseLanguageActivity;
+import com.sergon146.mobilization17.chooseLanguage.ChooseLanguageActivity;
 import com.sergon146.mobilization17.util.Const;
 import com.sergon146.mobilization17.util.Util;
 import com.sergon146.mobilization17.util.ViewUtil;
