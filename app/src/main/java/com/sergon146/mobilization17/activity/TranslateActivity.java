@@ -20,6 +20,7 @@ import com.sergon146.mobilization17.history.history.HistoryFragment;
 import com.sergon146.mobilization17.history.history.HistoryPresenter;
 import com.sergon146.mobilization17.translate.TranslateFragment;
 import com.sergon146.mobilization17.translate.TranslatePresenter;
+import com.sergon146.mobilization17.util.Const;
 import com.sergon146.mobilization17.util.Util;
 
 public class TranslateActivity extends AppCompatActivity {
@@ -41,19 +42,28 @@ public class TranslateActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_translate);
-        initNavBar();
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(receiver, filter);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        currentItem = savedInstanceState.getInt(Const.PAGE_ID);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver();
+        initNavBar();
+        navigation.setSelectedItemId(currentItem);
         setCurrentFragmentByItemId(navigation.getSelectedItemId());
     }
 
-    private void registerReceiver() {
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(receiver, filter);
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(Const.PAGE_ID, currentItem);
     }
 
     @Override
@@ -110,7 +120,6 @@ public class TranslateActivity extends AppCompatActivity {
                 break;
         }
     }
-
 
     @Override
     public void onBackPressed() {

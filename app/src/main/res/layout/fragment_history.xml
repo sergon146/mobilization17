@@ -57,7 +57,7 @@
                 style="@android:style/Widget.EditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:layout_weight="2"
                 android:background="@color/transparent"
                 android:ems="10"
@@ -86,14 +86,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:scaleX="2"
-                android:scaleY="2"
                 app:srcCompat="@drawable/ic_history" />
 
             <TextView

@@ -11,7 +11,7 @@
     <string name="offline_message">You are offline. Please Retry later</string>
 
     <string name="textHint">Type text for translate</string>
-    <string name="error">Error! Please try again</string>
+    <string name="error">Error! Please try again later</string>
     <string name="recognition">Voice recognition \n  Talking…</string>
 
     <string name="title_activity_splash">Loading...</string>

@@ -97,7 +97,7 @@ public class FavouritePresenter implements HistoryContract.Presenter {
 
     @Override
     public void search(String searchText) {
-        mRepository.searchInHistory(searchText)
+        mRepository.searchInFavourite(searchText)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Translate>>() {

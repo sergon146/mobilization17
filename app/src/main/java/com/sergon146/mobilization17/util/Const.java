@@ -2,6 +2,9 @@ package com.sergon146.mobilization17.util;
 
 public class Const {
     public static final String LOG_TAG = "MBLZN";
+
+    public static final String PAGE_ID = "PAGE_ID";
+
     public static final String NETWORK_ACTION = "com.sergon146.mobilization17.NETWORK_ACTION";
     public static final String NETWORK = "NETWORK";
 

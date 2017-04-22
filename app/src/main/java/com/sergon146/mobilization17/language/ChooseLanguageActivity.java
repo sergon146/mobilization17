@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.sergon146.mobilization17.R;
 import com.sergon146.mobilization17.data.source.TranslationDataSource;
@@ -19,6 +20,7 @@ import com.sergon146.mobilization17.util.Util;
 import java.util.List;
 import java.util.Locale;
 
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -30,23 +32,37 @@ public class ChooseLanguageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_language);
-        Intent intent = getIntent();
-        initActionBar(intent);
 
         recyclerView = (RecyclerView) findViewById(R.id.langs_recycler);
-
         initData();
+
+        initActionBar();
     }
 
     private void initData() {
         TranslationDataSource repository = Util.provideTasksRepository(getApplicationContext());
         repository.loadLangs((Locale.getDefault().getLanguage()))
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(l -> {
-                    languages = l;
-                    LanguageAdapter adapter = new LanguageAdapter(languages);
-                    recyclerView.setAdapter(adapter);
+                .map(Util::sortLangs)
+                .subscribe(new Subscriber<List<Language>>() {
+                    @Override
+                    public void onNext(List<Language> languageList) {
+                        languages = languageList;
+                        LanguageAdapter adapter = new LanguageAdapter(languageList);
+                        recyclerView.setAdapter(adapter);
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Toast.makeText(getApplicationContext(),
+                                getString(R.string.error),
+                                Toast.LENGTH_SHORT).show();
+                    }
                 });
 
         recyclerView.setHasFixedSize(true);
@@ -62,8 +78,8 @@ public class ChooseLanguageActivity extends AppCompatActivity {
         );
     }
 
-    private void initActionBar(Intent intent) {
-        switch (intent.getAction()) {
+    private void initActionBar() {
+        switch (getIntent().getAction()) {
             case Const.SOURCE:
                 setTitle(getString(R.string.source_title));
                 break;

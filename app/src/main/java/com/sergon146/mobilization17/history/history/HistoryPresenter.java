@@ -13,9 +13,7 @@ import com.sergon146.mobilization17.pojo.Translate;
 import com.sergon146.mobilization17.util.Const;
 
 import java.util.Collections;
-import java.util.List;
 
-import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -59,29 +57,20 @@ public class HistoryPresenter implements HistoryContract.Presenter {
         Subscription subscription = mRepository.loadHistory()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Translate>>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-
-                    @Override
-                    public void onNext(List<Translate> translates) {
-                        if (translates.isEmpty()) {
-                            mView.hideData();
-                            mView.hideSearchView();
-                            mView.showEmpty();
-                            mView.hideTrash();
-                        } else {
-                            mView.showData(translates);
-                            mView.hideEmpty();
-                            mView.showTrash();
-                        }
-                    }
-                });
+                .subscribe(
+                        t -> {
+                            if (t.isEmpty()) {
+                                mView.hideData();
+                                mView.hideSearchView();
+                                mView.showEmpty();
+                                mView.hideTrash();
+                            } else {
+                                mView.showData(t);
+                                mView.hideEmpty();
+                                mView.showTrash();
+                            }
+                        },
+                        e -> Log.w(Const.LOG_TAG, e.toString()));
         mSubscription.add(subscription);
     }
 
@@ -100,29 +89,23 @@ public class HistoryPresenter implements HistoryContract.Presenter {
         mRepository.searchInHistory(searchText)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Translate>>() {
-                    @Override
-                    public void onCompleted() {
-                        Log.i(Const.LOG_TAG, "Search complete");
-                    }
+                .subscribe(
+                        translates -> {
+                            if (translates.isEmpty()) {
+                                mView.hideData();
+                                mView.showEmpty();
+                            } else {
+                                mView.hideEmpty();
+                                mView.showData(translates);
+                            }
+                        },
+                        e -> {
+                            Log.w(Const.LOG_TAG, "Error while searching");
+                            mView.showData(Collections.emptyList());
+                        },
+                        () -> Log.i(Const.LOG_TAG, "Search complete")
+                );
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.w(Const.LOG_TAG, "Error while searching");
-                        mView.showData(Collections.emptyList());
-                    }
-
-                    @Override
-                    public void onNext(List<Translate> translates) {
-                        if (translates.isEmpty()) {
-                            mView.hideData();
-                            mView.showEmpty();
-                        } else {
-                            mView.hideEmpty();
-                            mView.showData(translates);
-                        }
-                    }
-                });
     }
 
     @Override

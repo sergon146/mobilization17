@@ -24,6 +24,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="?android:attr/windowBackground"
+        android:splitMotionEvents="true"
+        app:itemIconTint="@drawable/nav_checked"
+        app:itemTextColor="@drawable/nav_checked"
         app:menu="@menu/navigation" />
 
 </LinearLayout>

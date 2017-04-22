@@ -81,6 +81,14 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     }
 
     @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            setSourceText(savedInstanceState.getString(Const.TEXT));
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         mPresenter.subscribe();
@@ -91,6 +99,12 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
         super.onPause();
         mPresenter.unsubscribe();
         tts.shutdown();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(Const.TEXT, getSourceText());
     }
 
     private void initViews(View rootView) {

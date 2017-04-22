@@ -78,7 +78,9 @@ public class FavouriteFragment extends Fragment implements HistoryContract.View 
 
             @Override
             public void afterTextChanged(Editable s) {
-                mPresenter.search(s.toString());
+                if (mPresenter != null) {
+                    mPresenter.search(s.toString());
+                }
 
             }
         });
