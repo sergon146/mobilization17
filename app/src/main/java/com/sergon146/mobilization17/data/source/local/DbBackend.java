@@ -18,22 +18,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DbBackend implements DbContract {
+class DbBackend implements DbContract {
     private final DbHelper dbHelper;
     private SQLiteDatabase db;
 
-    public DbBackend(Context context) {
+    DbBackend(Context context) {
         dbHelper = new DbHelper(context);
     }
 
-    public boolean isEmptyLocaleLanguageList(String localeCode) {
+    boolean isEmptyLocaleLanguageList(String localeCode) {
         db = dbHelper.getReadableDatabase();
-        String table = TABLE_LANGS_NAME;
         String[] columns = new String[]{ID};
         String where = LangsNameTbl.COLUMN_LOCALE_CODE + " = ?";
         String[] whereArgs = new String[]{String.valueOf(getLocaleId(localeCode))};
 
-        Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
+        Cursor cursor = db.query(TABLE_LANGS_NAME, columns, where, whereArgs, null, null, null);
 
         if (cursor.moveToNext()) {
             cursor.close();
@@ -46,7 +45,7 @@ public class DbBackend implements DbContract {
         }
     }
 
-    public void insertLanguages(String localeCode, List<Language> languages) {
+    void insertLanguages(String localeCode, List<Language> languages) {
         db = dbHelper.getWritableDatabase();
         int localeId = getLocaleId(localeCode);
         db.beginTransaction();
@@ -66,20 +65,9 @@ public class DbBackend implements DbContract {
         }
     }
 
-    public int countLangs() {
+    List<Language> getCashedLangs(String localeCode) {
         db = dbHelper.getReadableDatabase();
 
-        String table = TABLE_LANGS_NAME;
-        String[] columns = new String[]{"COUNT(" + ID + ")"};
-        Cursor cursor = db.query(table, columns, null, null, null, null, null);
-        cursor.moveToFirst();
-        return cursor.getInt(0);
-    }
-
-    public List<Language> getCashedLangs(String localeCode) {
-        db = dbHelper.getReadableDatabase();
-
-        String table = TABLE_LANGS_NAME;
         String[] columns = new String[]{
                 ID,
                 LangsNameTbl.COLUMN_LANG_CODE,
@@ -88,7 +76,7 @@ public class DbBackend implements DbContract {
         String[] whereArgs = new String[]{String.valueOf(getLocaleId(localeCode))};
 
         Cursor cursor = db.query(
-                table,
+                TABLE_LANGS_NAME,
                 columns,
                 where,
                 whereArgs,
@@ -119,14 +107,16 @@ public class DbBackend implements DbContract {
     private int getLangId(String langCode) {
         db = dbHelper.getReadableDatabase();
 
-        String table = TABLE_LANGS;
         String[] columns = new String[]{ID};
         String where = LangsTbl.COLUMN_CODE + " LIKE ?";
         String[] whereArgs = new String[]{langCode};
-        Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
+        Cursor cursor = db.query(TABLE_LANGS, columns, where, whereArgs, null, null, null);
         if (cursor.moveToFirst()) {
-            return cursor.getInt(0);
+            int id = cursor.getInt(0);
+            cursor.close();
+            return id;
         } else {
+            cursor.close();
             insertLangCode(langCode);
             return getLangId(langCode);
         }
@@ -158,115 +148,111 @@ public class DbBackend implements DbContract {
         try {
             db = dbHelper.getReadableDatabase();
 
-            String table = TABLE_LANGS;
             String[] columns = new String[]{LangsTbl.COLUMN_CODE};
             String where = ID + " = ?";
             String[] whereArgs = new String[]{String.valueOf(id)};
-            Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
+            Cursor cursor = db.query(TABLE_LANGS, columns, where, whereArgs, null, null, null);
 
             cursor.moveToFirst();
 
-            return cursor.getString(0);
+            String code = cursor.getString(0);
+            cursor.close();
+            return code;
         } catch (Exception e) {
             return "";
         }
     }
 
-    public String getSourceName(String localeCode) {
+    String getSourceName(String localeCode) {
         try {
             db = dbHelper.getReadableDatabase();
 
-            String table = TABLE_LANGS_NAME;
             String[] columns = new String[]{LangsNameTbl.COLUMN_NAME};
             String where = LangsNameTbl.COLUMN_LANG_CODE + " = ? AND " + LangsNameTbl.COLUMN_LOCALE_CODE + " = ?";
             String[] whereArgs = new String[]{String.valueOf(getSourceLangId()), String.valueOf(getLocaleId(localeCode))};
-            Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
+            Cursor cursor = db.query(TABLE_LANGS_NAME, columns, where, whereArgs, null, null, null);
 
             cursor.moveToFirst();
-            return cursor.getString(0);
+            String name = cursor.getString(0);
+            cursor.close();
+            return name;
         } catch (Exception e) {
             return "";
         }
     }
 
-    public String getTargetName(String localeCode) {
+    String getTargetName(String localeCode) {
         try {
             db = dbHelper.getReadableDatabase();
 
-            String table = TABLE_LANGS_NAME;
             String[] columns = new String[]{LangsNameTbl.COLUMN_NAME};
             String where = LangsNameTbl.COLUMN_LANG_CODE + " = ? AND " + LangsNameTbl.COLUMN_LOCALE_CODE + " = ?";
             String[] whereArgs = new String[]{String.valueOf(getTargetLangId()), String.valueOf(getLocaleId(localeCode))};
-            Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
+            Cursor cursor = db.query(TABLE_LANGS_NAME, columns, where, whereArgs, null, null, null);
 
             cursor.moveToFirst();
-            return cursor.getString(0);
+            String name = cursor.getString(0);
+            cursor.close();
+            return name;
         } catch (Exception e) {
             return "";
         }
     }
 
-    public void setSourceLang(String sourceCode) {
+    void setSourceLang(String sourceCode) {
         db = dbHelper.getWritableDatabase();
         unSourcesAll();
-
-        String table = TABLE_LANGS;
 
         ContentValues values = new ContentValues();
         values.put(LangsTbl.COLUMN_IS_SOURCE, 1);
 
         String where = LangsTbl.COLUMN_CODE + " = ?";
         String[] whereArgs = new String[]{sourceCode};
-        db.update(table, values, where, whereArgs);
+        db.update(TABLE_LANGS, values, where, whereArgs);
     }
 
     private void unSourcesAll() {
         db = dbHelper.getWritableDatabase();
-        String table = TABLE_LANGS;
 
         ContentValues values = new ContentValues();
         values.put(LangsTbl.COLUMN_IS_SOURCE, 0);
 
         String where = LangsTbl.COLUMN_IS_SOURCE + " = ?";
         String[] whereArgs = new String[]{String.valueOf(1)};
-        db.update(table, values, where, whereArgs);
+        db.update(TABLE_LANGS, values, where, whereArgs);
     }
 
-    public void setTargetLang(String targetCode) {
+    void setTargetLang(String targetCode) {
         db = dbHelper.getWritableDatabase();
         unTargetAll();
-
-        String table = TABLE_LANGS;
 
         ContentValues values = new ContentValues();
         values.put(LangsTbl.COLUMN_IS_TARGET, 1);
 
         String where = LangsTbl.COLUMN_CODE + " = ?";
         String[] whereArgs = new String[]{targetCode};
-        db.update(table, values, where, whereArgs);
+        db.update(TABLE_LANGS, values, where, whereArgs);
     }
 
     private void unTargetAll() {
         db = dbHelper.getWritableDatabase();
-        String table = TABLE_LANGS;
 
         ContentValues values = new ContentValues();
         values.put(LangsTbl.COLUMN_IS_TARGET, 0);
 
         String where = LangsTbl.COLUMN_IS_TARGET + " = ?";
         String[] whereArgs = new String[]{String.valueOf(1)};
-        db.update(table, values, where, whereArgs);
+        db.update(TABLE_LANGS, values, where, whereArgs);
     }
 
     private int getSourceLangId() {
         try {
             db = dbHelper.getReadableDatabase();
 
-            String table = TABLE_LANGS;
             String[] columns = new String[]{ID};
             String where = LangsTbl.COLUMN_IS_SOURCE + " = ?";
             String[] whereArgs = new String[]{String.valueOf(1)};
-            Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
+            Cursor cursor = db.query(TABLE_LANGS, columns, where, whereArgs, null, null, null);
 
             cursor.moveToFirst();
             return cursor.getInt(0);
@@ -279,11 +265,10 @@ public class DbBackend implements DbContract {
         try {
             db = dbHelper.getReadableDatabase();
 
-            String table = TABLE_LANGS;
             String[] columns = new String[]{ID};
             String where = LangsTbl.COLUMN_IS_TARGET + " = ?";
             String[] whereArgs = new String[]{String.valueOf(1)};
-            Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
+            Cursor cursor = db.query(TABLE_LANGS, columns, where, whereArgs, null, null, null);
 
             cursor.moveToFirst();
             return cursor.getInt(0);
@@ -292,32 +277,33 @@ public class DbBackend implements DbContract {
         }
     }
 
-    public String getSourceCode() {
+    String getSourceCode() {
         try {
             db = dbHelper.getReadableDatabase();
 
-            String table = TABLE_LANGS;
             String[] columns = new String[]{LangsTbl.COLUMN_CODE};
             String where = LangsTbl.COLUMN_IS_SOURCE + " = ?";
             String[] whereArgs = new String[]{String.valueOf(1)};
-            Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
+            Cursor cursor = db.query(TABLE_LANGS, columns, where, whereArgs, null, null, null);
             cursor.moveToFirst();
 
-            return cursor.getString(0);
+            String code = cursor.getString(0);
+            cursor.close();
+
+            return code;
         } catch (Exception e) {
             return "";
         }
     }
 
-    public String getTargetCode() {
+    String getTargetCode() {
         try {
             db = dbHelper.getReadableDatabase();
 
-            String table = TABLE_LANGS;
             String[] columns = new String[]{LangsTbl.COLUMN_CODE};
             String where = LangsTbl.COLUMN_IS_TARGET + " = ?";
             String[] whereArgs = new String[]{String.valueOf(1)};
-            Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
+            Cursor cursor = db.query(TABLE_LANGS, columns, where, whereArgs, null, null, null);
             cursor.moveToFirst();
 
             return cursor.getString(0);
@@ -326,7 +312,7 @@ public class DbBackend implements DbContract {
         }
     }
 
-    public void saveTranslate(Translate translate) {
+    void saveTranslate(Translate translate) {
         if (isTranslateContains(translate)) {
             Log.i("DB", "Already exist in db: " + translate.getSourceText());
             return;
@@ -352,10 +338,9 @@ public class DbBackend implements DbContract {
         }
     }
 
-    public boolean isTranslateContains(Translate translate) {
+    boolean isTranslateContains(Translate translate) {
         db = dbHelper.getReadableDatabase();
 
-        String table = TABLE_TRANSLATE;
         String[] columns = new String[]{ID};
         String where = TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? AND " +
                 TranslateTbl.COLUMN_SOURCE_LANG + " = ? AND " +
@@ -363,15 +348,17 @@ public class DbBackend implements DbContract {
         String[] whereArgs = new String[]{translate.getSourceText(),
                 String.valueOf(getLangId(translate.getSourceLangCode())),
                 String.valueOf(getLangId(translate.getTargetLangCode()))};
-        Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
+        Cursor cursor = db.query(TABLE_TRANSLATE, columns, where, whereArgs, null, null, null);
 
-        return cursor.moveToFirst();
+
+        boolean b = cursor.moveToFirst();
+        cursor.close();
+        return b;
     }
 
-    public Translate getTranslateSentence(Translate translate) {
+    Translate getTranslateSentence(Translate translate) {
         db = dbHelper.getReadableDatabase();
 
-        String table = TABLE_TRANSLATE;
         String[] columns = new String[]{
                 TranslateTbl.COLUMN_TARGET_TEXT,
                 TranslateTbl.COLUMN_IS_FAVOURITE,
@@ -385,7 +372,7 @@ public class DbBackend implements DbContract {
                 String.valueOf(getLangId(translate.getSourceLangCode())),
                 String.valueOf(getLangId(translate.getTargetLangCode()))};
 
-        Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
+        Cursor cursor = db.query(TABLE_TRANSLATE, columns, where, whereArgs, null, null, null);
         cursor.moveToNext();
 
         translate.setTargetText(cursor.getString(0));
@@ -403,7 +390,7 @@ public class DbBackend implements DbContract {
         return translate;
     }
 
-    public void clearHistory() {
+    void clearHistory() {
         db = dbHelper.getReadableDatabase();
         db.beginTransaction();
         try {
@@ -414,55 +401,52 @@ public class DbBackend implements DbContract {
         }
     }
 
-    public List<Translate> getHistory() {
+    List<Translate> getHistory() {
         return searchInHistory("");
     }
 
-    public List<Translate> searchInHistory(String searchText) {
-        searchText = "%" + searchText + "%";
-        List<Translate> translateList = new ArrayList<>();
-
-        db = dbHelper.getReadableDatabase();
-
-        String table = TABLE_TRANSLATE;
-        String[] columns = new String[]{
-                TranslateTbl.COLUMN_SOURCE_TEXT,
-                TranslateTbl.COLUMN_TARGET_TEXT,
-                TranslateTbl.COLUMN_SOURCE_LANG,
-                TranslateTbl.COLUMN_TARGET_LANG,
-                TranslateTbl.COLUMN_IS_FAVOURITE,
-                TranslateTbl.COLUMN_WORD_JSON};
-
-        String where = TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? OR " +
-                TranslateTbl.COLUMN_TARGET_TEXT + " LIKE ?";
-
-        String[] whereArgs = new String[]{searchText, searchText};
-        String orderBy = ID + " DESC";
-
-        Cursor cursor = db.query(table, columns, where, whereArgs, null, null, orderBy);
-
-        while (cursor.moveToNext()) {
-            Translate translate = new Translate();
-            translate.setSourceText(cursor.getString(0));
-            translate.setTargetText(cursor.getString(1));
-            translate.setSourceLangCode(getLangCodeById(cursor.getInt(2)));
-            translate.setTargetLangCode(getLangCodeById(cursor.getInt(3)));
-            translate.setFavourite(cursor.getInt(4) == 1);
-            translate.setWordJson(cursor.getString(5));
-            translateList.add(translate);
-        }
-
+    List<Translate> searchInHistory(String searchText) {
         try {
+            searchText = "%" + searchText + "%";
+            List<Translate> translateList = new ArrayList<>();
+
+            db = dbHelper.getReadableDatabase();
+
+            String[] columns = new String[]{
+                    TranslateTbl.COLUMN_SOURCE_TEXT,
+                    TranslateTbl.COLUMN_TARGET_TEXT,
+                    TranslateTbl.COLUMN_SOURCE_LANG,
+                    TranslateTbl.COLUMN_TARGET_LANG,
+                    TranslateTbl.COLUMN_IS_FAVOURITE,
+                    TranslateTbl.COLUMN_WORD_JSON};
+
+            String where = TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? OR " +
+                    TranslateTbl.COLUMN_TARGET_TEXT + " LIKE ?";
+
+            String[] whereArgs = new String[]{searchText, searchText};
+            String orderBy = ID + " DESC";
+
+            Cursor cursor = db.query(TABLE_TRANSLATE, columns, where, whereArgs, null, null, orderBy);
+
+            while (cursor.moveToNext()) {
+                Translate translate = new Translate();
+                translate.setSourceText(cursor.getString(0));
+                translate.setTargetText(cursor.getString(1));
+                translate.setSourceLangCode(getLangCodeById(cursor.getInt(2)));
+                translate.setTargetLangCode(getLangCodeById(cursor.getInt(3)));
+                translate.setFavourite(cursor.getInt(4) == 1);
+                translate.setWordJson(cursor.getString(5));
+                translateList.add(translate);
+            }
+            cursor.close();
             return translateList;
         } catch (Exception e) {
             return Collections.emptyList();
         }
     }
 
-    public void updateTranslateFavourite(Translate translate) {
+    void updateTranslateFavourite(Translate translate) {
         db = dbHelper.getWritableDatabase();
-
-        String table = TABLE_TRANSLATE;
 
         ContentValues values = new ContentValues();
         values.put(TranslateTbl.COLUMN_IS_FAVOURITE, translate.isFavourite() ? 1 : 0);
@@ -474,21 +458,20 @@ public class DbBackend implements DbContract {
                 String.valueOf(getLangId(translate.getSourceLangCode())),
                 String.valueOf(getLangId(translate.getTargetLangCode())),
                 translate.getSourceText()};
-        db.update(table, values, where, whereArgs);
+        db.update(TABLE_TRANSLATE, values, where, whereArgs);
         Log.i(Const.LOG_TAG, "Set as favourite " + translate.getSourceText());
     }
 
-    public List<Translate> getFavourites() {
+    List<Translate> getFavourites() {
         return searchInFavourite("");
     }
 
-    public List<Translate> searchInFavourite(String searchText) {
+    List<Translate> searchInFavourite(String searchText) {
         searchText = "%" + searchText + "%";
         List<Translate> translateList = new ArrayList<>();
 
         db = dbHelper.getReadableDatabase();
 
-        String table = TABLE_TRANSLATE;
         String[] columns = new String[]{
                 TranslateTbl.COLUMN_SOURCE_TEXT,
                 TranslateTbl.COLUMN_TARGET_TEXT,
@@ -505,7 +488,7 @@ public class DbBackend implements DbContract {
         String[] whereArgs = new String[]{String.valueOf(1), searchText, searchText};
         String orderBy = ID + " DESC";
 
-        Cursor cursor = db.query(table, columns, where, whereArgs, null, null, orderBy);
+        Cursor cursor = db.query(TABLE_TRANSLATE, columns, where, whereArgs, null, null, orderBy);
 
         while (cursor.moveToNext()) {
             Translate translate = new Translate();
@@ -518,6 +501,7 @@ public class DbBackend implements DbContract {
             translateList.add(translate);
         }
 
+        cursor.close();
         try {
             return translateList;
         } catch (Exception e) {
@@ -525,16 +509,14 @@ public class DbBackend implements DbContract {
         }
     }
 
-    public void clearFavourites() {
+    void clearFavourites() {
         db = dbHelper.getWritableDatabase();
-
-        String table = TABLE_TRANSLATE;
 
         ContentValues values = new ContentValues();
         values.put(TranslateTbl.COLUMN_IS_FAVOURITE, 0);
 
         String where = TranslateTbl.COLUMN_IS_FAVOURITE + " = ? ";
         String[] whereArgs = new String[]{String.valueOf(1)};
-        db.update(table, values, where, whereArgs);
+        db.update(TABLE_TRANSLATE, values, where, whereArgs);
     }
 }
