@@ -2,9 +2,7 @@ package com.sergon146.mobilization17.pojo;
 
 import com.sergon146.mobilization17.pojo.translate.mapper.WordMapper;
 
-import java.io.Serializable;
-
-public class Translate implements Serializable {
+public class Translate {
     private String sourceText;
     private String targetText = "";
     private String wordJson = "";
@@ -68,22 +66,4 @@ public class Translate implements Serializable {
     public void setTargetLangCode(String targetLangCode) {
         this.targetLangCode = targetLangCode;
     }
-
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) {
-//            return true;
-//        }
-//
-//        if (o == null || getClass() != o.getClass()) {
-//            return false;
-//        }
-//
-//        Translate translate = (Translate) o;
-//        return Objects.equals(sourceText, translate.sourceText) &&
-//                Objects.equals(targetText,  translate.targetText) &&
-//                Objects.equals(sourceLangCode, translate.sourceLangCode) &&
-//                Objects.equals(targetLangCode,  translate.targetLangCode);
-//
-//    }
 }
