@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.sergon146.mobilization17.R;
 import com.sergon146.mobilization17.history.HistoryContract;
 import com.sergon146.mobilization17.pojo.Translate;
+import com.sergon146.mobilization17.util.ViewUtil;
 
 import java.util.List;
 
@@ -79,6 +80,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Translat
                 } else {
                     favourite.setImageResource(R.drawable.ic_active_favourite);
                 }
+                ViewUtil.animateClick(v, R.anim.click_scale);
                 translate.setFavourite(!translate.isFavourite());
                 itemListener.onFavouriteClick(translate);
 

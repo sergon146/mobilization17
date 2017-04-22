@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sergon146.mobilization17.activity.ChooseLanguageActivity">
+    tools:context="com.sergon146.mobilization17.language.ChooseLanguageActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/langsRecycler"
+        android:id="@+id/langs_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/base_8dp" />

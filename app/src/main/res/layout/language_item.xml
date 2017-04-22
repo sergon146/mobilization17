@@ -22,6 +22,7 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:layout_weight="1"
+            android:gravity="start"
             android:textColor="@color/black"
             android:textSize="18sp" />
 

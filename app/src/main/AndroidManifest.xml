@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.ChooseLanguageActivity"
+            android:name=".language.ChooseLanguageActivity"
             android:theme="@style/ChooseTheme" />
 
     </application>

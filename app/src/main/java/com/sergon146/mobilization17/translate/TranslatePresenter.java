@@ -2,7 +2,6 @@ package com.sergon146.mobilization17.translate;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -157,7 +156,6 @@ public class TranslatePresenter implements TranslateContract.Presenter {
                     public void onError(Throwable e) {
                         mView.hideProgress();
                         mView.showButtons();
-                        Log.w("Translate", "Error while translated sentence: " + text + " " + e.toString());
                     }
                 });
 
@@ -267,23 +265,13 @@ public class TranslatePresenter implements TranslateContract.Presenter {
     @Override
     public void speakSourceOut(String s, TextToSpeech tts) {
         tts.setLanguage(new Locale(translate.getSourceLangCode()));
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            tts.speak(s, TextToSpeech.QUEUE_FLUSH, null, Const.SOURCE_SPEECH);
-        } else {
-            tts.speak(s, TextToSpeech.QUEUE_FLUSH, null);
-        }
+        tts.speak(s, TextToSpeech.QUEUE_FLUSH, null, Const.SOURCE_SPEECH);
     }
 
     @Override
     public void speakTargetOut(String s, TextToSpeech tts) {
         tts.setLanguage(new Locale(translate.getTargetLangCode()));
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            tts.speak(s, TextToSpeech.QUEUE_FLUSH, null, Const.TARGET_SPEECH);
-        } else {
-            tts.speak(s, TextToSpeech.QUEUE_FLUSH, null);
-        }
+        tts.speak(s, TextToSpeech.QUEUE_FLUSH, null, Const.TARGET_SPEECH);
     }
 
     @Override

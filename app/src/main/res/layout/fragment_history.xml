@@ -86,15 +86,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:scaleX="2"
-                android:scaleY="1.8"
-                app:srcCompat="@drawable/ic_inactive_favourite" />
+                android:scaleY="2"
+                app:srcCompat="@drawable/ic_history" />
 
             <TextView
                 android:layout_width="match_parent"

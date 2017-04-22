@@ -23,7 +23,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.sergon146.mobilization17.R;
-import com.sergon146.mobilization17.activity.ChooseLanguageActivity;
+import com.sergon146.mobilization17.language.ChooseLanguageActivity;
 import com.sergon146.mobilization17.util.Const;
 import com.sergon146.mobilization17.util.Util;
 import com.sergon146.mobilization17.util.ViewUtil;
@@ -74,8 +74,8 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
         View rootView = inflater.inflate(R.layout.fragment_translate, container, false);
 
         tts = new TextToSpeech(getContext(), this);
-
         tts.setOnUtteranceProgressListener(getUtteranceListener());
+
         initViews(rootView);
         return rootView;
     }
@@ -129,7 +129,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
 
         ivFavourite = (ImageView) rootView.findViewById(R.id.favourite);
         ivFavourite.setOnClickListener(v -> {
-            ViewUtil.animateClick(getContext(), v, R.anim.click_scale);
+            ViewUtil.animateClick(v, R.anim.click_scale);
             mPresenter.setFavourite();
         });
 
@@ -172,10 +172,11 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
 
     @Override
     public void swapLanguage() {
-        ViewUtil.animateClick(getContext(), ivSwap, R.anim.rotate);
+        ViewUtil.animateClick(ivSwap, R.anim.rotate);
         setSourceText(tvTarget.getText().toString());
         hideTargetText();
         clearMeanLayout();
+        tts.stop();
         mPresenter.swapLanguage();
     }
 
@@ -317,6 +318,18 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
             }
 
             @Override
+            public void onError(String utteranceId, int errorCode) {
+                super.onError(utteranceId, errorCode);
+                swapView(utteranceId);
+            }
+
+            @Override
+            public void onStop(String utteranceId, boolean interrupted) {
+                super.onStop(utteranceId, interrupted);
+                swapView(utteranceId);
+            }
+
+            @Override
             public void onDone(String utteranceId) {
                 swapView(utteranceId);
             }
@@ -378,6 +391,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     }
 
     private void clearAll() {
+        tts.stop();
         setSourceText("");
         clearMeanLayout();
         hideTargetText();

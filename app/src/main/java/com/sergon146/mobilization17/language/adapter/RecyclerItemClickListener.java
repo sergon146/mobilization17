@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.listner;
+package com.sergon146.mobilization17.language.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

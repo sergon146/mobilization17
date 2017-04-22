@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.activity;
+package com.sergon146.mobilization17.language;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,9 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 
 import com.sergon146.mobilization17.R;
-import com.sergon146.mobilization17.adapter.LanguageAdapter;
 import com.sergon146.mobilization17.data.source.local.DbBackend;
-import com.sergon146.mobilization17.listner.RecyclerItemClickListener;
+import com.sergon146.mobilization17.language.adapter.LanguageAdapter;
+import com.sergon146.mobilization17.language.adapter.RecyclerItemClickListener;
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.util.Const;
 
@@ -34,7 +34,7 @@ public class ChooseLanguageActivity extends AppCompatActivity {
         DbBackend backend = new DbBackend(this);
         languages = backend.getCashedLangs(Locale.getDefault().getLanguage());
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.langsRecycler);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.langs_recycler);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
