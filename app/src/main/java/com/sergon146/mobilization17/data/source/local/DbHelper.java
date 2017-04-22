@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.sergon146.mobilization17.util.Const;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -27,24 +29,25 @@ public class DbHelper extends SQLiteOpenHelper implements DbContract {
             System.out.println("Database exists");
             openDataBase();
         } else {
-            Log.w("DB", "Database doesn't exist");
+            Log.i(Const.LOG_TAG, "Database doesn't exist");
             try {
                 createDataBase();
+                Log.i(Const.LOG_TAG, "DB create!");
             } catch (IOException e) {
-                Log.w("DB", "Cannot create DB");
+                Log.w(Const.LOG_TAG, "Cannot create DB");
             }
         }
     }
 
     public void createDataBase() throws IOException {
         if (isDbExist()) {
-            System.out.println(" Database exists.");
+            Log.i(Const.LOG_TAG, "Database exist");
         } else {
             this.getReadableDatabase();
             try {
                 copyDataBase();
             } catch (IOException e) {
-                throw new Error("Error copying database");
+                Log.i(Const.LOG_TAG, "Error copying database");
             }
         }
     }
@@ -57,7 +60,7 @@ public class DbHelper extends SQLiteOpenHelper implements DbContract {
             File dbFile = new File(myPath);
             checkdb = dbFile.exists();
         } catch (SQLiteException e) {
-            System.out.println("Database doesn't exist");
+            Log.i(Const.LOG_TAG, "Database doesn't exist");
         }
         return checkdb;
     }

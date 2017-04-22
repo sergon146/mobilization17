@@ -24,17 +24,23 @@ public class TranslateRepository implements TranslationDataSource {
         return instance;
     }
 
-    public static void destroyInstance() {
-        instance = null;
+    @Override
+    public boolean isEmptyLangList(String localeCode) {
+        return localSource.isEmptyLangList(localeCode);
     }
 
     @Override
     public Observable<List<Language>> loadLangs(String localeCode) {
-        return null;
+        return remoteSource.loadLangs(localeCode);
     }
 
     @Override
-    public Observable<Translate> loadFavourites() {
+    public void saveLanguages(String localeCode, List<Language> languages) {
+        localSource.saveLanguages(localeCode, languages);
+    }
+
+    @Override
+    public Observable<List<Translate>> loadFavourites() {
         return localSource.loadFavourites();
     }
 
@@ -49,12 +55,12 @@ public class TranslateRepository implements TranslationDataSource {
 
     @Override
     public boolean isContainTranslate(Translate translate) {
-        return false;
+        return localSource.isContainTranslate(translate);
     }
 
     @Override
     public Observable<Translate> loadTranslateSentence(Translate translate) {
-        if (localSource.isContainTranslate(translate)) {
+        if (isContainTranslate(translate)) {
             return localSource.loadTranslateSentence(translate);
         } else {
             return remoteSource.loadTranslateSentence(translate);
@@ -64,6 +70,11 @@ public class TranslateRepository implements TranslationDataSource {
     @Override
     public void saveTranslate(Translate translate) {
         localSource.saveTranslate(translate);
+    }
+
+    @Override
+    public Observable<List<Translate>> searchInHistory(String searchText) {
+        return localSource.searchInHistory(searchText);
     }
 
     @Override
@@ -77,8 +88,8 @@ public class TranslateRepository implements TranslationDataSource {
     }
 
     @Override
-    public Observable<List<Translate>> searchInHistory(String searchText) {
-        return localSource.searchInHistory(searchText);
+    public Observable<List<Translate>> searchInFavourite(String searchText) {
+        return localSource.searchInFavourite(searchText);
     }
 
     @Override

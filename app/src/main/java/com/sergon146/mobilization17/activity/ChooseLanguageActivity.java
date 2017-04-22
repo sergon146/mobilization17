@@ -15,11 +15,11 @@ import com.sergon146.mobilization17.listner.RecyclerItemClickListener;
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.util.Const;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class ChooseLanguageActivity extends AppCompatActivity {
-    ArrayList<Language> languages;
+    List<Language> languages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

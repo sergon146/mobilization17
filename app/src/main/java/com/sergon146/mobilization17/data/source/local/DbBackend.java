@@ -25,6 +25,26 @@ public class DbBackend implements DbContract {
         dbHelper = new DbHelper(context);
     }
 
+    public boolean isEmptyLocaleLanguageList(String localeCode) {
+        db = dbHelper.getReadableDatabase();
+        String table = TABLE_LANGS_NAME;
+        String[] columns = new String[]{ID};
+        String where = LangsNameTbl.COLUMN_LOCALE_CODE + " = ?";
+        String[] whereArgs = new String[]{String.valueOf(getLocaleId(localeCode))};
+
+        Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
+
+        if (cursor.moveToNext()) {
+            cursor.close();
+            db.close();
+            return false;
+        } else {
+            cursor.close();
+            db.close();
+            return true;
+        }
+    }
+
     public void insertLanguages(String localeCode, List<Language> languages) {
         db = dbHelper.getWritableDatabase();
         int localeId = getLocaleId(localeCode);
@@ -55,7 +75,7 @@ public class DbBackend implements DbContract {
         return cursor.getInt(0);
     }
 
-    public ArrayList<Language> getCashedLangs(String localeCode) {
+    public List<Language> getCashedLangs(String localeCode) {
         db = dbHelper.getReadableDatabase();
 
         String table = TABLE_LANGS_NAME;
@@ -75,7 +95,7 @@ public class DbBackend implements DbContract {
         int sourceId = getSourceLangId();
         int targetId = getTargetLangId();
 
-        ArrayList<Language> languages = new ArrayList<>();
+        List<Language> languages = new ArrayList<>();
         while (cursor.moveToNext()) {
             Language lang = new Language();
             lang.setId(cursor.getInt(0));
@@ -145,26 +165,6 @@ public class DbBackend implements DbContract {
         cursor.moveToFirst();
 
         return cursor.getString(0);
-    }
-
-    public boolean isEmptyLocaleLanguageList(String localeCode) {
-        db = dbHelper.getReadableDatabase();
-        String table = TABLE_LANGS_NAME;
-        String[] columns = new String[]{ID};
-        String where = LangsNameTbl.COLUMN_LOCALE_CODE + " = ?";
-        String[] whereArgs = new String[]{String.valueOf(getLocaleId(localeCode))};
-
-        Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
-
-        if (cursor.moveToNext()) {
-            cursor.close();
-            db.close();
-            return false;
-        } else {
-            cursor.close();
-            db.close();
-            return true;
-        }
     }
 
     public String getSourceName(String localeCode) {
@@ -303,6 +303,8 @@ public class DbBackend implements DbContract {
 
     public void saveTranslate(Translate translate) {
         if (isTranslateContains(translate)) {
+            Log.i("DB", "Already exist in db: " + translate.getSourceText());
+
             return;
         }
 
@@ -318,9 +320,9 @@ public class DbBackend implements DbContract {
             cv.put(TranslateTbl.COLUMN_WORD_JSON, translate.getWordJson());
             db.insert(TABLE_TRANSLATE, null, cv);
             db.setTransactionSuccessful();
-            Log.i("DB", "Saving translation: " + translate.getTargetText());
+            Log.i("DB", "Saving translation: " + translate.getSourceText());
         } catch (Exception e) {
-            Log.e("DB", "Already exist in db: " + translate.getTargetText());
+            Log.e("DB", "Already exist in db: " + translate.getSourceText());
         } finally {
             db.endTransaction();
         }
@@ -342,26 +344,42 @@ public class DbBackend implements DbContract {
         return cursor.moveToFirst();
     }
 
-    public void updateTranslateFavourite(Translate translate) {
-        db = dbHelper.getWritableDatabase();
+    public Translate getTranslateSentence(Translate translate) {
+        db = dbHelper.getReadableDatabase();
 
         String table = TABLE_TRANSLATE;
+        String[] columns = new String[]{
+                TranslateTbl.COLUMN_TARGET_TEXT,
+                TranslateTbl.COLUMN_IS_FAVOURITE,
+                TranslateTbl.COLUMN_WORD_JSON};
 
-        ContentValues values = new ContentValues();
-        values.put(TranslateTbl.COLUMN_IS_FAVOURITE, translate.isFavourite() ? 1 : 0);
+        String where = TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? AND " +
+                TranslateTbl.COLUMN_SOURCE_LANG + " = ? AND " +
+                TranslateTbl.COLUMN_TARGET_LANG + " = ?";
 
-        String where = TranslateTbl.COLUMN_SOURCE_LANG + " = ? AND "
-                + TranslateTbl.COLUMN_TARGET_LANG + " LIKE ? AND "
-                + TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ?";
-        String[] whereArgs = new String[]{
+        String[] whereArgs = new String[]{translate.getSourceText(),
                 String.valueOf(getLangId(translate.getSourceLangCode())),
-                String.valueOf(getLangId(translate.getTargetLangCode())),
-                translate.getSourceText()};
-        db.update(table, values, where, whereArgs);
-        Log.i(Const.LOG_TAG, "Set as favourite " + translate.getSourceText());
+                String.valueOf(getLangId(translate.getTargetLangCode()))};
+
+        Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
+        cursor.moveToNext();
+
+        translate.setTargetText(cursor.getString(0));
+        translate.setFavourite(cursor.getInt(1) == 1);
+        translate.setWordJson(cursor.getString(2));
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            translate.setWordMapper(mapper.readValue(translate.getWordJson(), WordMapper.class));
+        } catch (IOException e) {
+            Log.w(Const.LOG_TAG, "Error while mapper to Word.class " + translate.getWordJson());
+        }
+
+        cursor.close();
+        return translate;
     }
 
-    public void deleteHistory() {
+    public void clearHistory() {
         db = dbHelper.getReadableDatabase();
         db.beginTransaction();
         try {
@@ -411,6 +429,25 @@ public class DbBackend implements DbContract {
         }
 
         return translateList;
+    }
+
+    public void updateTranslateFavourite(Translate translate) {
+        db = dbHelper.getWritableDatabase();
+
+        String table = TABLE_TRANSLATE;
+
+        ContentValues values = new ContentValues();
+        values.put(TranslateTbl.COLUMN_IS_FAVOURITE, translate.isFavourite() ? 1 : 0);
+
+        String where = TranslateTbl.COLUMN_SOURCE_LANG + " = ? AND "
+                + TranslateTbl.COLUMN_TARGET_LANG + " LIKE ? AND "
+                + TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ?";
+        String[] whereArgs = new String[]{
+                String.valueOf(getLangId(translate.getSourceLangCode())),
+                String.valueOf(getLangId(translate.getTargetLangCode())),
+                translate.getSourceText()};
+        db.update(table, values, where, whereArgs);
+        Log.i(Const.LOG_TAG, "Set as favourite " + translate.getSourceText());
     }
 
     public List<Translate> getFavourites() {
@@ -467,40 +504,5 @@ public class DbBackend implements DbContract {
         String where = TranslateTbl.COLUMN_IS_FAVOURITE + " = ? ";
         String[] whereArgs = new String[]{String.valueOf(1)};
         db.update(table, values, where, whereArgs);
-    }
-
-    public Translate getTranslateSentence(Translate translate) {
-        db = dbHelper.getReadableDatabase();
-
-        String table = TABLE_TRANSLATE;
-        String[] columns = new String[]{
-                TranslateTbl.COLUMN_TARGET_TEXT,
-                TranslateTbl.COLUMN_IS_FAVOURITE,
-                TranslateTbl.COLUMN_WORD_JSON};
-
-        String where = TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? AND " +
-                TranslateTbl.COLUMN_SOURCE_LANG + " = ? AND " +
-                TranslateTbl.COLUMN_TARGET_LANG + " = ?";
-
-        String[] whereArgs = new String[]{translate.getSourceText(),
-                String.valueOf(getLangId(translate.getSourceLangCode())),
-                String.valueOf(getLangId(translate.getTargetLangCode()))};
-
-        Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
-        cursor.moveToNext();
-
-        translate.setTargetText(cursor.getString(0));
-        translate.setFavourite(cursor.getInt(1) == 1);
-        translate.setWordJson(cursor.getString(2));
-
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            translate.setWordMapper(mapper.readValue(translate.getWordJson(), WordMapper.class));
-        } catch (IOException e) {
-            Log.w(Const.LOG_TAG, "Error while mapper to Word.class");
-        }
-
-        cursor.close();
-        return translate;
     }
 }

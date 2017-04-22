@@ -28,18 +28,24 @@ public class TranslateLocalDataSource implements TranslationDataSource {
         return instance;
     }
 
-    public static void destroyInstance() {
-        instance = null;
+    @Override
+    public boolean isEmptyLangList(String localeCode) {
+        return backend.isEmptyLocaleLanguageList(localeCode);
     }
 
     @Override
     public Observable<List<Language>> loadLangs(String localeCode) {
-        return null;
+        return Observable.just(backend.getCashedLangs(localeCode));
     }
 
     @Override
-    public Observable<Translate> loadFavourites() {
-        return Observable.from(backend.getFavourites());
+    public void saveLanguages(String localeCode, List<Language> languages) {
+        backend.insertLanguages(localeCode, languages);
+    }
+
+    @Override
+    public Observable<List<Translate>> loadFavourites() {
+        return Observable.just(backend.getFavourites());
     }
 
     @Override
@@ -63,6 +69,11 @@ public class TranslateLocalDataSource implements TranslationDataSource {
     }
 
     @Override
+    public Observable<List<Translate>> searchInHistory(String searchText) {
+        return Observable.just(backend.searchInHistory(searchText));
+    }
+
+    @Override
     public void clearFavourites() {
         backend.clearFavourites();
     }
@@ -73,7 +84,7 @@ public class TranslateLocalDataSource implements TranslationDataSource {
     }
 
     @Override
-    public Observable<List<Translate>> searchInHistory(String searchText) {
+    public Observable<List<Translate>> searchInFavourite(String searchText) {
         return Observable.just(backend.searchInFavourite(searchText));
     }
 

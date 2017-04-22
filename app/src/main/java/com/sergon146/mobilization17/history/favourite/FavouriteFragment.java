@@ -16,14 +16,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.sergon146.mobilization17.R;
-import com.sergon146.mobilization17.adapter.HistoryAdapter;
+import com.sergon146.mobilization17.history.adapter.HistoryAdapter;
 import com.sergon146.mobilization17.history.HistoryContract;
 import com.sergon146.mobilization17.pojo.Translate;
 
 import java.util.Collections;
 import java.util.List;
 
-public class FavFragment extends Fragment implements HistoryContract.View {
+public class FavouriteFragment extends Fragment implements HistoryContract.View {
     private HistoryContract.Presenter mPresenter;
     private EditText etSearch;
     private ImageView ivClearSearch; //todo add
@@ -32,11 +32,11 @@ public class FavFragment extends Fragment implements HistoryContract.View {
     private RecyclerView mRecyclerView;
     private HistoryAdapter mAdapter;
 
-    public FavFragment() {
+    public FavouriteFragment() {
     }
 
-    public static FavFragment newInstance() {
-        return new FavFragment();
+    public static FavouriteFragment newInstance() {
+        return new FavouriteFragment();
     }
 
 

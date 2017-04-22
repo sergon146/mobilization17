@@ -20,12 +20,12 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class FavPresenter implements HistoryContract.Presenter {
+public class FavouritePresenter implements HistoryContract.Presenter {
     private TranslateRepository mRepository;
     private HistoryContract.View mView;
     private CompositeSubscription mSubscription;
 
-    public FavPresenter(TranslateRepository repository, HistoryContract.View view) {
+    public FavouritePresenter(TranslateRepository repository, HistoryContract.View view) {
         mRepository = repository;
         mView = view;
         mView.setPresenter(this);
@@ -46,7 +46,6 @@ public class FavPresenter implements HistoryContract.Presenter {
         Subscription subscription = mRepository.loadFavourites()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .toList()
                 .subscribe(new Observer<List<Translate>>() {
                     @Override
                     public void onCompleted() {

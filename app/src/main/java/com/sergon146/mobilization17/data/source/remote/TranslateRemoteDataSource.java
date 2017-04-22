@@ -32,6 +32,12 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
     }
 
     @Override
+    public boolean isEmptyLangList(String localeCode) {
+        //do nothing
+        return false;
+    }
+
+    @Override
     public Observable<List<Language>> loadLangs(String localeCode) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Const.TRANSLATE_URL)
@@ -44,6 +50,11 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
         return translateService.loadLanguages(Const.TRANSLATE_API_KEY, localeCode)
                 .doOnError(th -> Log.e(Const.LOG_TAG, th.toString()))
                 .map(this::getLangsListFromMap);
+    }
+
+    @Override
+    public void saveLanguages(String localeCode, List<Language> languages) {
+        //do nothing
     }
 
     @Override
@@ -95,58 +106,74 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
 
     @Override
     public boolean isContainTranslate(Translate translate) {
+        //do nothing
         return false;
     }
 
     @Override
     public void saveTranslate(Translate translate) {
+        //do nothing
     }
 
     @Override
-    public Observable<Translate> loadFavourites() {
+    public Observable<List<Translate>> loadFavourites() {
+        //do nothing
         return null;
     }
 
     @Override
     public void clearFavourites() {
+        //do nothing
     }
 
     @Override
     public void setFavourites(Translate translate) {
+        //do nothing
+    }
+
+    @Override
+    public Observable<List<Translate>> searchInFavourite(String searchText) {
+        //do nothing
+        return null;
     }
 
     @Override
     public Observable<List<Translate>> searchInHistory(String searchText) {
+        //do nothing
         return null;
     }
 
     @Override
     public void setSourceLang(String sourceCode) {
-
+        //do nothing
     }
 
     @Override
     public void setTargetLang(String targetLang) {
-
+        //do nothing
     }
 
     @Override
     public String getSourceCode() {
+        //do nothing
         return null;
     }
 
     @Override
     public String getTargetCode() {
+        //do nothing
         return null;
     }
 
     @Override
     public String getSourceName() {
+        //do nothing
         return null;
     }
 
     @Override
     public String getTargetName() {
+        //do nothing
         return null;
     }
 

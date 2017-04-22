@@ -20,26 +20,25 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 import static android.app.Activity.RESULT_OK;
 
-public class TrPresenter implements TranslateContract.Presenter {
+public class TranslatePresenter implements TranslateContract.Presenter {
     private TranslateRepository mRepository;
     private TranslateContract.View mView;
-    private CompositeSubscription mSubscription;
+    private CompositeSubscription mSubscriptions;
 
     private Translate translate;
 
-    public TrPresenter(TranslateRepository repository, TranslateContract.View view) {
+    public TranslatePresenter(TranslateRepository repository, TranslateContract.View view) {
         mView = view;
         mView.setPresenter(this);
         mRepository = repository;
         translate = new Translate();
-        mSubscription = new CompositeSubscription();
+        mSubscriptions = new CompositeSubscription();
 
         translate.setSourceLangCode(mRepository.getSourceCode());
         translate.setTargetLangCode(mRepository.getTargetCode());
@@ -47,11 +46,12 @@ public class TrPresenter implements TranslateContract.Presenter {
 
     @Override
     public void subscribe() {
+        loadTranslate(mView.getSourceText());
     }
 
     @Override
     public void unsubscribe() {
-        mSubscription.clear();
+        mSubscriptions.clear();
     }
 
     @Override
@@ -80,7 +80,7 @@ public class TrPresenter implements TranslateContract.Presenter {
         translate.setFavourite(false);
         translate.setWordMapper(null);
 
-        Subscription subscription = mRepository.loadTranslateSentence(translate)
+        mRepository.loadTranslateSentence(translate)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .cache()
@@ -92,7 +92,7 @@ public class TrPresenter implements TranslateContract.Presenter {
                         mView.changeFavourite(tr.isFavourite());
                         if (!tr.getTargetText().isEmpty()) {
                             if (Util.isWord(translate.getSourceText())) {
-                                if (tr.getWordJson().isEmpty()) {
+                                if (tr.getWordJson().isEmpty() && tr.getWordMapper() == null) {
                                     loadWord(tr);
                                 } else {
                                     setMeans(tr.getWordMapper());
@@ -118,11 +118,10 @@ public class TrPresenter implements TranslateContract.Presenter {
                     }
                 });
 
-        mSubscription.add(subscription);
     }
 
     private void loadWord(Translate translate) {
-        Subscription subscription = mRepository.loadTranslateWord(translate)
+        mRepository.loadTranslateWord(translate)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .cache()
@@ -151,7 +150,6 @@ public class TrPresenter implements TranslateContract.Presenter {
                         Log.w("Dictionary", "Error while translated sentence: " + translate.getSourceText() + " - " + e);
                     }
                 });
-        mSubscription.add(subscription);
     }
 
     @Override

@@ -8,7 +8,11 @@ import java.util.List;
 import rx.Observable;
 
 public interface TranslationDataSource {
+    boolean isEmptyLangList(String localeCode);
+
     Observable<List<Language>> loadLangs(String localeCode);
+
+    void saveLanguages(String localeCode, List<Language> languages);
 
     Observable<Translate> loadTranslateSentence(Translate translate);
 
@@ -18,13 +22,15 @@ public interface TranslationDataSource {
 
     void saveTranslate(Translate translate);
 
-    Observable<Translate> loadFavourites();
+    Observable<List<Translate>> searchInHistory(String searchText);
+
+    Observable<List<Translate>> loadFavourites();
 
     void clearFavourites();
 
     void setFavourites(Translate translate);
 
-    Observable<List<Translate>> searchInHistory(String searchText);
+    Observable<List<Translate>> searchInFavourite(String searchText);
 
     void setSourceLang(String sourceCode);
 

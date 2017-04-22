@@ -20,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.sergon146.mobilization17.R;
@@ -32,7 +31,7 @@ import com.sergon146.mobilization17.util.ViewUtil;
 import java.util.List;
 import java.util.Locale;
 
-public class TrFragment extends Fragment implements TranslateContract.View, TextToSpeech.OnInitListener {
+public class TranslateFragment extends Fragment implements TranslateContract.View, TextToSpeech.OnInitListener {
     private TranslateContract.Presenter mPresenter;
 
     private TextToSpeech tts;
@@ -62,11 +61,11 @@ public class TrFragment extends Fragment implements TranslateContract.View, Text
 
     private ViewSwitcher vsTarget;
 
-    public TrFragment() {
+    public TranslateFragment() {
     }
 
-    public static TrFragment newInstance() {
-        return new TrFragment();
+    public static TranslateFragment newInstance() {
+        return new TranslateFragment();
     }
 
     @Nullable

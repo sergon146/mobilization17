@@ -8,8 +8,8 @@ import com.sergon146.mobilization17.data.source.local.TranslateLocalDataSource;
 import com.sergon146.mobilization17.data.source.remote.TranslateRemoteDataSource;
 import com.sergon146.mobilization17.pojo.Language;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
@@ -18,7 +18,7 @@ public class Util {
         return (s.length() > 0 && s.split("\\s+").length == 1);
     }
 
-    public static ArrayList<Language> sortLangs(ArrayList<Language> languages) {
+    public static List<Language> sortLangs(List<Language> languages) {
         Collections.sort(languages, (o1, o2) -> o1.getName().compareTo(o2.getName()));
         return languages;
     }

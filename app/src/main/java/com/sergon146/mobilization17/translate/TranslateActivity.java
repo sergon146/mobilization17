@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.activity;
+package com.sergon146.mobilization17.translate;
 
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
@@ -7,17 +7,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.sergon146.mobilization17.R;
-import com.sergon146.mobilization17.history.favourite.FavFragment;
-import com.sergon146.mobilization17.history.favourite.FavPresenter;
-import com.sergon146.mobilization17.translate.TrFragment;
-import com.sergon146.mobilization17.translate.TrPresenter;
+import com.sergon146.mobilization17.history.favourite.FavouriteFragment;
+import com.sergon146.mobilization17.history.favourite.FavouritePresenter;
 import com.sergon146.mobilization17.util.Util;
 
 public class TranslateActivity extends AppCompatActivity {
     private BottomNavigationView navigation;
     private int currentItem = R.id.navigation_translate;
 
-    //коментарии в коде идут вразрез концепции чистого кода описанного Мартином :)
+    //коментарии в коде идут вразрез концепции чистого кода описанного Р. Мартином :)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +39,7 @@ public class TranslateActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(item -> {
             setCurrentFragmentByItemId(item.getItemId());
             item.setChecked(true);
-            return false;
+            return true;
         });
     }
 
@@ -49,34 +47,34 @@ public class TranslateActivity extends AppCompatActivity {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_container);
         switch (itemId) {
             case R.id.navigation_translate:
-                TrFragment trFragment;
-                if (fragment == null || !(fragment instanceof TrFragment)) {
-                    trFragment = TrFragment.newInstance();
+                TranslateFragment translateFragment;
+                if (fragment == null || !(fragment instanceof TranslateFragment)) {
+                    translateFragment = TranslateFragment.newInstance();
                 } else {
-                    trFragment = (TrFragment) fragment;
+                    translateFragment = (TranslateFragment) fragment;
                 }
-               new TrPresenter(Util.provideTasksRepository(getApplicationContext()), trFragment);
-                setCurrentFragment(trFragment);
+               new TranslatePresenter(Util.provideTasksRepository(getApplicationContext()), translateFragment);
+                setCurrentFragment(translateFragment);
                 break;
             case R.id.navigation_history:
-//                FavFragment favFragment;
-//                if (fragment == null || !(fragment instanceof FavFragment)) {
-//                    favFragment = FavFragment.newInstance();
+//                FavouriteFragment favouriteFragment;
+//                if (fragment == null || !(fragment instanceof FavouriteFragment)) {
+//                    favouriteFragment = FavouriteFragment.newInstance();
 //                } else {
-//                    favFragment = (FavFragment) fragment;
+//                    favouriteFragment = (FavouriteFragment) fragment;
 //                }
-//                new FavPresenter(Util.provideTasksRepository(getApplicationContext()), favFragment);
-//                setCurrentFragment(favFragment);
+//                new FavouritePresenter(Util.provideTasksRepository(getApplicationContext()), favouriteFragment);
+//                setCurrentFragment(favouriteFragment);
                 break;
             case R.id.navigation_favourite:
-                FavFragment favFragment;
-                if (fragment == null || !(fragment instanceof FavFragment)) {
-                    favFragment = FavFragment.newInstance();
+                FavouriteFragment favouriteFragment;
+                if (fragment == null || !(fragment instanceof FavouriteFragment)) {
+                    favouriteFragment = FavouriteFragment.newInstance();
                 } else {
-                    favFragment = (FavFragment) fragment;
+                    favouriteFragment = (FavouriteFragment) fragment;
                 }
-                new FavPresenter(Util.provideTasksRepository(getApplicationContext()), favFragment);
-                setCurrentFragment(favFragment);
+                new FavouritePresenter(Util.provideTasksRepository(getApplicationContext()), favouriteFragment);
+                setCurrentFragment(favouriteFragment);
                 break;
         }
         currentItem = itemId;

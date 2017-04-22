@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.adapter;
+package com.sergon146.mobilization17.history.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,16 +8,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sergon146.mobilization17.R;
-import com.sergon146.mobilization17.history.favourite.FavFragment;
+import com.sergon146.mobilization17.history.favourite.FavouriteFragment;
 import com.sergon146.mobilization17.pojo.Translate;
 
 import java.util.List;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.TranslateViewHolder> {
     private List<Translate> translates;
-    private FavFragment.TranslateItemListener itemListener;
+    private FavouriteFragment.TranslateItemListener itemListener;
 
-    public HistoryAdapter(List<Translate> translates, FavFragment.TranslateItemListener itemListener) {
+    public HistoryAdapter(List<Translate> translates, FavouriteFragment.TranslateItemListener itemListener) {
         this.translates = translates;
         this.itemListener = itemListener;
     }
