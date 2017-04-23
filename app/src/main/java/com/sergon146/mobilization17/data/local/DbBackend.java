@@ -11,7 +11,6 @@ import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.pojo.Translate;
 import com.sergon146.mobilization17.pojo.translate.mapper.WordMapper;
 import com.sergon146.mobilization17.util.Const;
-import com.sergon146.mobilization17.util.Util;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -72,15 +71,18 @@ class DbBackend implements DbContract {
                 ID,
                 LangsNameTbl.COLUMN_LANG_CODE,
                 LangsNameTbl.COLUMN_NAME};
+
         String where = LangsNameTbl.COLUMN_LOCALE_CODE + " = ?";
         String[] whereArgs = new String[]{String.valueOf(getLocaleId(localeCode))};
+
+        String orderBy = LangsNameTbl.COLUMN_NAME + " ASC";
 
         Cursor cursor = db.query(
                 TABLE_LANGS_NAME,
                 columns,
                 where,
                 whereArgs,
-                null, null, null);
+                null, null, orderBy);
         int sourceId = getSourceLangId();
         int targetId = getTargetLangId();
 
@@ -98,8 +100,6 @@ class DbBackend implements DbContract {
             languages.add(lang);
         }
         cursor.close();
-
-        languages = Util.sortLangs(languages);
 
         return languages;
     }

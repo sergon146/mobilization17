@@ -32,7 +32,6 @@
                 android:lines="1"
                 android:paddingRight="15dp"
                 android:scrollHorizontally="true"
-                android:text="@string/source"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
 
@@ -60,7 +59,6 @@
                 android:lines="1"
                 android:paddingLeft="15dp"
                 android:scrollHorizontally="true"
-                android:text="@string/target"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 android:visibility="visible" />

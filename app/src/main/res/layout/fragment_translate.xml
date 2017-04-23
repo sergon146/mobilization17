@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:tag="@string/translate"
-    tools:context="com.sergon146.mobilization17.fragment.TranslateFragment">
+    android:tag="@string/translate">
 
 
     <android.support.v7.widget.Toolbar
@@ -27,12 +25,10 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_toStartOf="@+id/swap"
-                android:ellipsize="end"
-                android:gravity="end|center_vertical"
+                android:gravity="center"
                 android:lines="1"
-                android:paddingRight="15dp"
                 android:scrollHorizontally="true"
-                android:text="@string/source"
+                android:textAlignment="center"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
 
@@ -54,13 +50,10 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/swap"
-                android:ellipsize="end"
-                android:ems="10"
-                android:gravity="start|center_vertical"
+                android:gravity="center"
                 android:lines="1"
-                android:paddingLeft="15dp"
                 android:scrollHorizontally="true"
-                android:text="@string/target"
+                android:textAlignment="center"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 android:visibility="visible" />
@@ -80,7 +73,7 @@
         android:weightSum="1">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
@@ -123,7 +116,6 @@
                 android:layout_marginEnd="5dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="10dp"
-                android:onClick="onGetSourceSpeechClick"
                 app:srcCompat="@drawable/ic_micro" />
 
             <ViewSwitcher
@@ -213,7 +205,7 @@
 
         <LinearLayout
             android:id="@+id/mean_layout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginTop="8dp"
             android:layout_weight="1"

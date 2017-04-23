@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">Mobilization</string>
-    <string name="source">Source</string>
     <string name="swap">Swap language</string>
-    <string name="target">Target</string>
 
     <string name="source_title">Source language</string>
     <string name="target_title">Target language</string>

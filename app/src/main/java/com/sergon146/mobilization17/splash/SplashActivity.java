@@ -46,7 +46,7 @@ public class SplashActivity extends AppCompatActivity implements SplashContract.
 
     @Override
     public void finishSplash() {
-        Intent intent = new Intent(SplashActivity.this, TranslateActivity.class);
+        Intent intent = new Intent(this, TranslateActivity.class);
         startActivity(intent);
         finish();
     }

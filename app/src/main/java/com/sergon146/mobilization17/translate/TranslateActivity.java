@@ -23,6 +23,8 @@ import com.sergon146.mobilization17.translate.translate.TranslatePresenter;
 import com.sergon146.mobilization17.util.Const;
 import com.sergon146.mobilization17.util.Util;
 
+import butterknife.ButterKnife;
+
 public class TranslateActivity extends AppCompatActivity {
     private BasePresenter mPresenter;
     private BottomNavigationView navigation;
@@ -73,7 +75,7 @@ public class TranslateActivity extends AppCompatActivity {
     }
 
     private void initNavBar() {
-        navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation = ButterKnife.findById(this, R.id.navigation);
         navigation.setSelectedItemId(currentItem);
         navigation.setOnNavigationItemSelectedListener(item -> {
             setCurrentFragmentByItemId(item.getItemId());

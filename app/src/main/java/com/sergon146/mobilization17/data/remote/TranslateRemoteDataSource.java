@@ -8,6 +8,7 @@ import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.pojo.Translate;
 import com.sergon146.mobilization17.service.TranslateService;
 import com.sergon146.mobilization17.util.Const;
+import com.sergon146.mobilization17.util.Util;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -117,7 +118,7 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
 
     @Override
     public void deleteTranslate(Translate translate) {
-
+        //only local data
     }
 
     @Override
@@ -214,7 +215,7 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
             language.setName(entry.getValue());
             languages.add(language);
         }
-
+        languages = Util.sortLangs(languages);
         return languages;
     }
 }

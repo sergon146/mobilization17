@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.sergon146.mobilization17.data.TranslateRepository;
+import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.pojo.Translate;
 import com.sergon146.mobilization17.pojo.translate.mapper.WordMapper;
 import com.sergon146.mobilization17.util.Const;
@@ -17,6 +18,7 @@ import com.sergon146.mobilization17.util.Util;
 import com.sergon146.mobilization17.view.MeanLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import rx.Subscriber;
@@ -81,10 +83,23 @@ public class TranslatePresenter implements TranslateContract.Presenter {
             mRepository.loadLangs(localeCode)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(t -> {
-                        setSourceLang();
-                        setTargetLang();
-                        mView.hideProgress();
+                    .subscribe(new Subscriber<List<Language>>() {
+                        @Override
+                        public void onNext(List<Language> languageList) {
+                            setSourceLang();
+                            setTargetLang();
+                            mView.hideProgress();
+                        }
+
+                        @Override
+                        public void onCompleted() {
+                            loadTranslate();
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.w("LoadLangs", "Error while loading langs: " + e);
+                        }
                     });
         } else {
             setSourceLang();

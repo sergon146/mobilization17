@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.util.Const;
 import com.sergon146.mobilization17.util.Util;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -26,13 +28,14 @@ import rx.schedulers.Schedulers;
 
 public class ChooseLanguageActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
+    private LanguageAdapter adapter;
     private List<Language> languages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_language);
-
+        languages = new ArrayList<>();
         recyclerView = (RecyclerView) findViewById(R.id.langs_recycler);
         initData();
 
@@ -44,17 +47,16 @@ public class ChooseLanguageActivity extends AppCompatActivity {
         repository.loadLangs((Locale.getDefault().getLanguage()))
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(Util::sortLangs)
                 .subscribe(new Subscriber<List<Language>>() {
                     @Override
                     public void onNext(List<Language> languageList) {
                         languages = languageList;
-                        LanguageAdapter adapter = new LanguageAdapter(languageList);
-                        recyclerView.setAdapter(adapter);
+                        adapter.setLanguages(languages);
                     }
 
                     @Override
                     public void onCompleted() {
+                        Log.e("ChooseLang", "Languages loaded ");
                     }
 
                     @Override
@@ -62,11 +64,14 @@ public class ChooseLanguageActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),
                                 getString(R.string.error),
                                 Toast.LENGTH_SHORT).show();
+                        finish();
                     }
                 });
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new LanguageAdapter(languages);
+        recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getApplicationContext(), (view, position) -> {
                     Intent intent = new Intent();

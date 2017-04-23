@@ -101,6 +101,8 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
         tts.shutdown();
     }
 
+
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

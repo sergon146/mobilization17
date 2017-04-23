@@ -44,4 +44,9 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
             name = (TextView) itemView.findViewById(R.id.lang_name);
         }
     }
+
+    public void setLanguages(List<Language> languages) {
+        this.languages = languages;
+        notifyDataSetChanged();
+    }
 }
