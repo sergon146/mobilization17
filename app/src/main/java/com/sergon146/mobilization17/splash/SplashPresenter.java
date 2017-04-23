@@ -29,6 +29,7 @@ public class SplashPresenter implements SplashContract.Presenter {
         mSubscriptions = new CompositeSubscription();
     }
 
+    //проверяем при загрузке наличие списка языков
     @Override
     public void subscribe() {
         loadLanguagesIfNecessary(Locale.getDefault().getLanguage());

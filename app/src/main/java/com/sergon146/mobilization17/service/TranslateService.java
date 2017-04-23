@@ -10,16 +10,17 @@ import retrofit2.http.Query;
 import rx.Observable;
 
 public interface TranslateService {
-
+    //загрузка списка языков
     @GET("getLangs?")
     Observable<Map<String, Object>> loadLanguages(@Query("key") String key,
                                                   @Query("ui") String locale);
-
+    //загрузка перевода предложения
     @GET("translate?")
     Observable<SentenceMapper> loadTranslateSentences(@Query("key") String key,
                                                       @Query("text") String text,
                                                       @Query("lang") String lang);
 
+    //загрузка перевода слова из словаря
     @GET("lookup?")
     Observable<WordMapper> loadTranslateWord(@Query("key") String key,
                                              @Query("lang") String lang,

@@ -61,6 +61,7 @@ public class TranslatePresenter implements TranslateContract.Presenter {
         initialProcess(context);
     }
 
+    //проверяем наличие подключения
     private void initialProcess(Context context) {
         if (NetworkUtil.getConnectivityStatus(context) ==
                 NetworkUtil.TYPE_NOT_CONNECTED) {
@@ -111,6 +112,7 @@ public class TranslatePresenter implements TranslateContract.Presenter {
         loadTranslate(mView.getSourceText());
     }
 
+    //загрузка перевода предложения и слова
     @Override
     public void loadTranslate(String text) {
         if (NetworkUtil.getConnectivityStatus(mView.getContext()) ==
@@ -176,6 +178,7 @@ public class TranslatePresenter implements TranslateContract.Presenter {
 
     }
 
+    //загрузка слова из словаря
     private void loadWord(Translate translate) {
         mRepository.loadTranslateWord(translate)
                 .subscribeOn(Schedulers.io())
@@ -222,6 +225,7 @@ public class TranslatePresenter implements TranslateContract.Presenter {
         }
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
+                //установка нового языка текста
                 case Const.REQUEST_CODE_SOURCE:
                     translate.setSourceLangCode((String) data.getExtras().get(Const.CODE));
                     mRepository.setSourceLang(translate.getSourceLangCode());
@@ -229,6 +233,8 @@ public class TranslatePresenter implements TranslateContract.Presenter {
 
                     loadTranslate();
                     break;
+
+                //установка нового языка перевода
                 case Const.REQUEST_CODE_TARGET:
                     translate.setTargetLangCode((String) data.getExtras().get(Const.CODE));
                     mRepository.setTargetLang(translate.getTargetLangCode());
@@ -236,6 +242,8 @@ public class TranslatePresenter implements TranslateContract.Presenter {
 
                     loadTranslate();
                     break;
+
+                //установка распознанного текста
                 case Const.REQUEST_CODE_RECOGNITION:
                     ArrayList<String> matches = data.getStringArrayListExtra(
                             RecognizerIntent.EXTRA_RESULTS);
@@ -248,6 +256,8 @@ public class TranslatePresenter implements TranslateContract.Presenter {
         }
     }
 
+
+    //смена языков текста и перевода
     @Override
     public void swapLanguage() {
         String temp = translate.getSourceLangCode();
@@ -277,12 +287,14 @@ public class TranslatePresenter implements TranslateContract.Presenter {
         }
     }
 
+    //озвучивание исходного текста
     @Override
     public void speakSourceOut(String s, TextToSpeech tts) {
         tts.setLanguage(new Locale(translate.getSourceLangCode()));
         tts.speak(s, TextToSpeech.QUEUE_FLUSH, null, Const.SOURCE_SPEECH);
     }
 
+    //озвучивание текста перевода
     @Override
     public void speakTargetOut(String s, TextToSpeech tts) {
         tts.setLanguage(new Locale(translate.getTargetLangCode()));
@@ -294,6 +306,7 @@ public class TranslatePresenter implements TranslateContract.Presenter {
         return translate.getSourceLangCode();
     }
 
+    //отображение перевода слова из словаря
     private void setMeans(WordMapper word) {
         View.OnClickListener flowListener = v -> {
             TextView view = (TextView) v;

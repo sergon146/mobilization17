@@ -29,6 +29,7 @@ public class TranslateRepository implements TranslationDataSource {
         return localSource.isEmptyLangList(localeCode);
     }
 
+    //если список языков ещё не загружен - загружаем, иначе достаём его из БД
     @Override
     public Observable<List<Language>> loadLangs(String localeCode) {
         if (isEmptyLangList(localeCode)) {
@@ -40,6 +41,7 @@ public class TranslateRepository implements TranslationDataSource {
         }
     }
 
+    //
     @Override
     public void saveLanguages(String localeCode, List<Language> languages) {
         localSource.saveLanguages(localeCode, languages);
@@ -50,6 +52,7 @@ public class TranslateRepository implements TranslationDataSource {
         return localSource.loadFavourites();
     }
 
+    //если перевод содержится в БД - возвращаем его, иначе дёргаем API
     @Override
     public Observable<Translate> loadTranslateWord(Translate translate) {
         if (localSource.isContainTranslate(translate)) {
@@ -64,6 +67,7 @@ public class TranslateRepository implements TranslationDataSource {
         return localSource.isContainTranslate(translate);
     }
 
+    //если перевод предложения имеется - возвращаем его из БД, иначе загружаем
     @Override
     public Observable<Translate> loadTranslateSentence(Translate translate) {
         if (isContainTranslate(translate)) {
