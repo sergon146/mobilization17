@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Mobilization`17</string>
+    <string name="app_name">Mobilization</string>
     <string name="source">Source</string>
     <string name="swap">Swap language</string>
     <string name="target">Target</string>
@@ -14,7 +14,7 @@
     <string name="error">Error! Please try again later</string>
     <string name="recognition">Voice recognition \n  Talking…</string>
 
-    <string name="title_activity_splash">Loading...</string>
+    <string name="title_activity_splash">Loading…</string>
 
     <string name="translate">Translate</string>
     <string name="history">History</string>

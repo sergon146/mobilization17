@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Мобилизация</string>
+    <string name="del_history">История очищена</string>
+    <string name="delete">Удалить</string>
+    <string name="error">Ошибка! Повторите попытку позже</string>
+    <string name="favourite_dialog_title">Вы уверены, что ходите очистить избарнное?</string>
+    <string name="favourite_search">Поиск по избранному</string>
+    <string name="favourites">Избранное</string>
+    <string name="history">История</string>
+    <string name="history_dialog_title">Вы уверены, что ходите очистить историю?</string>
+    <string name="history_search">Поиск по истории</string>
+    <string name="no">Нет</string>
+    <string name="yes">Да</string>
+    <string name="translate">Перевод</string>
+    <string name="translate_error">Возникла ошибка при переводе</string>
+    <string name="title_activity_splash">Загрузка…</string>
+    <string name="textHint">Введите текст для перевода</string>
+    <string name="target_title">Язык перевода</string>
+    <string name="target">Выберите язык</string>
+    <string name="swap">Сменить языки</string>
+    <string name="source_title">Язык текста</string>
+    <string name="source">Выберите язык</string>
+    <string name="retry">Повторить</string>
+    <string name="recognition">Распознавание голоса  Говорите…</string>
+    <string name="offline_message">Отсутствует подключеник к Интернету. Попробуйте позже</string>
+    <string name="nothing_show">Переводы отсутствуют</string>
+</resources>
