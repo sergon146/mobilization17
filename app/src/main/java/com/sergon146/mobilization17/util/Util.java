@@ -1,7 +1,6 @@
 package com.sergon146.mobilization17.util;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.sergon146.mobilization17.data.TranslateRepository;
 import com.sergon146.mobilization17.data.local.TranslateLocalDataSource;
@@ -11,7 +10,6 @@ import com.sergon146.mobilization17.pojo.Language;
 import java.util.Collections;
 import java.util.List;
 
-import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class Util {
     public static String trimAll(String text) {
@@ -28,8 +26,8 @@ public class Util {
         return languages;
     }
 
-    public static TranslateRepository provideTasksRepository(@NonNull Context context) {
-        checkNotNull(context);
+    public static TranslateRepository provideTasksRepository(Context context) {
+        assert context != null;
         return TranslateRepository.getInstance(TranslateLocalDataSource.getInstance(context),
                 TranslateRemoteDataSource.getInstance());
     }
