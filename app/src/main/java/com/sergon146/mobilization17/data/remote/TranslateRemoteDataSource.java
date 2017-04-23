@@ -34,7 +34,7 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
 
     @Override
     public boolean isEmptyLangList(String localeCode) {
-        //only local data
+        //only in local
         return true;
     }
 
@@ -55,7 +55,7 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
 
     @Override
     public void saveLanguages(String localeCode, List<Language> languages) {
-        //only local data
+        //only in local
     }
 
     @Override
@@ -107,90 +107,90 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
 
     @Override
     public boolean isContainTranslate(Translate translate) {
-        //only local data
+        //only in local
         return false;
     }
 
     @Override
     public void saveTranslate(Translate translate) {
-        //only local data
+        //only in local
     }
 
     @Override
     public void deleteTranslate(Translate translate) {
-        //only local data
+        //only in local
     }
 
     @Override
     public Observable<List<Translate>> loadHistory() {
-        //only local data
+        //only in local
         return null;
     }
 
     @Override
     public Observable<List<Translate>> loadFavourites() {
-        //only local data
+        //only in local
         return null;
     }
 
     @Override
     public void clearFavourites() {
-        //only local data
+        //only in local
     }
 
     @Override
     public void setFavourites(Translate translate) {
-        //only local data
+        //only in local
     }
 
     @Override
     public Observable<List<Translate>> searchInFavourite(String searchText) {
-        //only local data
+        //only in local
         return null;
     }
 
     @Override
     public Observable<List<Translate>> searchInHistory(String searchText) {
-        //only local data
+        //only in local
         return null;
     }
 
     @Override
     public void clearHistory() {
-        //only local data
+        //only in local
     }
 
     @Override
     public void setSourceLang(String sourceCode) {
-        //only local data
+        //only in local
     }
 
     @Override
     public void setTargetLang(String targetLang) {
-        //only local data
+        //only in local
     }
 
     @Override
     public String getSourceCode() {
-        //only local data
+        //only in local
         return null;
     }
 
     @Override
     public String getTargetCode() {
-        //only local data
+        //only in local
         return null;
     }
 
     @Override
     public String getSourceName() {
-        //only local data
+        //only in local
         return null;
     }
 
     @Override
     public String getTargetName() {
-        //only local data
+        //only in local
         return null;
     }
 

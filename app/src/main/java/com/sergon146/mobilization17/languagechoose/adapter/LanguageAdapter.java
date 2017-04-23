@@ -28,7 +28,6 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
     public void onBindViewHolder(LanguageViewHolder holder, int i) {
         holder.itemView.setId(languages.get(i).getId());
         holder.name.setText(languages.get(i).getName());
-
     }
 
     @Override

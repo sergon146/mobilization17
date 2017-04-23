@@ -9,7 +9,7 @@ import android.util.Log;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.pojo.Translate;
-import com.sergon146.mobilization17.pojo.translate.mapper.WordMapper;
+import com.sergon146.mobilization17.pojo.translate.WordMapper;
 import com.sergon146.mobilization17.util.Const;
 
 import java.io.IOException;

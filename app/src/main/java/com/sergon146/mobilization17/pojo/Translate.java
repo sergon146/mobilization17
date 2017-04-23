@@ -1,6 +1,6 @@
 package com.sergon146.mobilization17.pojo;
 
-import com.sergon146.mobilization17.pojo.translate.mapper.WordMapper;
+import com.sergon146.mobilization17.pojo.translate.WordMapper;
 
 public class Translate {
     private String sourceText;

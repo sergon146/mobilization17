@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.sergon146.mobilization17.data.TranslateRepository;
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.pojo.Translate;
-import com.sergon146.mobilization17.pojo.translate.mapper.WordMapper;
+import com.sergon146.mobilization17.pojo.translate.WordMapper;
 import com.sergon146.mobilization17.util.Const;
 import com.sergon146.mobilization17.util.NetworkUtil;
 import com.sergon146.mobilization17.util.Util;
@@ -151,6 +151,7 @@ public class TranslatePresenter implements TranslateContract.Presenter {
                         mView.changeFavourite(tr.isFavourite());
                         if (!tr.getTargetText().isEmpty()) {
                             if (Util.isWord(translate.getSourceText())) {
+                                //если уже имеется загруженные данные словаря отображаем их сразу
                                 if (tr.getWordJson().isEmpty() && tr.getWordMapper() == null) {
                                     loadWord(tr);
                                 } else {

@@ -1,5 +1,4 @@
-
-package com.sergon146.mobilization17.pojo.translate.mapper;
+package com.sergon146.mobilization17.pojo.translate;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -9,20 +8,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "head",
-        "def"
+        "text"
 })
-public class WordMapper {
+public class Mean {
 
-    @JsonProperty("head")
-    private Head head;
-    @JsonProperty("def")
-    private List<Def> def = null;
+    @JsonProperty("text")
+    private String text;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -30,47 +25,30 @@ public class WordMapper {
      * No args constructor for use in serialization
      *
      */
-    public WordMapper() {
+    public Mean() {
     }
 
     /**
      *
-     * @param def
-     * @param head
+     * @param text
      */
-    public WordMapper(Head head, List<Def> def) {
+    public Mean(String text) {
         super();
-        this.head = head;
-        this.def = def;
+        this.text = text;
     }
 
-    @JsonProperty("head")
-    public Head getHead() {
-        return head;
+    @JsonProperty("text")
+    public String getText() {
+        return text;
     }
 
-    @JsonProperty("head")
-    public void setHead(Head head) {
-        this.head = head;
+    @JsonProperty("text")
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public WordMapper withHead(Head head) {
-        this.head = head;
-        return this;
-    }
-
-    @JsonProperty("def")
-    public List<Def> getDef() {
-        return def;
-    }
-
-    @JsonProperty("def")
-    public void setDef(List<Def> def) {
-        this.def = def;
-    }
-
-    public WordMapper withDef(List<Def> def) {
-        this.def = def;
+    public Mean withText(String text) {
+        this.text = text;
         return this;
     }
 
@@ -84,7 +62,7 @@ public class WordMapper {
         this.additionalProperties.put(name, value);
     }
 
-    public WordMapper withAdditionalProperty(String name, Object value) {
+    public Mean withAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
         return this;
     }

@@ -10,12 +10,12 @@ import android.widget.TextView;
 
 import com.nex3z.flowlayout.FlowLayout;
 import com.sergon146.mobilization17.R;
-import com.sergon146.mobilization17.pojo.translate.mapper.Def;
-import com.sergon146.mobilization17.pojo.translate.mapper.Ex;
-import com.sergon146.mobilization17.pojo.translate.mapper.Mean;
-import com.sergon146.mobilization17.pojo.translate.mapper.Syn;
-import com.sergon146.mobilization17.pojo.translate.mapper.Tr;
-import com.sergon146.mobilization17.pojo.translate.mapper.WordMapper;
+import com.sergon146.mobilization17.pojo.translate.Def;
+import com.sergon146.mobilization17.pojo.translate.Ex;
+import com.sergon146.mobilization17.pojo.translate.Mean;
+import com.sergon146.mobilization17.pojo.translate.Syn;
+import com.sergon146.mobilization17.pojo.translate.Tr;
+import com.sergon146.mobilization17.pojo.translate.WordMapper;
 
 import java.util.ArrayList;
 import java.util.List;

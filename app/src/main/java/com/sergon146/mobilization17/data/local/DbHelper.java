@@ -15,12 +15,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class DbHelper extends SQLiteOpenHelper implements DbContract {
+class DbHelper extends SQLiteOpenHelper implements DbContract {
     private Context context;
     private static String DB_PATH;
-    public  static SQLiteDatabase dataBase;
+    private static SQLiteDatabase dataBase;
 
-    public DbHelper(Context context) {
+    DbHelper(Context context) {
         super(context, DbContract.DB_NAME, null, 1);
         this.context = context;
         DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
@@ -39,7 +39,7 @@ public class DbHelper extends SQLiteOpenHelper implements DbContract {
         }
     }
 
-    public void createDataBase() throws IOException {
+    private void createDataBase() throws IOException {
         if (isDbExist()) {
             Log.i(Const.LOG_TAG, "Database exist");
         } else {

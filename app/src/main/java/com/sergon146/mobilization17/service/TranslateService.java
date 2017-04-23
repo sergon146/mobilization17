@@ -1,7 +1,7 @@
 package com.sergon146.mobilization17.service;
 
-import com.sergon146.mobilization17.pojo.translate.mapper.SentenceMapper;
-import com.sergon146.mobilization17.pojo.translate.mapper.WordMapper;
+import com.sergon146.mobilization17.pojo.translate.SentenceMapper;
+import com.sergon146.mobilization17.pojo.translate.WordMapper;
 
 import java.util.Map;
 
