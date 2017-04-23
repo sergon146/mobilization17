@@ -25,6 +25,7 @@ class DbBackend implements DbContract {
         dbHelper = new DbHelper(context);
     }
 
+    //проверяем имеются ли сохранённые названия языков
     boolean isEmptyLocaleLanguageList(String localeCode) {
         db = dbHelper.getReadableDatabase();
         String[] columns = new String[]{ID};
@@ -44,6 +45,7 @@ class DbBackend implements DbContract {
         }
     }
 
+    //записываем в БД загруженный список языков
     void insertLanguages(String localeCode, List<Language> languages) {
         db = dbHelper.getWritableDatabase();
         int localeId = getLocaleId(localeCode);
@@ -64,6 +66,7 @@ class DbBackend implements DbContract {
         }
     }
 
+    //получаем сохранёный ранее список языков
     List<Language> getCashedLangs(String localeCode) {
         db = dbHelper.getReadableDatabase();
 
@@ -104,6 +107,7 @@ class DbBackend implements DbContract {
         return languages;
     }
 
+    //id языка по его ISO коду
     private int getLangId(String langCode) {
         db = dbHelper.getReadableDatabase();
 
@@ -122,6 +126,12 @@ class DbBackend implements DbContract {
         }
     }
 
+    //id локали
+    private int getLocaleId(String localeCode) {
+        return getLangId(localeCode);
+    }
+
+    //при появлении нового языка записываем его код в базу
     private void insertLangCode(String langCode) {
         try {
             db = dbHelper.getWritableDatabase();
@@ -140,10 +150,7 @@ class DbBackend implements DbContract {
         }
     }
 
-    private int getLocaleId(String localeCode) {
-        return getLangId(localeCode);
-    }
-
+    //ISO код языка по его id
     private String getLangCodeById(int id) {
         try {
             db = dbHelper.getReadableDatabase();
@@ -163,6 +170,7 @@ class DbBackend implements DbContract {
         }
     }
 
+    //язык текста для перевода
     String getSourceName(String localeCode) {
         try {
             db = dbHelper.getReadableDatabase();
@@ -181,6 +189,7 @@ class DbBackend implements DbContract {
         }
     }
 
+    //язык текста перевода
     String getTargetName(String localeCode) {
         try {
             db = dbHelper.getReadableDatabase();
@@ -199,6 +208,7 @@ class DbBackend implements DbContract {
         }
     }
 
+    //сохраняем новый язык текста
     void setSourceLang(String sourceCode) {
         db = dbHelper.getWritableDatabase();
         unSourcesAll();
@@ -211,6 +221,7 @@ class DbBackend implements DbContract {
         db.update(TABLE_LANGS, values, where, whereArgs);
     }
 
+    //снимаем пометку языка текста для всех языков, у которых она есть
     private void unSourcesAll() {
         db = dbHelper.getWritableDatabase();
 
@@ -222,6 +233,7 @@ class DbBackend implements DbContract {
         db.update(TABLE_LANGS, values, where, whereArgs);
     }
 
+    //сохраняем язык перевода
     void setTargetLang(String targetCode) {
         db = dbHelper.getWritableDatabase();
         unTargetAll();
@@ -234,6 +246,7 @@ class DbBackend implements DbContract {
         db.update(TABLE_LANGS, values, where, whereArgs);
     }
 
+    //снимаем отметку языка перевода для всех языков, у которых она есть
     private void unTargetAll() {
         db = dbHelper.getWritableDatabase();
 
@@ -245,6 +258,7 @@ class DbBackend implements DbContract {
         db.update(TABLE_LANGS, values, where, whereArgs);
     }
 
+    //код языка текста
     private int getSourceLangId() {
         try {
             db = dbHelper.getReadableDatabase();
@@ -261,6 +275,7 @@ class DbBackend implements DbContract {
         }
     }
 
+    //код языка перевода
     private int getTargetLangId() {
         try {
             db = dbHelper.getReadableDatabase();
@@ -277,6 +292,7 @@ class DbBackend implements DbContract {
         }
     }
 
+    //код языка текста
     String getSourceCode() {
         try {
             db = dbHelper.getReadableDatabase();
@@ -296,6 +312,7 @@ class DbBackend implements DbContract {
         }
     }
 
+    //код языка перевода
     String getTargetCode() {
         try {
             db = dbHelper.getReadableDatabase();
@@ -312,6 +329,7 @@ class DbBackend implements DbContract {
         }
     }
 
+    //сохраняем новый перевод, если его нет в базе
     void saveTranslate(Translate translate) {
         if (isTranslateContains(translate)) {
             Log.i("DB", "Already exist in db: " + translate.getSourceText());
@@ -338,6 +356,7 @@ class DbBackend implements DbContract {
         }
     }
 
+    //проверяем имеется ли текущий перевод в базе
     boolean isTranslateContains(Translate translate) {
         db = dbHelper.getReadableDatabase();
 
@@ -358,7 +377,8 @@ class DbBackend implements DbContract {
         return b;
     }
 
-    Translate getTranslateSentence(Translate translate) {
+    //получаем ранее сохранённый перевод
+    Translate getTranslate(Translate translate) {
         try {
             db = dbHelper.getReadableDatabase();
 
@@ -398,6 +418,7 @@ class DbBackend implements DbContract {
         }
     }
 
+    //очищаем всю историю
     void clearHistory() {
         db = dbHelper.getReadableDatabase();
         db.beginTransaction();
@@ -409,10 +430,12 @@ class DbBackend implements DbContract {
         }
     }
 
+    //получаем всю историю
     List<Translate> getHistory() {
         return searchInHistory("");
     }
 
+    //поиск по истории
     List<Translate> searchInHistory(String searchText) {
         try {
             searchText = "%" + searchText + "%";
@@ -453,6 +476,7 @@ class DbBackend implements DbContract {
         }
     }
 
+    //добавляем перевод в избранное
     void updateTranslateFavourite(Translate translate) {
         db = dbHelper.getWritableDatabase();
 
@@ -470,10 +494,12 @@ class DbBackend implements DbContract {
         Log.i(Const.LOG_TAG, "Set as favourite " + translate.getSourceText());
     }
 
+    //получаем все избарнные переводы
     List<Translate> getFavourites() {
         return searchInFavourite("");
     }
 
+    //поиск по избранному
     List<Translate> searchInFavourite(String searchText) {
         searchText = "%" + searchText + "%";
         List<Translate> translateList = new ArrayList<>();
@@ -517,6 +543,7 @@ class DbBackend implements DbContract {
         }
     }
 
+    //очищаем список избранного
     void clearFavourites() {
         db = dbHelper.getWritableDatabase();
 
@@ -528,6 +555,7 @@ class DbBackend implements DbContract {
         db.update(TABLE_TRANSLATE, values, where, whereArgs);
     }
 
+    //удаляем перевод
     public void deleteTranslate(Translate translate) {
         db = dbHelper.getReadableDatabase();
         String where = TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? AND " +

@@ -75,7 +75,7 @@ public class TranslateLocalDataSource implements TranslationDataSource {
 
     @Override
     public Observable<Translate> loadTranslateSentence(Translate translate) {
-        return Observable.just(backend.getTranslateSentence(translate));
+        return Observable.just(backend.getTranslate(translate));
     }
 
     @Override
