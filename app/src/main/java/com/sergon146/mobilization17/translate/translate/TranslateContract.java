@@ -17,6 +17,10 @@ public interface TranslateContract {
 
         void setTargetLang(String targetLang);
 
+        void hideTopBar();
+
+        void showTopBar();
+
         void swapLanguage();
 
         void setSourceText(String sourceText);
@@ -26,8 +30,6 @@ public interface TranslateContract {
         void hideTargetText();
 
         void showTargetText();
-
-        String getTargetText();
 
         void hideSourceSpeechOut();
 

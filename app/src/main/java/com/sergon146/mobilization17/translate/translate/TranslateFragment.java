@@ -36,6 +36,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
 
     private TextToSpeech tts;
 
+    private ViewGroup topBar;
     private TextView tvSourceLang;
     private ImageView ivSwap;
     private TextView tvTargetLang;
@@ -110,6 +111,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     }
 
     private void initViews(View rootView) {
+        topBar = (ViewGroup) rootView.findViewById(R.id.topbar);
         tvSourceLang = (TextView) rootView.findViewById(R.id.source_lang_view);
         tvSourceLang.setOnClickListener(getLangClickListener(Const.SOURCE));
 
@@ -187,6 +189,16 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     }
 
     @Override
+    public void hideTopBar() {
+        topBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void showTopBar() {
+        topBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public void swapLanguage() {
         ViewUtil.animateClick(ivSwap, R.anim.rotate);
         setSourceText(tvTarget.getText().toString());
@@ -214,11 +226,6 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     @Override
     public void showTargetText() {
         tvTarget.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public String getTargetText() {
-        return tvTarget.getText().toString();
     }
 
     @Override

@@ -208,10 +208,6 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
             Language language = new Language();
             language.setId(id++);
             language.setCode(entry.getKey());
-            if (language.getCode().equals(Locale.getDefault().getLanguage())) {
-                language.setSource(true);
-                language.setTarget(true);
-            }
             language.setName(entry.getValue());
             languages.add(language);
         }

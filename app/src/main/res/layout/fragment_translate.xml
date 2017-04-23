@@ -14,6 +14,7 @@
         android:background="?attr/colorPrimary">
 
         <RelativeLayout
+            android:id="@+id/topbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -27,8 +28,9 @@
                 android:layout_toStartOf="@+id/swap"
                 android:gravity="center"
                 android:lines="1"
+                android:paddingRight="10dp"
                 android:scrollHorizontally="true"
-                android:textAlignment="center"
+                android:textAlignment="textEnd"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
 
@@ -52,8 +54,9 @@
                 android:layout_toEndOf="@+id/swap"
                 android:gravity="center"
                 android:lines="1"
+                android:paddingLeft="10dp"
                 android:scrollHorizontally="true"
-                android:textAlignment="center"
+                android:textAlignment="textStart"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 android:visibility="visible" />
@@ -84,8 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@android:color/transparent"
-                android:ems="10"
-                android:gravity="top|left"
+                android:gravity="top|start"
                 android:hint="@string/textHint"
                 android:inputType="textCapSentences|textAutoCorrect|textAutoComplete|textMultiLine|textImeMultiLine"
                 android:lines="5"
@@ -177,6 +179,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
+            android:paddingTop="20dp"
             android:visibility="gone">
 
             <ImageView
@@ -191,7 +194,7 @@
                 android:gravity="top|center_vertical|center_horizontal"
                 android:text="@string/offline_message"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:visibility="visible" />
 
             <Button

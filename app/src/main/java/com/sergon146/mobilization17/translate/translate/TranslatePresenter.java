@@ -32,6 +32,7 @@ public class TranslatePresenter implements TranslateContract.Presenter {
     private TranslateRepository mRepository;
     private TranslateContract.View mView;
     private CompositeSubscription mSubscriptions;
+    private String locale;
 
     private Translate translate;
 
@@ -48,6 +49,7 @@ public class TranslatePresenter implements TranslateContract.Presenter {
 
     @Override
     public void subscribe() {
+        locale = Locale.getDefault().getLanguage();
         initialProcess(mView.getContext());
     }
 
@@ -58,6 +60,7 @@ public class TranslatePresenter implements TranslateContract.Presenter {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        locale = Locale.getDefault().getLanguage();
         initialProcess(context);
     }
 
@@ -68,10 +71,14 @@ public class TranslatePresenter implements TranslateContract.Presenter {
             mView.showOfflineMessage();
             mView.hideButtons();
             mView.hideTargetText();
-            setSourceLang();
-            setTargetLang();
+            if (mRepository.isEmptyLangList(locale)) {
+                mView.hideTopBar();
+            } else {
+                setSourceLang();
+                setTargetLang();
+            }
         } else {
-            loadLanguagesIfNecessary(Locale.getDefault().getLanguage());
+            loadLanguagesIfNecessary(locale);
             mView.hideOfflineMessage();
             loadTranslate();
         }
@@ -80,6 +87,7 @@ public class TranslatePresenter implements TranslateContract.Presenter {
     @Override
     public void loadLanguagesIfNecessary(String localeCode) {
         if (mRepository.isEmptyLangList(localeCode)) {
+            mView.hideTopBar();
             mView.showProgress();
             mRepository.loadLangs(localeCode)
                     .subscribeOn(Schedulers.io())
@@ -87,6 +95,7 @@ public class TranslatePresenter implements TranslateContract.Presenter {
                     .subscribe(new Subscriber<List<Language>>() {
                         @Override
                         public void onNext(List<Language> languageList) {
+                            mView.showTopBar();
                             setSourceLang();
                             setTargetLang();
                             mView.hideProgress();

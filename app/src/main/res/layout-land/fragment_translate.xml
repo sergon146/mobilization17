@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:tag="@string/translate"
-    tools:context="com.sergon146.mobilization17.fragment.TranslateFragment">
+    android:tag="@string/translate">
 
 
     <android.support.v7.widget.Toolbar
@@ -16,6 +14,7 @@
         android:background="?attr/colorPrimary">
 
         <RelativeLayout
+            android:id="@+id/topbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -54,7 +53,6 @@
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/swap"
                 android:ellipsize="end"
-                android:ems="10"
                 android:gravity="start|center_vertical"
                 android:lines="1"
                 android:paddingLeft="15dp"
@@ -83,42 +81,51 @@
             android:orientation="horizontal"
             android:weightSum="1">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <EditText
                     android:id="@+id/source_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
+                    android:layout_above="@+id/clear_text_view"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
                     android:background="@android:color/transparent"
-                    android:ems="10"
                     android:gravity="top|left"
                     android:hint="@string/textHint"
                     android:inputType="textCapSentences|textAutoCorrect|textAutoComplete|textMultiLine|textImeMultiLine"
-                    android:lines="5"
                     android:paddingStart="5dp"
                     android:textColorHint="@color/grayBackground"
                     android:textSize="18sp" />
 
-            </LinearLayout>
+                <ImageView
+                    android:id="@+id/clear_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_gravity="bottom|left"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    app:srcCompat="@drawable/ic_close" />
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/source_buttons_ll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/clear_text_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/ic_close" />
 
                 <ImageView
                     android:id="@+id/source_micro_view"
