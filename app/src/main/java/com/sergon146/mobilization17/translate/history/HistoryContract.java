@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.history;
+package com.sergon146.mobilization17.translate.history;
 
 import android.content.Context;
 
@@ -37,12 +37,14 @@ public interface HistoryContract {
         void search(String searchText);
 
         void showDialog(Context context, android.view.View v);
+
+        void deleteTranslate(Translate translate);
     }
 
 
     interface TranslateItemListener {
         void onFavouriteClick(Translate translate);
 
-        void onTextClick(Translate translate);
+        void onItemClick(Translate translate);
     }
 }

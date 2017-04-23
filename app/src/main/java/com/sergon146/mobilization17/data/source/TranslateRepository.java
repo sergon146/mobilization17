@@ -98,6 +98,11 @@ public class TranslateRepository implements TranslationDataSource {
     }
 
     @Override
+    public void deleteTranslate(Translate translate) {
+        localSource.deleteTranslate(translate);
+    }
+
+    @Override
     public Observable<List<Translate>> loadHistory() {
         return localSource.loadHistory();
     }

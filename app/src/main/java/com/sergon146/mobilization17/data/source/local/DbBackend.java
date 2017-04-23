@@ -359,37 +359,43 @@ class DbBackend implements DbContract {
     }
 
     Translate getTranslateSentence(Translate translate) {
-        db = dbHelper.getReadableDatabase();
-
-        String[] columns = new String[]{
-                TranslateTbl.COLUMN_TARGET_TEXT,
-                TranslateTbl.COLUMN_IS_FAVOURITE,
-                TranslateTbl.COLUMN_WORD_JSON};
-
-        String where = TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? AND " +
-                TranslateTbl.COLUMN_SOURCE_LANG + " = ? AND " +
-                TranslateTbl.COLUMN_TARGET_LANG + " = ?";
-
-        String[] whereArgs = new String[]{translate.getSourceText(),
-                String.valueOf(getLangId(translate.getSourceLangCode())),
-                String.valueOf(getLangId(translate.getTargetLangCode()))};
-
-        Cursor cursor = db.query(TABLE_TRANSLATE, columns, where, whereArgs, null, null, null);
-        cursor.moveToNext();
-
-        translate.setTargetText(cursor.getString(0));
-        translate.setFavourite(cursor.getInt(1) == 1);
-        translate.setWordJson(cursor.getString(2));
-
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            translate.setWordMapper(mapper.readValue(translate.getWordJson(), WordMapper.class));
-        } catch (IOException e) {
-            Log.w(Const.LOG_TAG, "Error while mapper to Word.class " + translate.getWordJson());
-        }
+            db = dbHelper.getReadableDatabase();
 
-        cursor.close();
-        return translate;
+            String[] columns = new String[]{
+                    TranslateTbl.COLUMN_TARGET_TEXT,
+                    TranslateTbl.COLUMN_IS_FAVOURITE,
+                    TranslateTbl.COLUMN_WORD_JSON};
+
+            String where = "(" + TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? OR " +
+                    TranslateTbl.COLUMN_TARGET_TEXT + " LIKE ?) AND " +
+                    TranslateTbl.COLUMN_SOURCE_LANG + " = ? AND " +
+                    TranslateTbl.COLUMN_TARGET_LANG + " = ?";
+
+            String[] whereArgs = new String[]{translate.getSourceText(),
+                    translate.getTargetText(),
+                    String.valueOf(getLangId(translate.getSourceLangCode())),
+                    String.valueOf(getLangId(translate.getTargetLangCode()))};
+
+            Cursor cursor = db.query(TABLE_TRANSLATE, columns, where, whereArgs, null, null, null);
+            cursor.moveToNext();
+
+            translate.setTargetText(cursor.getString(0));
+            translate.setFavourite(cursor.getInt(1) == 1);
+            translate.setWordJson(cursor.getString(2));
+
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                translate.setWordMapper(mapper.readValue(translate.getWordJson(), WordMapper.class));
+            } catch (IOException e) {
+                Log.w(Const.LOG_TAG, "Error while mapper to Word.class " + translate.getWordJson());
+            }
+
+            cursor.close();
+            return translate;
+        } catch (Exception e) {
+            return translate;
+        }
     }
 
     void clearHistory() {
@@ -520,5 +526,24 @@ class DbBackend implements DbContract {
         String where = TranslateTbl.COLUMN_IS_FAVOURITE + " = ? ";
         String[] whereArgs = new String[]{String.valueOf(1)};
         db.update(TABLE_TRANSLATE, values, where, whereArgs);
+    }
+
+    public void deleteTranslate(Translate translate) {
+        db = dbHelper.getReadableDatabase();
+        String where = TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? AND " +
+                TranslateTbl.COLUMN_SOURCE_LANG + " = ? AND " +
+                TranslateTbl.COLUMN_TARGET_LANG + " = ?";
+        String[] whereArgs = new String[]{
+                translate.getSourceText(),
+                String.valueOf(getLangId(translate.getSourceLangCode())),
+                String.valueOf(getLangId(translate.getTargetLangCode()))};
+
+        db.beginTransaction();
+        try {
+            db.delete(TABLE_TRANSLATE, where, whereArgs);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.translate;
+package com.sergon146.mobilization17.translate.translate;
 
 import android.content.Context;
 import android.content.Intent;

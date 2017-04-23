@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.translate;
+package com.sergon146.mobilization17.translate.translate;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,7 +23,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.sergon146.mobilization17.R;
-import com.sergon146.mobilization17.chooseLanguage.ChooseLanguageActivity;
+import com.sergon146.mobilization17.languagechoose.ChooseLanguageActivity;
 import com.sergon146.mobilization17.util.Const;
 import com.sergon146.mobilization17.util.Util;
 import com.sergon146.mobilization17.util.ViewUtil;
@@ -403,6 +403,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
             }
         };
     }
+
 
     private void clearAll() {
         tts.stop();

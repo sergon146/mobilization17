@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sergon146.mobilization17.chooseLanguage.ChooseLanguageActivity">
+    tools:context="com.sergon146.mobilization17.languagechoose.ChooseLanguageActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/langs_recycler"

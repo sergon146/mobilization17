@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.history.history;
+package com.sergon146.mobilization17.translate.history.history;
 
 
 import android.os.Bundle;
@@ -16,8 +16,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.sergon146.mobilization17.R;
-import com.sergon146.mobilization17.history.HistoryContract;
-import com.sergon146.mobilization17.history.adapter.HistoryAdapter;
+import com.sergon146.mobilization17.translate.history.HistoryContract;
+import com.sergon146.mobilization17.translate.history.adapter.HistoryAdapter;
 import com.sergon146.mobilization17.pojo.Translate;
 
 import java.util.Collections;
@@ -144,8 +144,8 @@ public class HistoryFragment extends Fragment implements HistoryContract.View {
         }
 
         @Override
-        public void onTextClick(Translate translate) {
-
+        public void onItemClick(Translate translate) {
+            mPresenter.deleteTranslate(translate);
         }
     };
 }

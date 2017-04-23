@@ -64,6 +64,11 @@ public class TranslateLocalDataSource implements TranslationDataSource {
     }
 
     @Override
+    public void deleteTranslate(Translate translate) {
+        backend.deleteTranslate(translate);
+    }
+
+    @Override
     public Observable<List<Translate>> loadHistory() {
         return Observable.just(backend.getHistory());
     }

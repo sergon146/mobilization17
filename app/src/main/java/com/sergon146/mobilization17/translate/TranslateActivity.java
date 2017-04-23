@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.activity;
+package com.sergon146.mobilization17.translate;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,12 +14,12 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.sergon146.mobilization17.BasePresenter;
 import com.sergon146.mobilization17.R;
-import com.sergon146.mobilization17.history.favourite.FavouriteFragment;
-import com.sergon146.mobilization17.history.favourite.FavouritePresenter;
-import com.sergon146.mobilization17.history.history.HistoryFragment;
-import com.sergon146.mobilization17.history.history.HistoryPresenter;
-import com.sergon146.mobilization17.translate.TranslateFragment;
-import com.sergon146.mobilization17.translate.TranslatePresenter;
+import com.sergon146.mobilization17.translate.history.favourite.FavouriteFragment;
+import com.sergon146.mobilization17.translate.history.favourite.FavouritePresenter;
+import com.sergon146.mobilization17.translate.history.history.HistoryFragment;
+import com.sergon146.mobilization17.translate.history.history.HistoryPresenter;
+import com.sergon146.mobilization17.translate.translate.TranslateFragment;
+import com.sergon146.mobilization17.translate.translate.TranslatePresenter;
 import com.sergon146.mobilization17.util.Const;
 import com.sergon146.mobilization17.util.Util;
 

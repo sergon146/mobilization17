@@ -32,4 +32,5 @@
 
     <string name="nothing_show">Nothing to show</string>
     <string name="translate_error">An error occurred while translating</string>
+    <string name="delete">Delete</string>
 </resources>

@@ -1,5 +1,7 @@
-package com.sergon146.mobilization17.history.adapter;
+package com.sergon146.mobilization17.translate.history.adapter;
 
+import android.content.Context;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sergon146.mobilization17.R;
-import com.sergon146.mobilization17.history.HistoryContract;
 import com.sergon146.mobilization17.pojo.Translate;
+import com.sergon146.mobilization17.translate.history.HistoryContract;
 import com.sergon146.mobilization17.util.ViewUtil;
 
 import java.util.List;
@@ -63,6 +65,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Translat
     }
 
     class TranslateViewHolder extends RecyclerView.ViewHolder {
+
+
         TextView source, target, langs;
         ImageView favourite;
 
@@ -85,6 +89,21 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Translat
                 itemListener.onFavouriteClick(translate);
 
             });
+            itemView.setOnCreateContextMenuListener((menu, v, menuInfo) -> showDialog(v.getContext(), v));
         }
+
+    }
+
+    private void showDialog(Context context, View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setNeutralButton(context.getString(R.string.delete),
+                (dialog, idV) -> {
+                    dialog.cancel();
+                    itemListener.onItemClick(translates.get(v.getId()));
+                    translates.remove(v.getId());
+                    notifyItemRemoved(v.getId());
+                })
+                .create()
+                .show();
     }
 }

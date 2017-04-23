@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.chooseLanguage.adapter;
+package com.sergon146.mobilization17.languagechoose.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

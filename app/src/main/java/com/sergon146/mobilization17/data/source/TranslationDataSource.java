@@ -22,6 +22,8 @@ public interface TranslationDataSource {
 
     void saveTranslate(Translate translate);
 
+    void deleteTranslate(Translate translate);
+
     Observable<List<Translate>> loadHistory();
 
     Observable<List<Translate>> searchInHistory(String searchText);
