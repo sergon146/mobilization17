@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.sergon146.mobilization17.data.TranslateRepository;
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.pojo.Translate;
-import com.sergon146.mobilization17.pojo.translate.WordMapper;
+import com.sergon146.mobilization17.pojo.mapper.WordMapper;
 import com.sergon146.mobilization17.util.Const;
 import com.sergon146.mobilization17.util.NetworkUtil;
 import com.sergon146.mobilization17.util.Util;
@@ -64,13 +64,12 @@ public class TranslatePresenter implements TranslateContract.Presenter {
         initialProcess(context);
     }
 
-    //проверяем наличие подключения
     private void initialProcess(Context context) {
-        if (NetworkUtil.getConnectivityStatus(context) ==
-                NetworkUtil.TYPE_NOT_CONNECTED) {
+        if (NetworkUtil.isLostConnection(context)) {
             mView.showOfflineMessage();
-            mView.hideButtons();
+            mView.hideTargetButtons();
             mView.hideTargetText();
+            mView.hideProgress();
             if (mRepository.isEmptyLangList(locale)) {
                 mView.hideTopBar();
             } else {
@@ -121,11 +120,9 @@ public class TranslatePresenter implements TranslateContract.Presenter {
         loadTranslate(mView.getSourceText());
     }
 
-    //загрузка перевода предложения и слова
     @Override
     public void loadTranslate(String text) {
-        if (NetworkUtil.getConnectivityStatus(mView.getContext()) ==
-                NetworkUtil.TYPE_NOT_CONNECTED) {
+        if (NetworkUtil.isLostConnection(mView.getContext())) {
             mView.showOfflineMessage();
             return;
         }
@@ -140,7 +137,7 @@ public class TranslatePresenter implements TranslateContract.Presenter {
         mView.showProgress();
         mView.hideTargetText();
         mView.clearMeanLayout();
-        mView.hideButtons();
+        mView.hideTargetButtons();
         mView.hideOfflineMessage();
 
         translate.setTargetText("");
@@ -164,9 +161,13 @@ public class TranslatePresenter implements TranslateContract.Presenter {
                                 if (tr.getWordJson().isEmpty() && tr.getWordMapper() == null) {
                                     loadWord(tr);
                                 } else {
+                                    mView.hideProgress();
+                                    mView.showTargetButtons();
                                     setMeans(tr.getWordMapper());
                                 }
                             } else {
+                                mView.hideProgress();
+                                mView.showTargetButtons();
                                 mRepository.saveTranslate(tr);
                             }
                         }
@@ -174,22 +175,20 @@ public class TranslatePresenter implements TranslateContract.Presenter {
 
                     @Override
                     public void onCompleted() {
-                        mView.hideProgress();
-                        mView.showButtons();
+                        mView.showTargetButtons();
                         mView.changeFavourite(translate.isFavourite());
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         mView.hideProgress();
-                        mView.showButtons();
                     }
                 });
 
     }
 
-    //загрузка слова из словаря
-    private void loadWord(Translate translate) {
+    @Override
+    public void loadWord(Translate translate) {
         mRepository.loadTranslateWord(translate)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -203,7 +202,7 @@ public class TranslatePresenter implements TranslateContract.Presenter {
                     @Override
                     public void onCompleted() {
                         mView.hideProgress();
-                        mView.showButtons();
+                        mView.showTargetButtons();
                         mView.changeFavourite(translate.isFavourite());
                         mRepository.saveTranslate(translate);
                     }
@@ -215,14 +214,13 @@ public class TranslatePresenter implements TranslateContract.Presenter {
                         mRepository.saveTranslate(translate);
 
                         mView.hideProgress();
-                        mView.showButtons();
                         Log.w("Dictionary", "Error while translated sentence: " + translate.getSourceText() + " - " + e);
                     }
                 });
     }
 
     @Override
-    public void setFavourite() {
+    public void swapFavourite() {
         translate.setFavourite(!translate.isFavourite());
         mRepository.setFavourites(translate);
         mView.changeFavourite(translate.isFavourite());
@@ -316,7 +314,11 @@ public class TranslatePresenter implements TranslateContract.Presenter {
         return translate.getSourceLangCode();
     }
 
-    //отображение перевода слова из словаря
+    /**
+     * Set mean view by word
+     *
+     * @param word word mapper
+     */
     private void setMeans(WordMapper word) {
         View.OnClickListener flowListener = v -> {
             TextView view = (TextView) v;

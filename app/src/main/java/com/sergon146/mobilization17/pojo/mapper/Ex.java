@@ -1,5 +1,4 @@
-
-package com.sergon146.mobilization17.pojo.translate;
+package com.sergon146.mobilization17.pojo.mapper;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -14,63 +13,61 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "head",
-        "def"
+        "text",
+        "tr"
 })
-public class WordMapper {
+public class Ex {
 
-    @JsonProperty("head")
-    private Head head;
-    @JsonProperty("def")
-    private List<Def> def = null;
+    @JsonProperty("text")
+    private String text;
+    @JsonProperty("tr")
+    private List<Tr> tr = null;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * No args constructor for use in serialization
-     *
      */
-    public WordMapper() {
+    public Ex() {
     }
 
     /**
-     *
-     * @param def
-     * @param head
+     * @param text
+     * @param tr
      */
-    public WordMapper(Head head, List<Def> def) {
+    public Ex(String text, List<Tr> tr) {
         super();
-        this.head = head;
-        this.def = def;
+        this.text = text;
+        this.tr = tr;
     }
 
-    @JsonProperty("head")
-    public Head getHead() {
-        return head;
+    @JsonProperty("text")
+    public String getText() {
+        return text;
     }
 
-    @JsonProperty("head")
-    public void setHead(Head head) {
-        this.head = head;
+    @JsonProperty("text")
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public WordMapper withHead(Head head) {
-        this.head = head;
+    public Ex withText(String text) {
+        this.text = text;
         return this;
     }
 
-    @JsonProperty("def")
-    public List<Def> getDef() {
-        return def;
+    @JsonProperty("tr")
+    public List<Tr> getTr() {
+        return tr;
     }
 
-    @JsonProperty("def")
-    public void setDef(List<Def> def) {
-        this.def = def;
+    @JsonProperty("tr")
+    public void setTr(List<Tr> tr) {
+        this.tr = tr;
     }
 
-    public WordMapper withDef(List<Def> def) {
-        this.def = def;
+    public Ex withTr(List<Tr> tr) {
+        this.tr = tr;
         return this;
     }
 
@@ -84,7 +81,7 @@ public class WordMapper {
         this.additionalProperties.put(name, value);
     }
 
-    public WordMapper withAdditionalProperty(String name, Object value) {
+    public Ex withAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
         return this;
     }

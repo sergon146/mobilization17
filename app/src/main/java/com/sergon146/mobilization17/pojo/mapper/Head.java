@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.pojo.translate;
+package com.sergon146.mobilization17.pojo.mapper;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;

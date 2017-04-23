@@ -50,18 +50,38 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Translat
         return translates.size();
     }
 
+    /**
+     * Update adapter data if necessary
+     *
+     * @param translateList list of translations
+     */
     public void updateData(List<Translate> translateList) {
         setTranslates(translateList);
     }
 
     private void setTranslates(List<Translate> translates) {
-        this.translates = translates;
-        notifyDataSetChanged();
+        if (this.translates != translates) {
+            this.translates = translates;
+            notifyDataSetChanged();
+        }
     }
 
     @Override
     public void onBindViewHolder(TranslateViewHolder holder, int position, List<Object> payloads) {
         super.onBindViewHolder(holder, position, payloads);
+    }
+
+    private void showDialog(Context context, View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setNeutralButton(context.getString(R.string.delete),
+                (dialog, idV) -> {
+                    dialog.cancel();
+                    itemListener.onItemClick(translates.get(v.getId()));
+                    translates.remove(v.getId());
+                    notifyItemRemoved(v.getId());
+                })
+                .create()
+                .show();
     }
 
     class TranslateViewHolder extends RecyclerView.ViewHolder {
@@ -92,18 +112,5 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Translat
             itemView.setOnCreateContextMenuListener((menu, v, menuInfo) -> showDialog(v.getContext(), v));
         }
 
-    }
-
-    private void showDialog(Context context, View v) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setNeutralButton(context.getString(R.string.delete),
-                (dialog, idV) -> {
-                    dialog.cancel();
-                    itemListener.onItemClick(translates.get(v.getId()));
-                    translates.remove(v.getId());
-                    notifyItemRemoved(v.getId());
-                })
-                .create()
-                .show();
     }
 }

@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.pojo.translate;
+package com.sergon146.mobilization17.pojo.mapper;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -14,33 +14,30 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "text",
+        "pos",
+        "gen",
+        "anm",
+        "ts",
         "tr"
 })
-public class Ex {
+public class Def {
 
     @JsonProperty("text")
     private String text;
+    @JsonProperty("pos")
+    private String pos;
+    @JsonProperty("gen")
+    private String gen;
+    @JsonProperty("anm")
+    private String anm;
+    @JsonProperty("ts")
+    private String ts;
     @JsonProperty("tr")
     private List<Tr> tr = null;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    /**
-     * No args constructor for use in serialization
-     *
-     */
-    public Ex() {
-    }
-
-    /**
-     *
-     * @param text
-     * @param tr
-     */
-    public Ex(String text, List<Tr> tr) {
-        super();
-        this.text = text;
-        this.tr = tr;
+    public Def() {
     }
 
     @JsonProperty("text")
@@ -53,9 +50,44 @@ public class Ex {
         this.text = text;
     }
 
-    public Ex withText(String text) {
-        this.text = text;
-        return this;
+    @JsonProperty("pos")
+    public String getPos() {
+        return pos;
+    }
+
+    @JsonProperty("pos")
+    public void setPos(String pos) {
+        this.pos = pos;
+    }
+
+    @JsonProperty("gen")
+    public String getGen() {
+        return gen;
+    }
+
+    @JsonProperty("gen")
+    public void setGen(String gen) {
+        this.gen = gen;
+    }
+
+    @JsonProperty("anm")
+    public String getAnm() {
+        return anm;
+    }
+
+    @JsonProperty("anm")
+    public void setAnm(String anm) {
+        this.anm = anm;
+    }
+
+    @JsonProperty("ts")
+    public String getTs() {
+        return ts;
+    }
+
+    @JsonProperty("ts")
+    public void setTs(String ts) {
+        this.ts = ts;
     }
 
     @JsonProperty("tr")
@@ -68,10 +100,6 @@ public class Ex {
         this.tr = tr;
     }
 
-    public Ex withTr(List<Tr> tr) {
-        this.tr = tr;
-        return this;
-    }
 
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
@@ -81,11 +109,6 @@ public class Ex {
     @JsonAnySetter
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
-    }
-
-    public Ex withAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-        return this;
     }
 
 }

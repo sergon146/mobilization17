@@ -19,11 +19,11 @@ public class SplashActivity extends AppCompatActivity implements SplashContract.
         setContentView(R.layout.activity_splash);
         getSupportActionBar().hide();
 
-        if (NetworkUtil.getConnectivityStatus(getApplicationContext()) == NetworkUtil.TYPE_NOT_CONNECTED) {
+        if (NetworkUtil.isLostConnection(getApplicationContext())) {
             showErrorLoadToast();
             finishSplash();
         } else {
-            new SplashPresenter(this, Util.provideTasksRepository(getApplicationContext()));
+            new SplashPresenter(this, Util.provideTranslateRepository(getApplicationContext()));
         }
     }
 

@@ -5,27 +5,26 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 public class NetworkUtil {
-    public static final int TYPE_WIFI = 1;
-    public static final int TYPE_MOBILE = 2;
-    public static final int TYPE_NOT_CONNECTED = 0;
 
-
-    public static int getConnectivityStatus(Context context) {
+    /**
+     * Check is there are network connection
+     *
+     * @param context Context
+     * @return is there a connection
+     */
+    public static boolean isLostConnection(Context context) {
         try {
             ConnectivityManager cm = (ConnectivityManager) context
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
 
             NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
             if (null != activeNetwork) {
-                if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI)
-                    return TYPE_WIFI;
-
-                if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE)
-                    return TYPE_MOBILE;
+                if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI || activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE)
+                    return false;
             }
-            return TYPE_NOT_CONNECTED;
+            return true;
         } catch (Exception e) {
-            return TYPE_NOT_CONNECTED;
+            return true;
         }
     }
 }

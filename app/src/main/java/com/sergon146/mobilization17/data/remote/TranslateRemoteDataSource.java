@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import retrofit2.Retrofit;
@@ -50,7 +49,7 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
 
         return translateService.loadLanguages(Const.TRANSLATE_API_KEY, localeCode)
                 .doOnError(th -> Log.e(Const.LOG_TAG, th.toString()))
-                .map(this::getLangsListFromMap);
+                .map(this::getSortedLangsListFromMap);
     }
 
     @Override
@@ -166,7 +165,7 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
     }
 
     @Override
-    public void setTargetLang(String targetLang) {
+    public void setTargetLang(String targetCode) {
         //only in local
     }
 
@@ -194,7 +193,7 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
         return null;
     }
 
-    private List<Language> getLangsListFromMap(Map<String, Object> map) {
+    private List<Language> getSortedLangsListFromMap(Map<String, Object> map) {
         Map<String, String> langs = new HashMap<>();
         try {
             langs.putAll((Map<String, String>) map.get("langs"));

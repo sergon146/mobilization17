@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.pojo.translate;
+package com.sergon146.mobilization17.pojo.mapper;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -12,22 +12,27 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "text",
-        "pos",
-        "gen"
+        "text"
 })
-public class Syn {
+public class Mean {
 
     @JsonProperty("text")
     private String text;
-    @JsonProperty("pos")
-    private String pos;
-    @JsonProperty("gen")
-    private String gen;
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<>();
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    public Syn() {
+    /**
+     * No args constructor for use in serialization
+     */
+    public Mean() {
+    }
+
+    /**
+     * @param text
+     */
+    public Mean(String text) {
+        super();
+        this.text = text;
     }
 
     @JsonProperty("text")
@@ -40,24 +45,9 @@ public class Syn {
         this.text = text;
     }
 
-    @JsonProperty("pos")
-    public String getPos() {
-        return pos;
-    }
-
-    @JsonProperty("pos")
-    public void setPos(String pos) {
-        this.pos = pos;
-    }
-
-    @JsonProperty("gen")
-    public String getGen() {
-        return gen;
-    }
-
-    @JsonProperty("gen")
-    public void setGen(String gen) {
-        this.gen = gen;
+    public Mean withText(String text) {
+        this.text = text;
+        return this;
     }
 
     @JsonAnyGetter
@@ -69,4 +59,10 @@ public class Syn {
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
     }
+
+    public Mean withAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
+        return this;
+    }
+
 }

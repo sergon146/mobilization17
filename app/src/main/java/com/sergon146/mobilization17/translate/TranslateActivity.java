@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
@@ -23,8 +22,6 @@ import com.sergon146.mobilization17.translate.translate.TranslatePresenter;
 import com.sergon146.mobilization17.util.Const;
 import com.sergon146.mobilization17.util.Util;
 
-import butterknife.ButterKnife;
-
 public class TranslateActivity extends AppCompatActivity {
     private BasePresenter mPresenter;
     private BottomNavigationView navigation;
@@ -37,8 +34,6 @@ public class TranslateActivity extends AppCompatActivity {
             mPresenter.onReceive(context, intent);
         }
     };
-
-    //коментарии в коде идут вразрез концепции чистого кода описанного Р. Мартином :)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +70,7 @@ public class TranslateActivity extends AppCompatActivity {
     }
 
     private void initNavBar() {
-        navigation = ButterKnife.findById(this, R.id.navigation);
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setSelectedItemId(currentItem);
         navigation.setOnNavigationItemSelectedListener(item -> {
             setCurrentFragmentByItemId(item.getItemId());
@@ -94,7 +89,7 @@ public class TranslateActivity extends AppCompatActivity {
                 } else {
                     translateFragment = (TranslateFragment) fragment;
                 }
-                mPresenter = new TranslatePresenter(Util.provideTasksRepository(getApplicationContext()), translateFragment);
+                mPresenter = new TranslatePresenter(Util.provideTranslateRepository(getApplicationContext()), translateFragment);
                 currentItem = 0;
                 setCurrentFragment(translateFragment);
                 break;
@@ -105,7 +100,7 @@ public class TranslateActivity extends AppCompatActivity {
                 } else {
                     historyFragment = (HistoryFragment) fragment;
                 }
-                mPresenter = new HistoryPresenter(Util.provideTasksRepository(getApplicationContext()), historyFragment);
+                mPresenter = new HistoryPresenter(Util.provideTranslateRepository(getApplicationContext()), historyFragment);
                 currentItem = 1;
                 setCurrentFragment(historyFragment);
                 break;
@@ -116,7 +111,7 @@ public class TranslateActivity extends AppCompatActivity {
                 } else {
                     favouriteFragment = (FavouriteFragment) fragment;
                 }
-                mPresenter = new FavouritePresenter(Util.provideTasksRepository(getApplicationContext()), favouriteFragment);
+                mPresenter = new FavouritePresenter(Util.provideTranslateRepository(getApplicationContext()), favouriteFragment);
                 currentItem = 2;
                 setCurrentFragment(favouriteFragment);
                 break;
@@ -143,11 +138,5 @@ public class TranslateActivity extends AppCompatActivity {
 
         transaction.replace(R.id.frame_container, fragment);
         transaction.commit();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mPresenter.loadLanguagesIfNecessary(newConfig.locale.getLanguage());
     }
 }

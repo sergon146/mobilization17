@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.pojo.translate;
+package com.sergon146.mobilization17.pojo.mapper;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -16,11 +16,11 @@ import java.util.Map;
         "text",
         "pos",
         "gen",
-        "anm",
-        "ts",
-        "tr"
+        "syn",
+        "mean",
+        "ex"
 })
-public class Def {
+public class Tr {
 
     @JsonProperty("text")
     private String text;
@@ -28,16 +28,16 @@ public class Def {
     private String pos;
     @JsonProperty("gen")
     private String gen;
-    @JsonProperty("anm")
-    private String anm;
-    @JsonProperty("ts")
-    private String ts;
-    @JsonProperty("tr")
-    private List<Tr> tr = null;
+    @JsonProperty("syn")
+    private List<Syn> syn = null;
+    @JsonProperty("mean")
+    private List<Mean> mean = null;
+    @JsonProperty("ex")
+    private List<Ex> ex = null;
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
-    public Def() {
+    public Tr() {
     }
 
     @JsonProperty("text")
@@ -70,35 +70,35 @@ public class Def {
         this.gen = gen;
     }
 
-    @JsonProperty("anm")
-    public String getAnm() {
-        return anm;
+    @JsonProperty("syn")
+    public List<Syn> getSyn() {
+        return syn;
     }
 
-    @JsonProperty("anm")
-    public void setAnm(String anm) {
-        this.anm = anm;
+    @JsonProperty("syn")
+    public void setSyn(List<Syn> syn) {
+        this.syn = syn;
     }
 
-    @JsonProperty("ts")
-    public String getTs() {
-        return ts;
+    @JsonProperty("mean")
+    public List<Mean> getMean() {
+        return mean;
     }
 
-    @JsonProperty("ts")
-    public void setTs(String ts) {
-        this.ts = ts;
-    }
-    @JsonProperty("tr")
-    public List<Tr> getTr() {
-        return tr;
+    @JsonProperty("mean")
+    public void setMean(List<Mean> mean) {
+        this.mean = mean;
     }
 
-    @JsonProperty("tr")
-    public void setTr(List<Tr> tr) {
-        this.tr = tr;
+    @JsonProperty("ex")
+    public List<Ex> getEx() {
+        return ex;
     }
 
+    @JsonProperty("ex")
+    public void setEx(List<Ex> ex) {
+        this.ex = ex;
+    }
 
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {

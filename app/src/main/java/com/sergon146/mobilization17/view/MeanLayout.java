@@ -10,12 +10,12 @@ import android.widget.TextView;
 
 import com.nex3z.flowlayout.FlowLayout;
 import com.sergon146.mobilization17.R;
-import com.sergon146.mobilization17.pojo.translate.Def;
-import com.sergon146.mobilization17.pojo.translate.Ex;
-import com.sergon146.mobilization17.pojo.translate.Mean;
-import com.sergon146.mobilization17.pojo.translate.Syn;
-import com.sergon146.mobilization17.pojo.translate.Tr;
-import com.sergon146.mobilization17.pojo.translate.WordMapper;
+import com.sergon146.mobilization17.pojo.mapper.Def;
+import com.sergon146.mobilization17.pojo.mapper.Ex;
+import com.sergon146.mobilization17.pojo.mapper.Mean;
+import com.sergon146.mobilization17.pojo.mapper.Syn;
+import com.sergon146.mobilization17.pojo.mapper.Tr;
+import com.sergon146.mobilization17.pojo.mapper.WordMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +31,12 @@ public class MeanLayout {
         li = LayoutInflater.from(context);
     }
 
+    /**
+     * Get List of means view by word
+     *
+     * @param word mapper for word's means
+     * @return list of View
+     */
     public List<View> getMeanViews(WordMapper word) {
         String prevTr = "";
         List<View> viewList = new ArrayList<>();
@@ -52,12 +58,12 @@ public class MeanLayout {
         return viewList;
     }
 
-    public LinearLayout getTranslateLayout(Def def, String prevTr) {
+    private LinearLayout getTranslateLayout(Def def, String prevTr) {
         LinearLayout targetLayout = (LinearLayout) li.inflate(R.layout.translate_view, null, false);
 
         if (!prevTr.equals(def.getText())) {
             if (def.getText() != null) {
-                TextView wordOrigin = (TextView) targetLayout.findViewById(R.id.mean_word_orign);
+                TextView wordOrigin = (TextView) targetLayout.findViewById(R.id.mean_word_origin);
                 wordOrigin.setText(def.getText());
             }
 
@@ -87,7 +93,7 @@ public class MeanLayout {
 
     private void setTrs(Tr tr, FlowLayout flowLayout) {
         if (tr.getText() != null) {
-            LinearLayout itemLayout = (LinearLayout) li.inflate(R.layout.flow_item_view, null, false);
+            LinearLayout itemLayout = (LinearLayout) li.inflate(R.layout.flow_item_view, flowLayout, false);
             if (tr.getSyn() == null || tr.getSyn().isEmpty()) {
                 TextView itemEnd = (TextView) itemLayout.findViewById(R.id.flow_item_end);
                 itemEnd.setVisibility(View.GONE);
@@ -113,7 +119,7 @@ public class MeanLayout {
             for (int i = 0; i < synList.size(); i++) {
                 Syn syn = synList.get(i);
                 if (syn.getText() != null && !syn.getText().isEmpty()) {
-                    LinearLayout itemLayout = (LinearLayout) li.inflate(R.layout.flow_item_view, null, false);
+                    LinearLayout itemLayout = (LinearLayout) li.inflate(R.layout.flow_item_view, flowLayout, false);
 
                     TextView itemName = (TextView) itemLayout.findViewById(R.id.flow_item_name);
                     itemName.setText(syn.getText());
@@ -136,7 +142,6 @@ public class MeanLayout {
 
         }
     }
-
 
 
     private void setMeans(Tr tr, LinearLayout layout) {

@@ -12,21 +12,44 @@ import java.util.List;
 
 
 public class Util {
+    /**
+     * Get text without excess spaces
+     *
+     * @param text source text
+     * @return trimmed text
+     */
     public static String trimAll(String text) {
         return text.replaceAll("[\\s]{2,}", " ").trim();
     }
 
-    public static boolean isWord(String s) {
-        return (s.length() > 0 && s.split("\\s+").length == 1);
+    /**
+     * Check whether the text is a word
+     *
+     * @param text checked text
+     * @return text is a word
+     */
+    public static boolean isWord(String text) {
+        return (text.length() > 0 && text.split("\\s+").length == 1);
     }
 
-
+    /**
+     * Sort language ASC
+     *
+     * @param languages list of loaded languages
+     * @return sorted list
+     */
     public static List<Language> sortLangs(List<Language> languages) {
         Collections.sort(languages, (o1, o2) -> o1.getName().compareTo(o2.getName()));
         return languages;
     }
 
-    public static TranslateRepository provideTasksRepository(Context context) {
+    /**
+     * Get repo
+     *
+     * @param context Context
+     * @return instance of repo
+     */
+    public static TranslateRepository provideTranslateRepository(Context context) {
         assert context != null;
         return TranslateRepository.getInstance(TranslateLocalDataSource.getInstance(context),
                 TranslateRemoteDataSource.getInstance());

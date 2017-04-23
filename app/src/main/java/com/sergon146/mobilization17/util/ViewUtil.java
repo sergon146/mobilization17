@@ -6,8 +6,14 @@ import android.view.animation.AnimationUtils;
 
 public class ViewUtil {
 
-    public static void animateClick(View v, int andimId) {
-        Animation rotate = AnimationUtils.loadAnimation(v.getContext(), andimId);
-        v.startAnimation(rotate);
+    /**
+     * Animate View by click
+     *
+     * @param view   animated view
+     * @param animId animation resource id
+     */
+    public static void animateClick(View view, int animId) {
+        Animation rotate = AnimationUtils.loadAnimation(view.getContext(), animId);
+        view.startAnimation(rotate);
     }
 }

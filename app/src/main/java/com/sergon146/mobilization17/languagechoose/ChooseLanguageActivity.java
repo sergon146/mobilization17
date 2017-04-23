@@ -43,7 +43,7 @@ public class ChooseLanguageActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        TranslationDataSource repository = Util.provideTasksRepository(getApplicationContext());
+        TranslationDataSource repository = Util.provideTranslateRepository(getApplicationContext());
         repository.loadLangs((Locale.getDefault().getLanguage()))
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())

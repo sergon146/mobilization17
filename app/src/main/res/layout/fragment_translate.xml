@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:baselineAligned="false"
     android:orientation="vertical"
     android:tag="@string/translate">
 
@@ -32,7 +34,8 @@
                 android:scrollHorizontally="true"
                 android:textAlignment="textEnd"
                 android:textColor="@android:color/black"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                tools:ignore="RtlCompat" />
 
             <ImageView
                 android:id="@+id/swap"
@@ -59,7 +62,8 @@
                 android:textAlignment="textStart"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
-                android:visibility="visible" />
+                android:visibility="visible"
+                tools:ignore="RtlCompat" />
 
         </RelativeLayout>
 
@@ -151,36 +155,28 @@
         </LinearLayout>
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/translate_progress_bar"
-        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:progressDrawable="@drawable/progress_bar"
-        android:visibility="gone" />
-
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:layout_marginEnd="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
         android:orientation="horizontal"
-        android:weightSum="1">
+        android:weightSum="1"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="248dp">
 
         <LinearLayout
             android:id="@+id/offline_message"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingTop="20dp"
-            android:visibility="gone">
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="@+id/mean_layout"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -210,9 +206,11 @@
             android:id="@+id/mean_layout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/button_layout"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteY="8dp">
 
             <TextView
                 android:id="@+id/target_translate"
@@ -229,12 +227,15 @@
                 android:fadingEdge="none"
                 android:requiresFadingEdge="none"
                 android:scrollIndicators="none"
-                android:scrollbars="none">
+                android:scrollbars="none"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="8dp">
 
                 <LinearLayout
                     android:id="@+id/mean_inner_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
                     android:orientation="vertical"
                     android:paddingBottom="8dp" />
             </ScrollView>
@@ -245,9 +246,15 @@
             android:id="@+id/button_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
             android:gravity="top"
             android:orientation="vertical"
-            android:visibility="invisible">
+            android:visibility="invisible"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints">
 
             <ViewSwitcher
                 android:id="@+id/target_speech_switcher"
@@ -286,6 +293,20 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+        <ProgressBar
+            android:id="@+id/translate_progress_bar"
+            style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:progressDrawable="@drawable/progress_bar"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
+
+    </android.support.constraint.ConstraintLayout>
 
 </LinearLayout>

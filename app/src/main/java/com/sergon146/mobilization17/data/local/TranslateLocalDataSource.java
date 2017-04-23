@@ -17,7 +17,7 @@ public class TranslateLocalDataSource implements TranslationDataSource {
     private static TranslateLocalDataSource instance;
     private DbBackend backend;
 
-    public TranslateLocalDataSource(@NonNull Context context) {
+    private TranslateLocalDataSource(@NonNull Context context) {
         backend = new DbBackend(context);
     }
 
@@ -109,8 +109,8 @@ public class TranslateLocalDataSource implements TranslationDataSource {
     }
 
     @Override
-    public void setTargetLang(String targetLang) {
-        backend.setTargetLang(targetLang);
+    public void setTargetLang(String targetCode) {
+        backend.setTargetLang(targetCode);
     }
 
     @Override

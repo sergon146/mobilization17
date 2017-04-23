@@ -4,8 +4,6 @@ public class Language {
     private int id;
     private String name;
     private String code = "";
-    private boolean isSource = false;
-    private boolean isTarget = false;
 
     public Language() {
     }
@@ -32,21 +30,5 @@ public class Language {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public boolean isSource() {
-        return isSource;
-    }
-
-    public void setSource(boolean source) {
-        isSource = source;
-    }
-
-    public boolean isTarget() {
-        return isTarget;
-    }
-
-    public void setTarget(boolean target) {
-        isTarget = target;
     }
 }

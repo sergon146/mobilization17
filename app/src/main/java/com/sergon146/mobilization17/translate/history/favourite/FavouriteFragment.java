@@ -16,15 +16,26 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.sergon146.mobilization17.R;
+import com.sergon146.mobilization17.pojo.Translate;
 import com.sergon146.mobilization17.translate.history.HistoryContract;
 import com.sergon146.mobilization17.translate.history.adapter.HistoryAdapter;
-import com.sergon146.mobilization17.pojo.Translate;
 
 import java.util.Collections;
 import java.util.List;
 
 public class FavouriteFragment extends Fragment implements HistoryContract.View {
     private HistoryContract.Presenter mPresenter;
+    HistoryContract.TranslateItemListener itemListener = new HistoryContract.TranslateItemListener() {
+        @Override
+        public void onFavouriteClick(Translate translate) {
+            mPresenter.setFavourite(translate);
+        }
+
+        @Override
+        public void onItemClick(Translate translate) {
+            mPresenter.deleteTranslate(translate);
+        }
+    };
     private EditText etSearch;
     private ImageView ivClearSearch;
     private ImageView ivTrash;
@@ -38,7 +49,6 @@ public class FavouriteFragment extends Fragment implements HistoryContract.View 
     public static FavouriteFragment newInstance() {
         return new FavouriteFragment();
     }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,7 +101,7 @@ public class FavouriteFragment extends Fragment implements HistoryContract.View 
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         ivTrash = (ImageView) rootView.findViewById(R.id.trash);
-        ivTrash.setOnClickListener(v -> mPresenter.showDialog(getContext(), v));
+        ivTrash.setOnClickListener(v -> mPresenter.showDialog(getContext()));
 
         return rootView;
     }
@@ -136,16 +146,4 @@ public class FavouriteFragment extends Fragment implements HistoryContract.View 
     public void hideEmpty() {
         mEmptyData.setVisibility(View.GONE);
     }
-
-    HistoryContract.TranslateItemListener itemListener = new HistoryContract.TranslateItemListener() {
-        @Override
-        public void onFavouriteClick(Translate translate) {
-            mPresenter.setFavourite(translate);
-        }
-
-        @Override
-        public void onItemClick(Translate translate) {
-            mPresenter.deleteTranslate(translate);
-        }
-    };
 }

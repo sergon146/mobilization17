@@ -4,15 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.View;
 
 import com.sergon146.mobilization17.R;
 import com.sergon146.mobilization17.data.TranslateRepository;
-import com.sergon146.mobilization17.translate.history.HistoryContract;
 import com.sergon146.mobilization17.pojo.Translate;
+import com.sergon146.mobilization17.translate.history.HistoryContract;
 import com.sergon146.mobilization17.util.Const;
 
 import java.util.Collections;
+import java.util.Locale;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -42,7 +42,7 @@ public class HistoryPresenter implements HistoryContract.Presenter {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        //do nothing
+        loadLanguagesIfNecessary(Locale.getDefault().getLanguage());
     }
 
     @Override
@@ -109,7 +109,7 @@ public class HistoryPresenter implements HistoryContract.Presenter {
     }
 
     @Override
-    public void showDialog(Context context, View v) {
+    public void showDialog(Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(context.getString(R.string.history_dialog_title))
                 .setNegativeButton(context.getString(R.string.no),

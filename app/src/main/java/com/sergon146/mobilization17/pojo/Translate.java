@@ -1,15 +1,15 @@
 package com.sergon146.mobilization17.pojo;
 
-import com.sergon146.mobilization17.pojo.translate.WordMapper;
+import com.sergon146.mobilization17.pojo.mapper.WordMapper;
 
 public class Translate {
     private String sourceText;
     private String targetText = "";
-    private String wordJson = "";
-    private WordMapper wordMapper;
-    private boolean isFavourite = false;
     private String sourceLangCode = "";
     private String targetLangCode = "";
+    private boolean isFavourite = false;
+    private String wordJson = "";
+    private WordMapper wordMapper;
 
     public String getSourceText() {
         return sourceText;
@@ -27,30 +27,6 @@ public class Translate {
         this.targetText = targetText;
     }
 
-    public String getWordJson() {
-        return wordJson;
-    }
-
-    public void setWordJson(String wordJson) {
-        this.wordJson = wordJson;
-    }
-
-    public WordMapper getWordMapper() {
-        return wordMapper;
-    }
-
-    public void setWordMapper(WordMapper wordMapper) {
-        this.wordMapper = wordMapper;
-    }
-
-    public boolean isFavourite() {
-        return isFavourite;
-    }
-
-    public void setFavourite(boolean favourite) {
-        isFavourite = favourite;
-    }
-
     public String getSourceLangCode() {
         return sourceLangCode;
     }
@@ -65,5 +41,29 @@ public class Translate {
 
     public void setTargetLangCode(String targetLangCode) {
         this.targetLangCode = targetLangCode;
+    }
+
+    public boolean isFavourite() {
+        return isFavourite;
+    }
+
+    public void setFavourite(boolean favourite) {
+        isFavourite = favourite;
+    }
+
+    public String getWordJson() {
+        return wordJson;
+    }
+
+    public void setWordJson(String wordJson) {
+        this.wordJson = wordJson;
+    }
+
+    public WordMapper getWordMapper() {
+        return wordMapper;
+    }
+
+    public void setWordMapper(WordMapper wordMapper) {
+        this.wordMapper = wordMapper;
     }
 }

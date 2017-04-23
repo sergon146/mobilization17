@@ -103,7 +103,6 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     }
 
 
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -128,7 +127,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
         ivClear.setOnClickListener(v -> clearAll());
 
         ivSourceSpeechOut = (ImageView) rootView.findViewById(R.id.source_speech_view);
-        ivSourceSpeechOut.setOnClickListener(v -> speakSourceOut());
+        ivSourceSpeechOut.setOnClickListener(v -> sourceSpeakOut());
 
         ivSourceSpeechIn = (ImageView) rootView.findViewById(R.id.source_micro_view);
         ivSourceSpeechIn.setOnClickListener(v -> startVoiceRecognitionActivity());
@@ -148,7 +147,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
         ivFavourite = (ImageView) rootView.findViewById(R.id.favourite);
         ivFavourite.setOnClickListener(v -> {
             ViewUtil.animateClick(v, R.anim.click_scale);
-            mPresenter.setFavourite();
+            mPresenter.swapFavourite();
         });
 
         pbTranslate = (ProgressBar) rootView.findViewById(R.id.translate_progress_bar);
@@ -209,13 +208,13 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     }
 
     @Override
-    public void setSourceText(String sourceText) {
-        etSource.setText(sourceText);
+    public String getSourceText() {
+        return etSource.getText().toString();
     }
 
     @Override
-    public String getSourceText() {
-        return etSource.getText().toString();
+    public void setSourceText(String sourceText) {
+        etSource.setText(sourceText);
     }
 
     @Override
@@ -244,17 +243,17 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     }
 
     @Override
-    public void hideButtons() {
+    public void hideTargetButtons() {
         llButtons.setVisibility(View.INVISIBLE);
     }
 
     @Override
-    public void showButtons() {
+    public void showTargetButtons() {
         llButtons.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void speakSourceOut() {
+    public void sourceSpeakOut() {
         vsSource.showNext();
         mPresenter.speakSourceOut(etSource.getText().toString(), tts);
     }
@@ -419,7 +418,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
         setSourceText("");
         clearMeanLayout();
         hideTargetText();
-        hideButtons();
+        hideTargetButtons();
         hideProgress();
         hideSourceSpeechOut();
     }

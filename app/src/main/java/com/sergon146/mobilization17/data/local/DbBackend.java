@@ -9,7 +9,7 @@ import android.util.Log;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.pojo.Translate;
-import com.sergon146.mobilization17.pojo.translate.WordMapper;
+import com.sergon146.mobilization17.pojo.mapper.WordMapper;
 import com.sergon146.mobilization17.util.Const;
 
 import java.io.IOException;
@@ -86,18 +86,11 @@ class DbBackend implements DbContract {
                 where,
                 whereArgs,
                 null, null, orderBy);
-        int sourceId = getSourceLangId();
-        int targetId = getTargetLangId();
 
         List<Language> languages = new ArrayList<>();
         while (cursor.moveToNext()) {
             Language lang = new Language();
             lang.setId(cursor.getInt(0));
-            if (cursor.getInt(1) == sourceId) {
-                lang.setSource(true);
-            } else if (cursor.getInt(1) == targetId) {
-                lang.setTarget(true);
-            }
             lang.setCode(getLangCodeById(cursor.getInt(1)));
             lang.setName(cursor.getString(2));
             languages.add(lang);
