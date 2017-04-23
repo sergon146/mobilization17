@@ -3,9 +3,9 @@ package com.sergon146.mobilization17.util;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.sergon146.mobilization17.data.source.TranslateRepository;
-import com.sergon146.mobilization17.data.source.local.TranslateLocalDataSource;
-import com.sergon146.mobilization17.data.source.remote.TranslateRemoteDataSource;
+import com.sergon146.mobilization17.data.TranslateRepository;
+import com.sergon146.mobilization17.data.local.TranslateLocalDataSource;
+import com.sergon146.mobilization17.data.remote.TranslateRemoteDataSource;
 import com.sergon146.mobilization17.pojo.Language;
 
 import java.util.Collections;

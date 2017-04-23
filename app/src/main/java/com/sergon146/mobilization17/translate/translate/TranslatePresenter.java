@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.sergon146.mobilization17.data.source.TranslateRepository;
+import com.sergon146.mobilization17.data.TranslateRepository;
 import com.sergon146.mobilization17.pojo.Translate;
 import com.sergon146.mobilization17.pojo.translate.mapper.WordMapper;
 import com.sergon146.mobilization17.util.Const;

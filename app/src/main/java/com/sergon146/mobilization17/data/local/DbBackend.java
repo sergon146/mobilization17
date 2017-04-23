@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.data.source.local;
+package com.sergon146.mobilization17.data.local;
 
 import android.content.ContentValues;
 import android.content.Context;

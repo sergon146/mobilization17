@@ -1,9 +1,9 @@
-package com.sergon146.mobilization17.data.source.remote;
+package com.sergon146.mobilization17.data.remote;
 
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sergon146.mobilization17.data.source.TranslationDataSource;
+import com.sergon146.mobilization17.data.TranslationDataSource;
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.pojo.Translate;
 import com.sergon146.mobilization17.service.TranslateService;

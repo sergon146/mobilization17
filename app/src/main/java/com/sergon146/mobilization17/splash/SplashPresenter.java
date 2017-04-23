@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.sergon146.mobilization17.data.source.TranslateRepository;
+import com.sergon146.mobilization17.data.TranslateRepository;
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.util.Const;
 

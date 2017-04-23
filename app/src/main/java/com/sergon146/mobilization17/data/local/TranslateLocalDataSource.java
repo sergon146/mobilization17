@@ -1,9 +1,9 @@
-package com.sergon146.mobilization17.data.source.local;
+package com.sergon146.mobilization17.data.local;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.sergon146.mobilization17.data.source.TranslationDataSource;
+import com.sergon146.mobilization17.data.TranslationDataSource;
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.pojo.Translate;
 

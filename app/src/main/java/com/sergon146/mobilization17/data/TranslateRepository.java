@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.data.source;
+package com.sergon146.mobilization17.data;
 
 import android.util.Log;
 

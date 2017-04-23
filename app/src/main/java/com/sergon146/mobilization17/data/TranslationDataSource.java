@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.data.source;
+package com.sergon146.mobilization17.data;
 
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.pojo.Translate;

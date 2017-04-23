@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.data.source.local;
+package com.sergon146.mobilization17.data.local;
 
 interface DbContract {
     String DB_NAME = "mobilization.db";
