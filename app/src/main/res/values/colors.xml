@@ -2,16 +2,14 @@
 <resources>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
+    <color name="transparent">#00ffffff</color>
     <color name="colorPrimary">#ffd43e</color>
     <color name="colorPrimaryDark">#d6b851</color>
     <color name="colorAccent">#616161</color>
     <color name="grayBackground">#bdbdbd</color>
-    <color name="grayIconBg">#757575</color>
+    <color name="iconBg">#8488a4</color>
     <color name="destBlue">#4b7892</color>
     <color name="destGray">#999999</color>
     <color name="destRed">#8c634d</color>
-    <color name="transparent">#00ffffff</color>
-    <color name="exColor">#8488a4</color>
-
     <color name="black_overlay">#66000000</color>
 </resources>

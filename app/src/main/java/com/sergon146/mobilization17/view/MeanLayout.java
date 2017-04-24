@@ -173,7 +173,7 @@ public class MeanLayout {
             } else {
                 for (Ex ex : exList) {
                     TextView exView = new TextView(context);
-                    exView.setTextColor(ContextCompat.getColor(context, R.color.exColor));
+                    exView.setTextColor(ContextCompat.getColor(context, R.color.iconBg));
                     exView.setTextSize(18);
                     exView.setTypeface(exView.getTypeface(), Typeface.ITALIC);
 

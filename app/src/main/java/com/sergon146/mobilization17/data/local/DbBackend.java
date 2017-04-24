@@ -25,27 +25,30 @@ class DbBackend implements DbContract {
         dbHelper = new DbHelper(context);
     }
 
-    //проверяем имеются ли сохранённые названия языков
     boolean isEmptyLocaleLanguageList(String localeCode) {
-        db = dbHelper.getReadableDatabase();
-        String[] columns = new String[]{ID};
-        String where = LangsNameTbl.COLUMN_LOCALE_CODE + " = ?";
-        String[] whereArgs = new String[]{String.valueOf(getLocaleId(localeCode))};
+        try {
+            db = dbHelper.getReadableDatabase();
+            String[] columns = new String[]{ID};
+            String where = LangsNameTbl.COLUMN_LOCALE_CODE + " = ?";
+            String[] whereArgs = new String[]{String.valueOf(getLocaleId(localeCode))};
 
-        Cursor cursor = db.query(TABLE_LANGS_NAME, columns, where, whereArgs, null, null, null);
+            Cursor cursor = db.query(TABLE_LANGS_NAME, columns, where, whereArgs, null, null, null);
 
-        if (cursor.moveToNext()) {
-            cursor.close();
-            db.close();
-            return false;
-        } else {
-            cursor.close();
-            db.close();
+            if (cursor.moveToNext()) {
+                cursor.close();
+                db.close();
+                return false;
+            } else {
+                cursor.close();
+                db.close();
+                return true;
+            }
+        } catch (Exception e) {
+            Log.e("DB", "on empty lang list: " + e);
             return true;
         }
     }
 
-    //записываем в БД загруженный список языков
     void insertLanguages(String localeCode, List<Language> languages) {
         db = dbHelper.getWritableDatabase();
         int localeId = getLocaleId(localeCode);
@@ -66,65 +69,71 @@ class DbBackend implements DbContract {
         }
     }
 
-    //получаем сохранёный ранее список языков
     List<Language> getCashedLangs(String localeCode) {
-        db = dbHelper.getReadableDatabase();
+        try {
+            db = dbHelper.getReadableDatabase();
 
-        String[] columns = new String[]{
-                ID,
-                LangsNameTbl.COLUMN_LANG_CODE,
-                LangsNameTbl.COLUMN_NAME};
+            String[] columns = new String[]{
+                    ID,
+                    LangsNameTbl.COLUMN_LANG_CODE,
+                    LangsNameTbl.COLUMN_NAME};
 
-        String where = LangsNameTbl.COLUMN_LOCALE_CODE + " = ?";
-        String[] whereArgs = new String[]{String.valueOf(getLocaleId(localeCode))};
+            String where = LangsNameTbl.COLUMN_LOCALE_CODE + " = ?";
+            String[] whereArgs = new String[]{String.valueOf(getLocaleId(localeCode))};
 
-        String orderBy = LangsNameTbl.COLUMN_NAME + " ASC";
+            String orderBy = LangsNameTbl.COLUMN_NAME + " ASC";
 
-        Cursor cursor = db.query(
-                TABLE_LANGS_NAME,
-                columns,
-                where,
-                whereArgs,
-                null, null, orderBy);
+            Cursor cursor = db.query(
+                    TABLE_LANGS_NAME,
+                    columns,
+                    where,
+                    whereArgs,
+                    null, null, orderBy);
 
-        List<Language> languages = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            Language lang = new Language();
-            lang.setId(cursor.getInt(0));
-            lang.setCode(getLangCodeById(cursor.getInt(1)));
-            lang.setName(cursor.getString(2));
-            languages.add(lang);
+            List<Language> languages = new ArrayList<>();
+            while (cursor.moveToNext()) {
+                Language lang = new Language();
+                lang.setId(cursor.getInt(0));
+                lang.setCode(getLangCodeById(cursor.getInt(1)));
+                lang.setName(cursor.getString(2));
+                languages.add(lang);
+            }
+            cursor.close();
+
+            return languages;
+        } catch (Exception e) {
+            Log.e("DB", "Get cashed langs: " + e);
+            return Collections.emptyList();
         }
-        cursor.close();
-
-        return languages;
     }
 
-    //id языка по его ISO коду
     private int getLangId(String langCode) {
-        db = dbHelper.getReadableDatabase();
+        try {
+            db = dbHelper.getReadableDatabase();
 
-        String[] columns = new String[]{ID};
-        String where = LangsTbl.COLUMN_CODE + " LIKE ?";
-        String[] whereArgs = new String[]{langCode};
-        Cursor cursor = db.query(TABLE_LANGS, columns, where, whereArgs, null, null, null);
-        if (cursor.moveToFirst()) {
-            int id = cursor.getInt(0);
-            cursor.close();
-            return id;
-        } else {
-            cursor.close();
-            insertLangCode(langCode);
-            return getLangId(langCode);
+            String[] columns = new String[]{ID};
+            String where = LangsTbl.COLUMN_CODE + " LIKE ?";
+            String[] whereArgs = new String[]{langCode};
+            Cursor cursor = db.query(TABLE_LANGS, columns, where, whereArgs, null, null, null);
+            if (cursor.moveToFirst()) {
+                int id = cursor.getInt(0);
+                cursor.close();
+                return id;
+            } else {
+                cursor.close();
+                insertLangCode(langCode);
+                return getLangId(langCode);
+            }
+        } catch (Exception e) {
+            Log.e("DB", "Get lang id: " + e);
+            return 0;
         }
     }
 
-    //id локали
     private int getLocaleId(String localeCode) {
         return getLangId(localeCode);
     }
 
-    //при появлении нового языка записываем его код в базу
     private void insertLangCode(String langCode) {
         try {
             db = dbHelper.getWritableDatabase();
@@ -137,13 +146,12 @@ class DbBackend implements DbContract {
             db.setTransactionSuccessful();
             Log.i("DB", "Insert new language code: " + langCode);
         } catch (Exception e) {
-            Log.e("DB", "Error when inserting: " + e);
+            Log.e("DB", "Error when inserting lang code: " + e);
         } finally {
             db.endTransaction();
         }
     }
 
-    //ISO код языка по его id
     private String getLangCodeById(int id) {
         try {
             db = dbHelper.getReadableDatabase();
@@ -159,11 +167,11 @@ class DbBackend implements DbContract {
             cursor.close();
             return code;
         } catch (Exception e) {
+            Log.e("DB", "Get lang code by id: " + e);
             return "";
         }
     }
 
-    //язык текста для перевода
     String getSourceName(String localeCode) {
         try {
             db = dbHelper.getReadableDatabase();
@@ -178,11 +186,11 @@ class DbBackend implements DbContract {
             cursor.close();
             return name;
         } catch (Exception e) {
+            Log.e("DB", "Get source name: " + e);
             return "";
         }
     }
 
-    //язык текста перевода
     String getTargetName(String localeCode) {
         try {
             db = dbHelper.getReadableDatabase();
@@ -197,61 +205,73 @@ class DbBackend implements DbContract {
             cursor.close();
             return name;
         } catch (Exception e) {
+            Log.e("DB", "Get target name: " + e);
             return "";
         }
     }
 
-    //сохраняем новый язык текста
     void setSourceLang(String sourceCode) {
-        db = dbHelper.getWritableDatabase();
-        unSourcesAll();
+        try {
+            db = dbHelper.getWritableDatabase();
+            unSourcesAll();
 
-        ContentValues values = new ContentValues();
-        values.put(LangsTbl.COLUMN_IS_SOURCE, 1);
+            ContentValues values = new ContentValues();
+            values.put(LangsTbl.COLUMN_IS_SOURCE, 1);
 
-        String where = LangsTbl.COLUMN_CODE + " = ?";
-        String[] whereArgs = new String[]{sourceCode};
-        db.update(TABLE_LANGS, values, where, whereArgs);
+            String where = LangsTbl.COLUMN_CODE + " = ?";
+            String[] whereArgs = new String[]{sourceCode};
+            db.update(TABLE_LANGS, values, where, whereArgs);
+        } catch (Exception e) {
+            Log.e("DB", "Set source lang: " + e);
+        }
     }
 
-    //снимаем пометку языка текста для всех языков, у которых она есть
     private void unSourcesAll() {
-        db = dbHelper.getWritableDatabase();
+        try {
+            db = dbHelper.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(LangsTbl.COLUMN_IS_SOURCE, 0);
+            ContentValues values = new ContentValues();
+            values.put(LangsTbl.COLUMN_IS_SOURCE, 0);
 
-        String where = LangsTbl.COLUMN_IS_SOURCE + " = ?";
-        String[] whereArgs = new String[]{String.valueOf(1)};
-        db.update(TABLE_LANGS, values, where, whereArgs);
+            String where = LangsTbl.COLUMN_IS_SOURCE + " = ?";
+            String[] whereArgs = new String[]{String.valueOf(1)};
+            db.update(TABLE_LANGS, values, where, whereArgs);
+        } catch (Exception e) {
+            Log.e("DB", "Unsource all: " + e);
+        }
     }
 
-    //сохраняем язык перевода
     void setTargetLang(String targetCode) {
-        db = dbHelper.getWritableDatabase();
-        unTargetAll();
+        try {
+            db = dbHelper.getWritableDatabase();
+            unTargetAll();
 
-        ContentValues values = new ContentValues();
-        values.put(LangsTbl.COLUMN_IS_TARGET, 1);
+            ContentValues values = new ContentValues();
+            values.put(LangsTbl.COLUMN_IS_TARGET, 1);
 
-        String where = LangsTbl.COLUMN_CODE + " = ?";
-        String[] whereArgs = new String[]{targetCode};
-        db.update(TABLE_LANGS, values, where, whereArgs);
+            String where = LangsTbl.COLUMN_CODE + " = ?";
+            String[] whereArgs = new String[]{targetCode};
+            db.update(TABLE_LANGS, values, where, whereArgs);
+        } catch (Exception e) {
+            Log.e("DB", "Set target lang: " + e);
+        }
     }
 
-    //снимаем отметку языка перевода для всех языков, у которых она есть
     private void unTargetAll() {
-        db = dbHelper.getWritableDatabase();
+        try {
+            db = dbHelper.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(LangsTbl.COLUMN_IS_TARGET, 0);
+            ContentValues values = new ContentValues();
+            values.put(LangsTbl.COLUMN_IS_TARGET, 0);
 
-        String where = LangsTbl.COLUMN_IS_TARGET + " = ?";
-        String[] whereArgs = new String[]{String.valueOf(1)};
-        db.update(TABLE_LANGS, values, where, whereArgs);
+            String where = LangsTbl.COLUMN_IS_TARGET + " = ?";
+            String[] whereArgs = new String[]{String.valueOf(1)};
+            db.update(TABLE_LANGS, values, where, whereArgs);
+        } catch (Exception e) {
+            Log.e("DB", "Untarget all: " + e);
+        }
     }
 
-    //код языка текста
     private int getSourceLangId() {
         try {
             db = dbHelper.getReadableDatabase();
@@ -264,11 +284,11 @@ class DbBackend implements DbContract {
             cursor.moveToFirst();
             return cursor.getInt(0);
         } catch (Exception e) {
+            Log.e("DB", "Get source lang id: " + e);
             return -1;
         }
     }
 
-    //код языка перевода
     private int getTargetLangId() {
         try {
             db = dbHelper.getReadableDatabase();
@@ -281,11 +301,11 @@ class DbBackend implements DbContract {
             cursor.moveToFirst();
             return cursor.getInt(0);
         } catch (Exception e) {
+            Log.e("DB", "Get target lang id: " + e);
             return -1;
         }
     }
 
-    //код языка текста
     String getSourceCode() {
         try {
             db = dbHelper.getReadableDatabase();
@@ -301,11 +321,11 @@ class DbBackend implements DbContract {
 
             return code;
         } catch (Exception e) {
+            Log.e("DB", "Get source code: " + e);
             return "";
         }
     }
 
-    //код языка перевода
     String getTargetCode() {
         try {
             db = dbHelper.getReadableDatabase();
@@ -318,11 +338,11 @@ class DbBackend implements DbContract {
 
             return cursor.getString(0);
         } catch (Exception e) {
+            Log.e("DB", "Get target code: " + e);
             return "";
         }
     }
 
-    //сохраняем новый перевод, если его нет в базе
     void saveTranslate(Translate translate) {
         if (isTranslateContains(translate)) {
             Log.i("DB", "Already exist in db: " + translate.getSourceText());
@@ -343,34 +363,37 @@ class DbBackend implements DbContract {
             db.setTransactionSuccessful();
             Log.i("DB", "Saving translation: " + translate.getSourceText());
         } catch (Exception e) {
-            Log.e("DB", "Already exist in db: " + translate.getSourceText());
+            Log.e("DB", "Save translate: " + translate.getSourceText());
         } finally {
             db.endTransaction();
         }
     }
 
-    //проверяем имеется ли текущий перевод в базе
     boolean isTranslateContains(Translate translate) {
-        db = dbHelper.getReadableDatabase();
+        try {
+            db = dbHelper.getReadableDatabase();
 
-        String[] columns = new String[]{ID};
-        String where = "(" + TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? OR " +
-                TranslateTbl.COLUMN_TARGET_TEXT + " LIKE ?) AND " +
-                TranslateTbl.COLUMN_SOURCE_LANG + " = ? AND " +
-                TranslateTbl.COLUMN_TARGET_LANG + " = ?";
-        String[] whereArgs = new String[]{translate.getSourceText(),
-                translate.getTargetText(),
-                String.valueOf(getLangId(translate.getSourceLangCode())),
-                String.valueOf(getLangId(translate.getTargetLangCode()))};
-        Cursor cursor = db.query(TABLE_TRANSLATE, columns, where, whereArgs, null, null, null);
+            String[] columns = new String[]{ID};
+            String where = "(" + TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? OR " +
+                    TranslateTbl.COLUMN_TARGET_TEXT + " LIKE ?) AND " +
+                    TranslateTbl.COLUMN_SOURCE_LANG + " = ? AND " +
+                    TranslateTbl.COLUMN_TARGET_LANG + " = ?";
+            String[] whereArgs = new String[]{translate.getSourceText(),
+                    translate.getTargetText(),
+                    String.valueOf(getLangId(translate.getSourceLangCode())),
+                    String.valueOf(getLangId(translate.getTargetLangCode()))};
+            Cursor cursor = db.query(TABLE_TRANSLATE, columns, where, whereArgs, null, null, null);
 
 
-        boolean b = cursor.moveToFirst();
-        cursor.close();
-        return b;
+            boolean b = cursor.moveToFirst();
+            cursor.close();
+            return b;
+        } catch (Exception e) {
+            Log.e("DB", "Is translate contains: " + e);
+            return false;
+        }
     }
 
-    //получаем ранее сохранённый перевод
     Translate getTranslate(Translate translate) {
         try {
             db = dbHelper.getReadableDatabase();
@@ -407,28 +430,28 @@ class DbBackend implements DbContract {
             cursor.close();
             return translate;
         } catch (Exception e) {
+            Log.e("DB", "Get translate: " + e);
             return translate;
         }
     }
 
-    //очищаем всю историю
     void clearHistory() {
         db = dbHelper.getReadableDatabase();
         db.beginTransaction();
         try {
             db.delete(TABLE_TRANSLATE, null, null);
             db.setTransactionSuccessful();
+        } catch (Exception e) {
+            Log.e("DB", "Clear history: " + e);
         } finally {
             db.endTransaction();
         }
     }
 
-    //получаем всю историю
     List<Translate> getHistory() {
         return searchInHistory("");
     }
 
-    //поиск по истории
     List<Translate> searchInHistory(String searchText) {
         try {
             searchText = "%" + searchText + "%";
@@ -465,104 +488,110 @@ class DbBackend implements DbContract {
             cursor.close();
             return translateList;
         } catch (Exception e) {
+            Log.e("DB", "Search in history: " + e);
             return Collections.emptyList();
         }
     }
 
-    //добавляем перевод в избранное
     void updateTranslateFavourite(Translate translate) {
-        db = dbHelper.getWritableDatabase();
+        try {
+            db = dbHelper.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(TranslateTbl.COLUMN_IS_FAVOURITE, translate.isFavourite() ? 1 : 0);
+            ContentValues values = new ContentValues();
+            values.put(TranslateTbl.COLUMN_IS_FAVOURITE, translate.isFavourite() ? 1 : 0);
 
-        String where = TranslateTbl.COLUMN_SOURCE_LANG + " = ? AND "
-                + TranslateTbl.COLUMN_TARGET_LANG + " LIKE ? AND "
-                + TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ?";
-        String[] whereArgs = new String[]{
-                String.valueOf(getLangId(translate.getSourceLangCode())),
-                String.valueOf(getLangId(translate.getTargetLangCode())),
-                translate.getSourceText()};
-        db.update(TABLE_TRANSLATE, values, where, whereArgs);
-        Log.i(Const.LOG_TAG, "Set as favourite " + translate.getSourceText());
+            String where = TranslateTbl.COLUMN_SOURCE_LANG + " = ? AND "
+                    + TranslateTbl.COLUMN_TARGET_LANG + " LIKE ? AND "
+                    + TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ?";
+            String[] whereArgs = new String[]{
+                    String.valueOf(getLangId(translate.getSourceLangCode())),
+                    String.valueOf(getLangId(translate.getTargetLangCode())),
+                    translate.getSourceText()};
+            db.update(TABLE_TRANSLATE, values, where, whereArgs);
+        } catch (Exception e) {
+            Log.e("DB", "Update favourite: " + e);
+        }
     }
 
-    //получаем все избарнные переводы
     List<Translate> getFavourites() {
         return searchInFavourite("");
     }
 
-    //поиск по избранному
     List<Translate> searchInFavourite(String searchText) {
-        searchText = "%" + searchText + "%";
-        List<Translate> translateList = new ArrayList<>();
-
-        db = dbHelper.getReadableDatabase();
-
-        String[] columns = new String[]{
-                TranslateTbl.COLUMN_SOURCE_TEXT,
-                TranslateTbl.COLUMN_TARGET_TEXT,
-                TranslateTbl.COLUMN_SOURCE_LANG,
-                TranslateTbl.COLUMN_TARGET_LANG,
-                TranslateTbl.COLUMN_IS_FAVOURITE,
-                TranslateTbl.COLUMN_WORD_JSON};
-
-        String where =
-                TranslateTbl.COLUMN_IS_FAVOURITE + " = ? AND (" +
-                        TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? OR " +
-                        TranslateTbl.COLUMN_TARGET_TEXT + " LIKE ?)";
-
-        String[] whereArgs = new String[]{String.valueOf(1), searchText, searchText};
-        String orderBy = ID + " DESC";
-
-        Cursor cursor = db.query(TABLE_TRANSLATE, columns, where, whereArgs, null, null, orderBy);
-
-        while (cursor.moveToNext()) {
-            Translate translate = new Translate();
-            translate.setSourceText(cursor.getString(0));
-            translate.setTargetText(cursor.getString(1));
-            translate.setSourceLangCode(getLangCodeById(cursor.getInt(2)));
-            translate.setTargetLangCode(getLangCodeById(cursor.getInt(3)));
-            translate.setFavourite(cursor.getInt(4) == 1);
-            translate.setWordJson(cursor.getString(5));
-            translateList.add(translate);
-        }
-
-        cursor.close();
         try {
+            searchText = "%" + searchText + "%";
+            List<Translate> translateList = new ArrayList<>();
+
+            db = dbHelper.getReadableDatabase();
+
+            String[] columns = new String[]{
+                    TranslateTbl.COLUMN_SOURCE_TEXT,
+                    TranslateTbl.COLUMN_TARGET_TEXT,
+                    TranslateTbl.COLUMN_SOURCE_LANG,
+                    TranslateTbl.COLUMN_TARGET_LANG,
+                    TranslateTbl.COLUMN_IS_FAVOURITE,
+                    TranslateTbl.COLUMN_WORD_JSON};
+
+            String where =
+                    TranslateTbl.COLUMN_IS_FAVOURITE + " = ? AND (" +
+                            TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? OR " +
+                            TranslateTbl.COLUMN_TARGET_TEXT + " LIKE ?)";
+
+            String[] whereArgs = new String[]{String.valueOf(1), searchText, searchText};
+            String orderBy = ID + " DESC";
+
+            Cursor cursor = db.query(TABLE_TRANSLATE, columns, where, whereArgs, null, null, orderBy);
+
+            while (cursor.moveToNext()) {
+                Translate translate = new Translate();
+                translate.setSourceText(cursor.getString(0));
+                translate.setTargetText(cursor.getString(1));
+                translate.setSourceLangCode(getLangCodeById(cursor.getInt(2)));
+                translate.setTargetLangCode(getLangCodeById(cursor.getInt(3)));
+                translate.setFavourite(cursor.getInt(4) == 1);
+                translate.setWordJson(cursor.getString(5));
+                translateList.add(translate);
+            }
+
+            cursor.close();
             return translateList;
         } catch (Exception e) {
+            Log.e("DB", "Search in favourite: " + e);
             return Collections.emptyList();
         }
     }
 
-    //очищаем список избранного
     void clearFavourites() {
-        db = dbHelper.getWritableDatabase();
+        try {
+            db = dbHelper.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(TranslateTbl.COLUMN_IS_FAVOURITE, 0);
+            ContentValues values = new ContentValues();
+            values.put(TranslateTbl.COLUMN_IS_FAVOURITE, 0);
 
-        String where = TranslateTbl.COLUMN_IS_FAVOURITE + " = ? ";
-        String[] whereArgs = new String[]{String.valueOf(1)};
-        db.update(TABLE_TRANSLATE, values, where, whereArgs);
+            String where = TranslateTbl.COLUMN_IS_FAVOURITE + " = ? ";
+            String[] whereArgs = new String[]{String.valueOf(1)};
+            db.update(TABLE_TRANSLATE, values, where, whereArgs);
+        } catch (Exception e) {
+            Log.e("DB", "Clear favourite: " + e);
+        }
     }
 
-    //удаляем перевод
     public void deleteTranslate(Translate translate) {
-        db = dbHelper.getReadableDatabase();
-        String where = TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? AND " +
-                TranslateTbl.COLUMN_SOURCE_LANG + " = ? AND " +
-                TranslateTbl.COLUMN_TARGET_LANG + " = ?";
-        String[] whereArgs = new String[]{
-                translate.getSourceText(),
-                String.valueOf(getLangId(translate.getSourceLangCode())),
-                String.valueOf(getLangId(translate.getTargetLangCode()))};
-
-        db.beginTransaction();
         try {
+            db.beginTransaction();
+            db = dbHelper.getReadableDatabase();
+            String where = TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? AND " +
+                    TranslateTbl.COLUMN_SOURCE_LANG + " = ? AND " +
+                    TranslateTbl.COLUMN_TARGET_LANG + " = ?";
+            String[] whereArgs = new String[]{
+                    translate.getSourceText(),
+                    String.valueOf(getLangId(translate.getSourceLangCode())),
+                    String.valueOf(getLangId(translate.getTargetLangCode()))};
+
             db.delete(TABLE_TRANSLATE, where, whereArgs);
             db.setTransactionSuccessful();
+        } catch (Exception e) {
+            Log.e("DB", "delete translate: " + e);
         } finally {
             db.endTransaction();
         }

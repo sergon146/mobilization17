@@ -157,7 +157,6 @@ public class TranslatePresenter implements TranslateContract.Presenter {
                         mView.changeFavourite(tr.isFavourite());
                         if (!tr.getTargetText().isEmpty()) {
                             if (Util.isWord(translate.getSourceText())) {
-                                //если уже имеется загруженные данные словаря отображаем их сразу
                                 if (tr.getWordJson().isEmpty() && tr.getWordMapper() == null) {
                                     loadWord(tr);
                                 } else {
@@ -233,7 +232,7 @@ public class TranslatePresenter implements TranslateContract.Presenter {
         }
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                //установка нового языка текста
+
                 case Const.REQUEST_CODE_SOURCE:
                     translate.setSourceLangCode((String) data.getExtras().get(Const.CODE));
                     mRepository.setSourceLang(translate.getSourceLangCode());
@@ -242,7 +241,6 @@ public class TranslatePresenter implements TranslateContract.Presenter {
                     loadTranslate();
                     break;
 
-                //установка нового языка перевода
                 case Const.REQUEST_CODE_TARGET:
                     translate.setTargetLangCode((String) data.getExtras().get(Const.CODE));
                     mRepository.setTargetLang(translate.getTargetLangCode());
@@ -251,7 +249,6 @@ public class TranslatePresenter implements TranslateContract.Presenter {
                     loadTranslate();
                     break;
 
-                //установка распознанного текста
                 case Const.REQUEST_CODE_RECOGNITION:
                     ArrayList<String> matches = data.getStringArrayListExtra(
                             RecognizerIntent.EXTRA_RESULTS);
@@ -265,7 +262,6 @@ public class TranslatePresenter implements TranslateContract.Presenter {
     }
 
 
-    //смена языков текста и перевода
     @Override
     public void swapLanguage() {
         String temp = translate.getSourceLangCode();
@@ -295,14 +291,12 @@ public class TranslatePresenter implements TranslateContract.Presenter {
         }
     }
 
-    //озвучивание исходного текста
     @Override
     public void speakSourceOut(String s, TextToSpeech tts) {
         tts.setLanguage(new Locale(translate.getSourceLangCode()));
         tts.speak(s, TextToSpeech.QUEUE_FLUSH, null, Const.SOURCE_SPEECH);
     }
 
-    //озвучивание текста перевода
     @Override
     public void speakTargetOut(String s, TextToSpeech tts) {
         tts.setLanguage(new Locale(translate.getTargetLangCode()));

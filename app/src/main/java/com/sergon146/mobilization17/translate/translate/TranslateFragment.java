@@ -99,9 +99,16 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     public void onPause() {
         super.onPause();
         mPresenter.unsubscribe();
-        tts.shutdown();
+        tts.stop();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (tts != null) {
+            tts.shutdown();
+        }
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -124,7 +131,10 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
         etSource.addTextChangedListener(getSourceTextWatcher());
 
         ivClear = (ImageView) rootView.findViewById(R.id.clear_text_view);
-        ivClear.setOnClickListener(v -> clearAll());
+        ivClear.setOnClickListener(v -> {
+            ViewUtil.animateClick(v, R.anim.rotate);
+            clearAll();
+        });
 
         ivSourceSpeechOut = (ImageView) rootView.findViewById(R.id.source_speech_view);
         ivSourceSpeechOut.setOnClickListener(v -> sourceSpeakOut());
