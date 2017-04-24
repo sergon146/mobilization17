@@ -230,6 +230,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
 
     @Override
     public void hideTargetText() {
+        tvTarget.setText("");
         tvTarget.setVisibility(View.INVISIBLE);
     }
 

@@ -174,7 +174,6 @@ public class TranslatePresenter implements TranslateContract.Presenter {
 
                     @Override
                     public void onCompleted() {
-                        mView.showTargetButtons();
                         mView.changeFavourite(translate.isFavourite());
                     }
 

@@ -374,18 +374,16 @@ class DbBackend implements DbContract {
             db = dbHelper.getReadableDatabase();
 
             String[] columns = new String[]{ID};
-            String where = "(" + TranslateTbl.COLUMN_SOURCE_TEXT + " LIKE ? OR " +
-                    TranslateTbl.COLUMN_TARGET_TEXT + " LIKE ?) AND " +
+            String where = TranslateTbl.COLUMN_SOURCE_TEXT + " = ? AND " +
                     TranslateTbl.COLUMN_SOURCE_LANG + " = ? AND " +
                     TranslateTbl.COLUMN_TARGET_LANG + " = ?";
             String[] whereArgs = new String[]{translate.getSourceText(),
-                    translate.getTargetText(),
                     String.valueOf(getLangId(translate.getSourceLangCode())),
                     String.valueOf(getLangId(translate.getTargetLangCode()))};
             Cursor cursor = db.query(TABLE_TRANSLATE, columns, where, whereArgs, null, null, null);
 
 
-            boolean b = cursor.moveToFirst();
+            boolean b = cursor.moveToNext();
             cursor.close();
             return b;
         } catch (Exception e) {
@@ -420,11 +418,13 @@ class DbBackend implements DbContract {
             translate.setFavourite(cursor.getInt(1) == 1);
             translate.setWordJson(cursor.getString(2));
 
-            try {
-                ObjectMapper mapper = new ObjectMapper();
-                translate.setWordMapper(mapper.readValue(translate.getWordJson(), WordMapper.class));
-            } catch (IOException e) {
-                Log.w(Const.LOG_DB, "Error while mapper to Word.class " + translate.getWordJson());
+            if (!translate.getWordJson().isEmpty()) {
+                try {
+                    ObjectMapper mapper = new ObjectMapper();
+                    translate.setWordMapper(mapper.readValue(translate.getWordJson(), WordMapper.class));
+                } catch (IOException e) {
+                    Log.w(Const.LOG_DB, "Error while mapper to Word.class " + translate.getWordJson());
+                }
             }
 
             cursor.close();

@@ -160,8 +160,9 @@
                         style="?android:attr/progressBarStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:scaleX="0.5"
-                        android:scaleY="0.5"
+                        android:indeterminateTint="@color/colorPrimary"
+                        android:scaleX="0.7"
+                        android:scaleY="0.7"
                         android:visibility="visible" />
 
                 </ViewSwitcher>
@@ -230,12 +231,15 @@
                     android:id="@+id/translate_progress_bar"
                     style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginBottom="20dp"
                     android:layout_marginTop="20dp"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:indeterminateTint="@color/colorPrimary"
                     android:progressDrawable="@drawable/progress_bar"
+                    android:scaleX="0.7"
+                    android:scaleY="0.7"
                     android:visibility="gone" />
 
                 <ScrollView
@@ -284,8 +288,9 @@
                         style="?android:attr/progressBarStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:scaleX="0.5"
-                        android:scaleY="0.5"
+                        android:indeterminateTint="@color/colorPrimary"
+                        android:scaleX="0.7"
+                        android:scaleY="0.7"
                         android:visibility="gone" />
                 </ViewSwitcher>
 
