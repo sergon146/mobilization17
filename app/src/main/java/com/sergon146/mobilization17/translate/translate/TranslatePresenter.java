@@ -248,7 +248,7 @@ public class TranslatePresenter implements TranslateContract.Presenter {
                 case Const.REQUEST_CODE_TARGET:
                     String targetCode = (String) data.getExtras().get(Const.CODE);
                     assert targetCode != null;
-                    if (targetCode.equals(translate.getTargetLangCode())) {
+                    if (targetCode.equals(translate.getSourceLangCode())) {
                         swapLanguage();
                     }
                     translate.setTargetLangCode(targetCode);
