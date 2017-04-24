@@ -107,7 +107,7 @@ public class TranslatePresenter implements TranslateContract.Presenter {
 
                         @Override
                         public void onError(Throwable e) {
-                            Log.w("LoadLangs", "Error while loading langs: " + e);
+                            Log.e(Const.LOG_TRANSLATE, "Load languages: " + e);
                         }
                     });
         } else {
@@ -181,6 +181,7 @@ public class TranslatePresenter implements TranslateContract.Presenter {
                     @Override
                     public void onError(Throwable e) {
                         mView.hideProgress();
+                        Log.e(Const.LOG_TRANSLATE, "Load translate: " + e);
                     }
                 });
 
@@ -213,7 +214,7 @@ public class TranslatePresenter implements TranslateContract.Presenter {
                         mRepository.saveTranslate(translate);
 
                         mView.hideProgress();
-                        Log.w("Dictionary", "Error while translated sentence: " + translate.getSourceText() + " - " + e);
+                        Log.e(Const.LOG_TRANSLATE, "Error while translated word: " + e);
                     }
                 });
     }

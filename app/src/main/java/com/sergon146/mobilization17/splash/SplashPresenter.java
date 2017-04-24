@@ -29,6 +29,7 @@ public class SplashPresenter implements SplashContract.Presenter {
         mSubscriptions = new CompositeSubscription();
     }
 
+    //проверяем при загрузке наличие списка языков
     @Override
     public void subscribe() {
         loadLanguagesIfNecessary(Locale.getDefault().getLanguage());
@@ -56,12 +57,12 @@ public class SplashPresenter implements SplashContract.Presenter {
 
                         @Override
                         public void onCompleted() {
-                            Log.i(Const.LOG_TAG, "Langs load success!");
                             mView.finishSplash();
                         }
 
                         @Override
                         public void onError(Throwable e) {
+                            Log.e(Const.LOG_SPLASH, "Load langs: " + e);
                             mView.showErrorLoadToast();
                             mView.finishSplash();
                         }

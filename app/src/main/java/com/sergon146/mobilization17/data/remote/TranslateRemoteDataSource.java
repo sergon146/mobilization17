@@ -48,7 +48,7 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
         TranslateService translateService = retrofit.create(TranslateService.class);
 
         return translateService.loadLanguages(Const.TRANSLATE_API_KEY, localeCode)
-                .doOnError(th -> Log.e(Const.LOG_TAG, th.toString()))
+                .doOnError(th -> Log.e(Const.LOG_RTF, "Load langs" + th.toString()))
                 .map(this::getSortedLangsListFromMap);
     }
 
@@ -67,7 +67,7 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
         return retrofit.create(TranslateService.class)
                 .loadTranslateSentences(Const.TRANSLATE_API_KEY, translate.getSourceText(),
                         translate.getSourceLangCode() + "-" + translate.getTargetLangCode())
-                .doOnError(th -> Log.e(Const.LOG_TAG, th.toString()))
+                .doOnError(th -> Log.e(Const.LOG_RTF, th.toString()))
                 .map(st -> st.getText().get(0))
                 .map(s -> {
                     translate.setTargetText(s);
@@ -88,7 +88,7 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
                 .loadTranslateWord(Const.DICTIONARY_API_KEY,
                         translate.getSourceLangCode() + "-" + translate.getTargetLangCode(),
                         translate.getSourceText())
-                .doOnError(th -> Log.e(Const.LOG_TAG, th.toString()))
+                .doOnError(th -> Log.e(Const.LOG_RTF, th.toString()))
                 .map(wr -> {
                     translate.setWordMapper(wr);
                     return wr;
@@ -198,7 +198,7 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
         try {
             langs.putAll((Map<String, String>) map.get("langs"));
         } catch (Exception e) {
-            Log.w("ERROR", e);
+            Log.w("MAPPING", e);
         }
 
         int id = 0;

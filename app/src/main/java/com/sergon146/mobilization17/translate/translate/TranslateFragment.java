@@ -212,6 +212,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
         ViewUtil.animateClick(ivSwap, R.anim.rotate);
         setSourceText(tvTarget.getText().toString());
         hideTargetText();
+        hideTargetButtons();
         clearMeanLayout();
         tts.stop();
         mPresenter.swapLanguage();
@@ -327,10 +328,10 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
             int result = tts.setLanguage(Locale.getDefault());
             if (result == TextToSpeech.LANG_MISSING_DATA
                     || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Log.e("TTS", "This Language is not supported");
+                Log.e(Const.LOG_TTS, "This Language is not supported");
             }
         } else {
-            Log.e("TTS", "Initialization Failed!");
+            Log.e(Const.LOG_TTS, "Initialization Failed!");
         }
     }
 
@@ -352,6 +353,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
             @Override
             public void onError(String utteranceId, int errorCode) {
                 super.onError(utteranceId, errorCode);
+                Log.e(Const.LOG_TTS, "TTS error with code: " + errorCode);
                 swapView(utteranceId);
             }
 
@@ -368,6 +370,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
 
             @Override
             public void onError(String utteranceId) {
+                Log.e(Const.LOG_TTS, "TTS error");
                 swapView(utteranceId);
             }
 

@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.sergon146.mobilization17.R;
 import com.sergon146.mobilization17.data.TranslationDataSource;
 import com.sergon146.mobilization17.languagechoose.adapter.LanguageAdapter;
-import com.sergon146.mobilization17.languagechoose.adapter.RecyclerItemClickListener;
+import com.sergon146.mobilization17.languagechoose.listener.RecyclerItemClickListener;
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.util.Const;
 import com.sergon146.mobilization17.util.Util;
@@ -56,11 +56,12 @@ public class ChooseLanguageActivity extends AppCompatActivity {
 
                     @Override
                     public void onCompleted() {
-                        Log.e("ChooseLang", "Languages loaded ");
+                        Log.i(Const.LOG_CHOOSE, "Languages loaded ");
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        Log.e(Const.LOG_CHOOSE, "Load langs: " + e);
                         Toast.makeText(getApplicationContext(),
                                 getString(R.string.error),
                                 Toast.LENGTH_SHORT).show();
@@ -102,7 +103,7 @@ public class ChooseLanguageActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                this.finish();
+                finish();
                 return true;
             default:
                 return false;

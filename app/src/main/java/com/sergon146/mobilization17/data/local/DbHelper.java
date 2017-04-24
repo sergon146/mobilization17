@@ -29,25 +29,25 @@ class DbHelper extends SQLiteOpenHelper implements DbContract {
             System.out.println("Database exists");
             openDataBase();
         } else {
-            Log.i(Const.LOG_TAG, "Database doesn't exist");
+            Log.i(Const.LOG_DB_HELPER, "Database doesn't exist");
             try {
                 createDataBase();
-                Log.i(Const.LOG_TAG, "DB create!");
+                Log.i(Const.LOG_DB_HELPER, "DB create!");
             } catch (IOException e) {
-                Log.w(Const.LOG_TAG, "Cannot create DB");
+                Log.w(Const.LOG_DB_HELPER, "Cannot create DB");
             }
         }
     }
 
     private void createDataBase() throws IOException {
         if (isDbExist()) {
-            Log.i(Const.LOG_TAG, "Database exist");
+            Log.i(Const.LOG_DB_HELPER, "Database exist");
         } else {
             this.getReadableDatabase();
             try {
                 copyDataBase();
             } catch (IOException e) {
-                Log.i(Const.LOG_TAG, "Error copying database");
+                Log.i(Const.LOG_DB_HELPER, "Error copying database");
             }
         }
     }
@@ -60,7 +60,7 @@ class DbHelper extends SQLiteOpenHelper implements DbContract {
             File dbFile = new File(myPath);
             checkdb = dbFile.exists();
         } catch (SQLiteException e) {
-            Log.i(Const.LOG_TAG, "Database doesn't exist");
+            Log.i(Const.LOG_DB_HELPER, "Database doesn't exist");
         }
         return checkdb;
     }

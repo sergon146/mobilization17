@@ -44,7 +44,7 @@ class DbBackend implements DbContract {
                 return true;
             }
         } catch (Exception e) {
-            Log.e("DB", "on empty lang list: " + e);
+            Log.e(Const.LOG_DB, "on empty lang list: " + e);
             return true;
         }
     }
@@ -63,7 +63,7 @@ class DbBackend implements DbContract {
             }
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.e("DB", "Error inserting languages: " + e);
+            Log.e(Const.LOG_DB, "Error inserting languages: " + e);
         } finally {
             db.endTransaction();
         }
@@ -102,7 +102,7 @@ class DbBackend implements DbContract {
 
             return languages;
         } catch (Exception e) {
-            Log.e("DB", "Get cashed langs: " + e);
+            Log.e(Const.LOG_DB, "Get cashed langs: " + e);
             return Collections.emptyList();
         }
     }
@@ -125,7 +125,7 @@ class DbBackend implements DbContract {
                 return getLangId(langCode);
             }
         } catch (Exception e) {
-            Log.e("DB", "Get lang id: " + e);
+            Log.e(Const.LOG_DB, "Get lang id: " + e);
             return 0;
         }
     }
@@ -144,9 +144,9 @@ class DbBackend implements DbContract {
             cv.put(LangsTbl.COLUMN_IS_TARGET, 0);
             db.insert(TABLE_LANGS, null, cv);
             db.setTransactionSuccessful();
-            Log.i("DB", "Insert new language code: " + langCode);
+            Log.i(Const.LOG_DB, "Insert new language code: " + langCode);
         } catch (Exception e) {
-            Log.e("DB", "Error when inserting lang code: " + e);
+            Log.e(Const.LOG_DB, "Error when inserting lang code: " + e);
         } finally {
             db.endTransaction();
         }
@@ -167,7 +167,7 @@ class DbBackend implements DbContract {
             cursor.close();
             return code;
         } catch (Exception e) {
-            Log.e("DB", "Get lang code by id: " + e);
+            Log.e(Const.LOG_DB, "Get lang code by id: " + e);
             return "";
         }
     }
@@ -186,7 +186,7 @@ class DbBackend implements DbContract {
             cursor.close();
             return name;
         } catch (Exception e) {
-            Log.e("DB", "Get source name: " + e);
+            Log.e(Const.LOG_DB, "Get source name: " + e);
             return "";
         }
     }
@@ -205,7 +205,7 @@ class DbBackend implements DbContract {
             cursor.close();
             return name;
         } catch (Exception e) {
-            Log.e("DB", "Get target name: " + e);
+            Log.e(Const.LOG_DB, "Get target name: " + e);
             return "";
         }
     }
@@ -222,7 +222,7 @@ class DbBackend implements DbContract {
             String[] whereArgs = new String[]{sourceCode};
             db.update(TABLE_LANGS, values, where, whereArgs);
         } catch (Exception e) {
-            Log.e("DB", "Set source lang: " + e);
+            Log.e(Const.LOG_DB, "Set source lang: " + e);
         }
     }
 
@@ -237,7 +237,7 @@ class DbBackend implements DbContract {
             String[] whereArgs = new String[]{String.valueOf(1)};
             db.update(TABLE_LANGS, values, where, whereArgs);
         } catch (Exception e) {
-            Log.e("DB", "Unsource all: " + e);
+            Log.e(Const.LOG_DB, "Unsource all: " + e);
         }
     }
 
@@ -253,7 +253,7 @@ class DbBackend implements DbContract {
             String[] whereArgs = new String[]{targetCode};
             db.update(TABLE_LANGS, values, where, whereArgs);
         } catch (Exception e) {
-            Log.e("DB", "Set target lang: " + e);
+            Log.e(Const.LOG_DB, "Set target lang: " + e);
         }
     }
 
@@ -268,7 +268,7 @@ class DbBackend implements DbContract {
             String[] whereArgs = new String[]{String.valueOf(1)};
             db.update(TABLE_LANGS, values, where, whereArgs);
         } catch (Exception e) {
-            Log.e("DB", "Untarget all: " + e);
+            Log.e(Const.LOG_DB, "Untarget all: " + e);
         }
     }
 
@@ -284,7 +284,7 @@ class DbBackend implements DbContract {
             cursor.moveToFirst();
             return cursor.getInt(0);
         } catch (Exception e) {
-            Log.e("DB", "Get source lang id: " + e);
+            Log.e(Const.LOG_DB, "Get source lang id: " + e);
             return -1;
         }
     }
@@ -301,7 +301,7 @@ class DbBackend implements DbContract {
             cursor.moveToFirst();
             return cursor.getInt(0);
         } catch (Exception e) {
-            Log.e("DB", "Get target lang id: " + e);
+            Log.e(Const.LOG_DB, "Get target lang id: " + e);
             return -1;
         }
     }
@@ -321,7 +321,7 @@ class DbBackend implements DbContract {
 
             return code;
         } catch (Exception e) {
-            Log.e("DB", "Get source code: " + e);
+            Log.e(Const.LOG_DB, "Get source code: " + e);
             return "";
         }
     }
@@ -338,14 +338,14 @@ class DbBackend implements DbContract {
 
             return cursor.getString(0);
         } catch (Exception e) {
-            Log.e("DB", "Get target code: " + e);
+            Log.e(Const.LOG_DB, "Get target code: " + e);
             return "";
         }
     }
 
     void saveTranslate(Translate translate) {
         if (isTranslateContains(translate)) {
-            Log.i("DB", "Already exist in db: " + translate.getSourceText());
+            Log.i(Const.LOG_DB, "Already exist in db: " + translate.getSourceText());
             return;
         }
 
@@ -361,9 +361,9 @@ class DbBackend implements DbContract {
             cv.put(TranslateTbl.COLUMN_WORD_JSON, translate.getWordJson());
             db.insert(TABLE_TRANSLATE, null, cv);
             db.setTransactionSuccessful();
-            Log.i("DB", "Saving translation: " + translate.getSourceText());
+            Log.i(Const.LOG_DB, "Saving translation: " + translate.getSourceText());
         } catch (Exception e) {
-            Log.e("DB", "Save translate: " + translate.getSourceText());
+            Log.e(Const.LOG_DB, "Save translate: " + translate.getSourceText());
         } finally {
             db.endTransaction();
         }
@@ -389,7 +389,7 @@ class DbBackend implements DbContract {
             cursor.close();
             return b;
         } catch (Exception e) {
-            Log.e("DB", "Is translate contains: " + e);
+            Log.e(Const.LOG_DB, "Is translate contains: " + e);
             return false;
         }
     }
@@ -424,13 +424,13 @@ class DbBackend implements DbContract {
                 ObjectMapper mapper = new ObjectMapper();
                 translate.setWordMapper(mapper.readValue(translate.getWordJson(), WordMapper.class));
             } catch (IOException e) {
-                Log.w(Const.LOG_TAG, "Error while mapper to Word.class " + translate.getWordJson());
+                Log.w(Const.LOG_DB, "Error while mapper to Word.class " + translate.getWordJson());
             }
 
             cursor.close();
             return translate;
         } catch (Exception e) {
-            Log.e("DB", "Get translate: " + e);
+            Log.e(Const.LOG_DB, "Get translate: " + e);
             return translate;
         }
     }
@@ -442,7 +442,7 @@ class DbBackend implements DbContract {
             db.delete(TABLE_TRANSLATE, null, null);
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.e("DB", "Clear history: " + e);
+            Log.e(Const.LOG_DB, "Clear history: " + e);
         } finally {
             db.endTransaction();
         }
@@ -488,7 +488,7 @@ class DbBackend implements DbContract {
             cursor.close();
             return translateList;
         } catch (Exception e) {
-            Log.e("DB", "Search in history: " + e);
+            Log.e(Const.LOG_DB, "Search in history: " + e);
             return Collections.emptyList();
         }
     }
@@ -509,7 +509,7 @@ class DbBackend implements DbContract {
                     translate.getSourceText()};
             db.update(TABLE_TRANSLATE, values, where, whereArgs);
         } catch (Exception e) {
-            Log.e("DB", "Update favourite: " + e);
+            Log.e(Const.LOG_DB, "Update favourite: " + e);
         }
     }
 
@@ -556,7 +556,7 @@ class DbBackend implements DbContract {
             cursor.close();
             return translateList;
         } catch (Exception e) {
-            Log.e("DB", "Search in favourite: " + e);
+            Log.e(Const.LOG_DB, "Search in favourite: " + e);
             return Collections.emptyList();
         }
     }
@@ -572,7 +572,7 @@ class DbBackend implements DbContract {
             String[] whereArgs = new String[]{String.valueOf(1)};
             db.update(TABLE_TRANSLATE, values, where, whereArgs);
         } catch (Exception e) {
-            Log.e("DB", "Clear favourite: " + e);
+            Log.e(Const.LOG_DB, "Clear favourite: " + e);
         }
     }
 
@@ -591,7 +591,7 @@ class DbBackend implements DbContract {
             db.delete(TABLE_TRANSLATE, where, whereArgs);
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.e("DB", "delete translate: " + e);
+            Log.e(Const.LOG_DB, "delete translate: " + e);
         } finally {
             db.endTransaction();
         }

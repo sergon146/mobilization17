@@ -67,6 +67,7 @@ public class FavouritePresenter implements HistoryContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
+                        Log.e(Const.LOG_FAV, "Load data: " + e);
                     }
 
                     @Override
@@ -104,12 +105,12 @@ public class FavouritePresenter implements HistoryContract.Presenter {
                 .subscribe(new Observer<List<Translate>>() {
                     @Override
                     public void onCompleted() {
-                        Log.i(Const.LOG_TAG, "Search complete");
+                        Log.i(Const.LOG_FAV, "Search complete");
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.w(Const.LOG_TAG, "Error while searching");
+                        Log.w(Const.LOG_FAV, "Error while searching: " + e);
                         mView.showData(Collections.emptyList());
                     }
 

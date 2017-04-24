@@ -70,7 +70,7 @@ public class HistoryPresenter implements HistoryContract.Presenter {
                                 mView.showTrash();
                             }
                         },
-                        e -> Log.w(Const.LOG_TAG, e.toString()));
+                        e -> Log.w(Const.LOG_HISTORY, e.toString()));
         mSubscription.add(subscription);
     }
 
@@ -100,10 +100,10 @@ public class HistoryPresenter implements HistoryContract.Presenter {
                             }
                         },
                         e -> {
-                            Log.w(Const.LOG_TAG, "Error while searching");
+                            Log.w(Const.LOG_HISTORY, "Error while searching");
                             mView.showData(Collections.emptyList());
                         },
-                        () -> Log.i(Const.LOG_TAG, "Search complete")
+                        () -> Log.i(Const.LOG_HISTORY, "Search complete")
                 );
 
     }
