@@ -212,14 +212,19 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints">
 
-            <TextView
-                android:id="@+id/target_translate"
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/base_8dp"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:visibility="visible" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/target_translate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/base_8dp"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:visibility="visible" />
+            </ScrollView>
 
             <ScrollView
                 android:layout_width="match_parent"

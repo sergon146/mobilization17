@@ -218,14 +218,19 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/target_translate"
+                <ScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/base_8dp"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:visibility="visible" />
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/target_translate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/base_8dp"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:visibility="visible" />
+                </ScrollView>
 
                 <ProgressBar
                     android:id="@+id/translate_progress_bar"
