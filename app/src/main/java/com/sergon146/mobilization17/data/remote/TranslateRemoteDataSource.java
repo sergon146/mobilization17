@@ -45,9 +45,7 @@ public class TranslateRemoteDataSource implements TranslationDataSource {
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
 
-        TranslateService translateService = retrofit.create(TranslateService.class);
-
-        return translateService.loadLanguages(Const.TRANSLATE_API_KEY, localeCode)
+        return retrofit.create(TranslateService.class).loadLanguages(Const.TRANSLATE_API_KEY, localeCode)
                 .doOnError(th -> Log.e(Const.LOG_RTF, "Load langs" + th.toString()))
                 .map(this::getSortedLangsListFromMap);
     }

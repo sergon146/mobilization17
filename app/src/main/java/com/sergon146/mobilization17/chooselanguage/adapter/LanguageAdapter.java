@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.languagechoose.adapter;
+package com.sergon146.mobilization17.chooselanguage.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,9 +13,11 @@ import java.util.List;
 
 public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.LanguageViewHolder> {
     private List<Language> languages;
+    private View.OnClickListener listener;
 
-    public LanguageAdapter(List<Language> languages) {
+    public LanguageAdapter(List<Language> languages, View.OnClickListener listener) {
         this.languages = languages;
+        this.listener = listener;
     }
 
     @Override
@@ -26,7 +28,7 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
 
     @Override
     public void onBindViewHolder(LanguageViewHolder holder, int i) {
-        holder.itemView.setId(languages.get(i).getId());
+        holder.itemView.setId(i);
         holder.name.setText(languages.get(i).getName());
     }
 
@@ -40,6 +42,7 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
 
         LanguageViewHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(listener);
             name = (TextView) itemView.findViewById(R.id.lang_name);
         }
     }

@@ -1,4 +1,4 @@
-package com.sergon146.mobilization17.languagechoose;
+package com.sergon146.mobilization17.chooselanguage;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,12 +8,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.sergon146.mobilization17.R;
+import com.sergon146.mobilization17.chooselanguage.adapter.LanguageAdapter;
 import com.sergon146.mobilization17.data.TranslationDataSource;
-import com.sergon146.mobilization17.languagechoose.adapter.LanguageAdapter;
-import com.sergon146.mobilization17.languagechoose.listener.RecyclerItemClickListener;
 import com.sergon146.mobilization17.pojo.Language;
 import com.sergon146.mobilization17.util.Const;
 import com.sergon146.mobilization17.util.Util;
@@ -69,19 +69,18 @@ public class ChooseLanguageActivity extends AppCompatActivity {
                     }
                 });
 
+        View.OnClickListener listener = v -> {
+            Intent intent = new Intent();
+            intent.putExtra(Const.LANGUAGE, languages.get(v.getId()).getName());
+            intent.putExtra(Const.CODE, languages.get(v.getId()).getCode());
+            setResult(RESULT_OK, intent);
+            finish();
+        };
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new LanguageAdapter(languages);
+        adapter = new LanguageAdapter(languages, listener);
         recyclerView.setAdapter(adapter);
-        recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getApplicationContext(), (view, position) -> {
-                    Intent intent = new Intent();
-                    intent.putExtra(Const.LANGUAGE, languages.get(position).getName());
-                    intent.putExtra(Const.CODE, languages.get(position).getCode());
-                    setResult(RESULT_OK, intent);
-                    finish();
-                })
-        );
     }
 
     private void initActionBar() {

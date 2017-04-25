@@ -180,13 +180,15 @@ public class TranslatePresenter implements TranslateContract.Presenter {
                     @Override
                     public void onError(Throwable e) {
                         mView.hideProgress();
-                        Log.e(Const.LOG_TRANSLATE, "Load translate: " + e);
+                        mView.showTargetButtons();
+                        Log.e(Const.LOG_TRANSLATE, "Error while translated sentence: " + e);
                     }
                 });
 
     }
 
     @Override
+
     public void loadWord(Translate translate) {
         mRepository.loadTranslateWord(translate)
                 .subscribeOn(Schedulers.io())
@@ -211,7 +213,7 @@ public class TranslatePresenter implements TranslateContract.Presenter {
                         translate.setWordMapper(null);
                         translate.setWordJson("");
                         mRepository.saveTranslate(translate);
-
+                        mView.showTargetButtons();
                         mView.hideProgress();
                         Log.e(Const.LOG_TRANSLATE, "Error while translated word: " + e);
                     }
